@@ -1,0 +1,13 @@
+{
+    "basename": "asr-bits_03-c7d2024",
+    "cmd": "lfortran --show-asr --no-color {infile} -o {outfile}",
+    "infile": "tests/../integration_tests/bits_03.f90",
+    "infile_hash": "cc34aad3be3fdea9a5462e9abfa5bdcfb6450d87092552dd633e7d63",
+    "outfile": null,
+    "outfile_hash": null,
+    "stdout": "asr-bits_03-c7d2024.stdout",
+    "stdout_hash": "ce4d8d7ce3a5dbaa21e80e9f6b3cdb6feeb0b7332d4604561953536a",
+    "stderr": null,
+    "stderr_hash": null,
+    "returncode": 0
+}

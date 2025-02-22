@@ -1,0 +1,13 @@
+{
+    "basename": "asr-arrays_01_real-6cb0873",
+    "cmd": "lfortran --show-asr --no-color {infile} -o {outfile}",
+    "infile": "tests/../integration_tests/arrays_01_real.f90",
+    "infile_hash": "52d4b470c5523650dead5fa570d62db7293b9ecd23758e3cc4ba28c2",
+    "outfile": null,
+    "outfile_hash": null,
+    "stdout": "asr-arrays_01_real-6cb0873.stdout",
+    "stdout_hash": "79df805f0c504d5fe98322c57dcc04f2f20f5619c9e9a708a98efd3c",
+    "stderr": null,
+    "stderr_hash": null,
+    "returncode": 0
+}

@@ -1,0 +1,59 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            test_exec:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            homedir:
+                                (Variable
+                                    2
+                                    homedir
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (String 1 255 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                )
+                        })
+                    test_exec
+                    []
+                    [(IntrinsicImpureSubroutine
+                        GetEnvironmentVariable
+                        [(StringConstant
+                            "HOME"
+                            (String 1 4 () PointerString)
+                        )
+                        (Var 2 homedir)]
+                        0
+                    )
+                    (Print
+                        (IntrinsicElementalFunction
+                            StringTrim
+                            [(Var 2 homedir)]
+                            0
+                            (String 1 255 () PointerString)
+                            ()
+                        )
+                    )
+                    (IntrinsicImpureSubroutine
+                        ExecuteCommandLine
+                        [(StringConstant
+                            "printenv"
+                            (String 1 8 () PointerString)
+                        )]
+                        0
+                    )]
+                )
+        })
+    []
+)

@@ -1,0 +1,13 @@
+{
+    "basename": "asr-doloop_02-cc78975",
+    "cmd": "lfortran --show-asr --no-color {infile} -o {outfile}",
+    "infile": "tests/../integration_tests/doloop_02.f90",
+    "infile_hash": "3f887434509231f48fbbbda31f34778f17ddb6871b39c44626d54f2e",
+    "outfile": null,
+    "outfile_hash": null,
+    "stdout": "asr-doloop_02-cc78975.stdout",
+    "stdout_hash": "0bb91edfb6fd33769ef0b27ee5a39e9e5bc9fb999a2b972cbbb61b96",
+    "stderr": null,
+    "stderr_hash": null,
+    "returncode": 0
+}

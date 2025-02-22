@@ -1,0 +1,607 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            class_default_select_type:
+                (Module
+                    (SymbolTable
+                        11
+                        {
+                            enum_stat:
+                                (Struct
+                                    (SymbolTable
+                                        12
+                                        {
+                                            fatal:
+                                                (Variable
+                                                    12
+                                                    fatal
+                                                    []
+                                                    Local
+                                                    (IntegerUnaryMinus
+                                                        (IntegerConstant 1 (Integer 4) Decimal)
+                                                        (Integer 4)
+                                                        (IntegerConstant -1 (Integer 4) Decimal)
+                                                    )
+                                                    (IntegerConstant -1 (Integer 4) Decimal)
+                                                    Save
+                                                    (Integer 4)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            success:
+                                                (Variable
+                                                    12
+                                                    success
+                                                    []
+                                                    Local
+                                                    (IntegerConstant 0 (Integer 4) Decimal)
+                                                    (IntegerConstant 0 (Integer 4) Decimal)
+                                                    Save
+                                                    (Integer 4)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                )
+                                        })
+                                    enum_stat
+                                    []
+                                    [success
+                                    fatal]
+                                    Source
+                                    Public
+                                    .false.
+                                    .false.
+                                    []
+                                    ()
+                                    ()
+                                ),
+                            toml_stat:
+                                (Variable
+                                    11
+                                    toml_stat
+                                    []
+                                    Local
+                                    (StructConstructor
+                                        11 enum_stat
+                                        [(())
+                                        (())]
+                                        (StructType
+                                            11 enum_stat
+                                        )
+                                        ()
+                                    )
+                                    ()
+                                    Parameter
+                                    (StructType
+                                        11 enum_stat
+                                    )
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                )
+                        })
+                    class_default_select_type
+                    []
+                    .true.
+                    .false.
+                ),
+            class_default_select_type_user:
+                (Module
+                    (SymbolTable
+                        4
+                        {
+                            1_enum_stat:
+                                (ExternalSymbol
+                                    4
+                                    1_enum_stat
+                                    11 enum_stat
+                                    class_default_select_type
+                                    []
+                                    enum_stat
+                                    Public
+                                ),
+                            check_table:
+                                (Function
+                                    (SymbolTable
+                                        7
+                                        {
+                                            tab:
+                                                (Variable
+                                                    7
+                                                    tab
+                                                    []
+                                                    Out
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (ClassType
+                                                        4 toml_table
+                                                    )
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                )
+                                        })
+                                    check_table
+                                    (FunctionType
+                                        [(ClassType
+                                            4 toml_table
+                                        )]
+                                        ()
+                                        Source
+                                        Implementation
+                                        ()
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        []
+                                        .false.
+                                    )
+                                    []
+                                    [(Var 7 tab)]
+                                    [(Print
+                                        (StringConstant
+                                            "inside check_table"
+                                            (String 1 18 () PointerString)
+                                        )
+                                    )]
+                                    ()
+                                    Public
+                                    .false.
+                                    .false.
+                                    ()
+                                ),
+                            get_table:
+                                (Function
+                                    (SymbolTable
+                                        8
+                                        {
+                                            1_enum_stat_fatal:
+                                                (ExternalSymbol
+                                                    8
+                                                    1_enum_stat_fatal
+                                                    12 fatal
+                                                    1_enum_stat
+                                                    []
+                                                    fatal
+                                                    Public
+                                                ),
+                                            ptr:
+                                                (Variable
+                                                    8
+                                                    ptr
+                                                    []
+                                                    Out
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Pointer
+                                                        (StructType
+                                                            4 toml_table
+                                                        )
+                                                    )
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            stat:
+                                                (Variable
+                                                    8
+                                                    stat
+                                                    []
+                                                    Out
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Integer 4)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Optional
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            table:
+                                                (Variable
+                                                    8
+                                                    table
+                                                    []
+                                                    InOut
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (ClassType
+                                                        4 toml_table
+                                                    )
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            tmp:
+                                                (Variable
+                                                    8
+                                                    tmp
+                                                    []
+                                                    Local
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Pointer
+                                                        (ClassType
+                                                            4 toml_value
+                                                        )
+                                                    )
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            ~select_type_block_:
+                                                (Block
+                                                    (SymbolTable
+                                                        9
+                                                        {
+                                                            1_enum_stat_success:
+                                                                (ExternalSymbol
+                                                                    9
+                                                                    1_enum_stat_success
+                                                                    12 success
+                                                                    1_enum_stat
+                                                                    []
+                                                                    success
+                                                                    Public
+                                                                )
+                                                        })
+                                                    ~select_type_block_
+                                                    [(Associate
+                                                        (Var 8 ptr)
+                                                        (Var 8 tmp)
+                                                    )
+                                                    (If
+                                                        (IntrinsicElementalFunction
+                                                            Present
+                                                            [(Var 8 stat)]
+                                                            0
+                                                            (Logical 4)
+                                                            ()
+                                                        )
+                                                        [(Assignment
+                                                            (Var 8 stat)
+                                                            (StructInstanceMember
+                                                                (Var 4 toml_stat)
+                                                                9 1_enum_stat_success
+                                                                (Integer 4)
+                                                                (IntegerConstant 0 (Integer 4) Decimal)
+                                                            )
+                                                            ()
+                                                        )]
+                                                        []
+                                                    )]
+                                                )
+                                        })
+                                    get_table
+                                    (FunctionType
+                                        [(ClassType
+                                            4 toml_table
+                                        )
+                                        (Pointer
+                                            (StructType
+                                                4 toml_table
+                                            )
+                                        )
+                                        (Integer 4)]
+                                        ()
+                                        Source
+                                        Implementation
+                                        ()
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        []
+                                        .false.
+                                    )
+                                    [check_table]
+                                    [(Var 8 table)
+                                    (Var 8 ptr)
+                                    (Var 8 stat)]
+                                    [(Nullify
+                                        [(Var 8 ptr)]
+                                    )
+                                    (If
+                                        (PointerAssociated
+                                            (Var 8 tmp)
+                                            ()
+                                            (Logical 4)
+                                            ()
+                                        )
+                                        [(SelectType
+                                            (Var 8 tmp)
+                                            [(TypeStmtName
+                                                4 toml_table
+                                                [(BlockCall
+                                                    -1
+                                                    8 ~select_type_block_
+                                                )]
+                                            )]
+                                            [(If
+                                                (IntrinsicElementalFunction
+                                                    Present
+                                                    [(Var 8 stat)]
+                                                    0
+                                                    (Logical 4)
+                                                    ()
+                                                )
+                                                [(Assignment
+                                                    (Var 8 stat)
+                                                    (StructInstanceMember
+                                                        (Var 4 toml_stat)
+                                                        8 1_enum_stat_fatal
+                                                        (Integer 4)
+                                                        (IntegerConstant -1 (Integer 4) Decimal)
+                                                    )
+                                                    ()
+                                                )]
+                                                []
+                                            )]
+                                        )]
+                                        [(SubroutineCall
+                                            4 check_table
+                                            ()
+                                            [((Var 8 table))]
+                                            ()
+                                        )]
+                                    )]
+                                    ()
+                                    Public
+                                    .false.
+                                    .false.
+                                    ()
+                                ),
+                            toml_stat:
+                                (ExternalSymbol
+                                    4
+                                    toml_stat
+                                    11 toml_stat
+                                    class_default_select_type
+                                    []
+                                    toml_stat
+                                    Public
+                                ),
+                            toml_table:
+                                (Struct
+                                    (SymbolTable
+                                        5
+                                        {
+                                            implicit:
+                                                (Variable
+                                                    5
+                                                    implicit
+                                                    []
+                                                    Local
+                                                    (LogicalConstant
+                                                        .false.
+                                                        (Logical 4)
+                                                    )
+                                                    (LogicalConstant
+                                                        .false.
+                                                        (Logical 4)
+                                                    )
+                                                    Save
+                                                    (Logical 4)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            inline:
+                                                (Variable
+                                                    5
+                                                    inline
+                                                    []
+                                                    Local
+                                                    (LogicalConstant
+                                                        .false.
+                                                        (Logical 4)
+                                                    )
+                                                    (LogicalConstant
+                                                        .false.
+                                                        (Logical 4)
+                                                    )
+                                                    Save
+                                                    (Logical 4)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                )
+                                        })
+                                    toml_table
+                                    []
+                                    [implicit
+                                    inline]
+                                    Source
+                                    Public
+                                    .false.
+                                    .false.
+                                    []
+                                    ()
+                                    4 toml_value
+                                ),
+                            toml_value:
+                                (Struct
+                                    (SymbolTable
+                                        6
+                                        {
+                                            float:
+                                                (Variable
+                                                    6
+                                                    float
+                                                    []
+                                                    Local
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Real 4)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            int:
+                                                (Variable
+                                                    6
+                                                    int
+                                                    []
+                                                    Local
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Integer 4)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                )
+                                        })
+                                    toml_value
+                                    []
+                                    [int
+                                    float]
+                                    Source
+                                    Public
+                                    .false.
+                                    .false.
+                                    []
+                                    ()
+                                    ()
+                                )
+                        })
+                    class_default_select_type_user
+                    [class_default_select_type]
+                    .true.
+                    .false.
+                ),
+            class_default_select_type_user1:
+                (Module
+                    (SymbolTable
+                        2
+                        {
+                            1_enum_stat:
+                                (ExternalSymbol
+                                    2
+                                    1_enum_stat
+                                    11 enum_stat
+                                    class_default_select_type
+                                    []
+                                    enum_stat
+                                    Public
+                                ),
+                            check_table:
+                                (ExternalSymbol
+                                    2
+                                    check_table
+                                    4 check_table
+                                    class_default_select_type_user
+                                    []
+                                    check_table
+                                    Public
+                                ),
+                            get_table:
+                                (ExternalSymbol
+                                    2
+                                    get_table
+                                    4 get_table
+                                    class_default_select_type_user
+                                    []
+                                    get_table
+                                    Public
+                                ),
+                            toml_stat:
+                                (ExternalSymbol
+                                    2
+                                    toml_stat
+                                    11 toml_stat
+                                    class_default_select_type
+                                    []
+                                    toml_stat
+                                    Public
+                                ),
+                            toml_table:
+                                (ExternalSymbol
+                                    2
+                                    toml_table
+                                    4 toml_table
+                                    class_default_select_type_user
+                                    []
+                                    toml_table
+                                    Public
+                                ),
+                            toml_value:
+                                (ExternalSymbol
+                                    2
+                                    toml_value
+                                    4 toml_value
+                                    class_default_select_type_user
+                                    []
+                                    toml_value
+                                    Public
+                                )
+                        })
+                    class_default_select_type_user1
+                    [class_default_select_type_user]
+                    .false.
+                    .false.
+                ),
+            select_type4:
+                (Program
+                    (SymbolTable
+                        13
+                        {
+                            
+                        })
+                    select_type4
+                    []
+                    [(Print
+                        (StringConstant
+                            "running select_type4 main program"
+                            (String 1 33 () PointerString)
+                        )
+                    )]
+                )
+        })
+    []
+)

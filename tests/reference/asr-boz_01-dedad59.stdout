@@ -1,0 +1,111 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            boz_01:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            boz_1:
+                                (Variable
+                                    2
+                                    boz_1
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (Integer 4)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            boz_2:
+                                (Variable
+                                    2
+                                    boz_2
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (Integer 4)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            boz_3:
+                                (Variable
+                                    2
+                                    boz_3
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (Integer 4)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                )
+                        })
+                    boz_01
+                    []
+                    [(Assignment
+                        (Var 2 boz_1)
+                        (IntrinsicElementalFunction
+                            Int
+                            [(IntegerConstant 93 (Integer 4) Binary)]
+                            0
+                            (Integer 4)
+                            (IntegerConstant 93 (Integer 4) Decimal)
+                        )
+                        ()
+                    )
+                    (Assignment
+                        (Var 2 boz_2)
+                        (IntrinsicElementalFunction
+                            Int
+                            [(IntegerConstant 1255 (Integer 4) Octal)]
+                            0
+                            (Integer 4)
+                            (IntegerConstant 1255 (Integer 4) Decimal)
+                        )
+                        ()
+                    )
+                    (Assignment
+                        (Var 2 boz_3)
+                        (IntrinsicElementalFunction
+                            Int
+                            [(IntegerConstant 2748 (Integer 4) Hex)]
+                            0
+                            (Integer 4)
+                            (IntegerConstant 2748 (Integer 4) Decimal)
+                        )
+                        ()
+                    )
+                    (Print
+                        (StringFormat
+                            ()
+                            [(Var 2 boz_1)
+                            (Var 2 boz_2)
+                            (Var 2 boz_3)]
+                            FormatFortran
+                            (String -1 0 () PointerString)
+                            ()
+                        )
+                    )]
+                )
+        })
+    []
+)

@@ -1,0 +1,13 @@
+{
+    "basename": "asr-polymorphic_class_in_derived_type-15eb7b6",
+    "cmd": "lfortran --show-asr --no-color {infile} -o {outfile}",
+    "infile": "tests/polymorphic_class_in_derived_type.f90",
+    "infile_hash": "677dedbd26096d25f181bde9ec5de0e23794b2f2435c5ba79defa792",
+    "outfile": null,
+    "outfile_hash": null,
+    "stdout": "asr-polymorphic_class_in_derived_type-15eb7b6.stdout",
+    "stdout_hash": "1272c8f70a6d8756c53648f795c9c41dc9dedcea504188888c99baa9",
+    "stderr": null,
+    "stderr_hash": null,
+    "returncode": 0
+}

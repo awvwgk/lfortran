@@ -40,11 +40,15 @@ python src/libasr/asdl_cpp.py grammar/AST.asdl src/lfortran/ast.h
 python src/libasr/asdl_cpp.py src/libasr/ASR.asdl src/libasr/asr.h
 # Generate a wasm_visitor.h from src/libasr/wasm_instructions.txt (C++)
 python src/libasr/wasm_instructions_visitor.py
+# Generate the intrinsic_function_registry_util.h (C++)
+python src/libasr/intrinsic_func_registry_util_gen.py
 
 # Generate the tokenizer and parser
 pushd src/lfortran/parser && re2c -W -b tokenizer.re -o tokenizer.cpp && popd
 pushd src/lfortran/parser && re2c -W -b preprocessor.re -o preprocessor.cpp && popd
 pushd src/lfortran/parser && bison -Wall -d -r all parser.yy && popd
+
+pandoc --standalone --to man doc/man/lfortran.md -o doc/man/lfortran.1
 
 $lfortran_version=$(cat version).strip()
 $dest="lfortran-" + $lfortran_version
@@ -61,7 +65,7 @@ if $IS_LINUX:
     BUILD_TYPE = "Debug"
 else:
     BUILD_TYPE = "Release"
-cmake -G$LFORTRAN_CMAKE_GENERATOR -DCMAKE_VERBOSE_MAKEFILE=ON -DWITH_LLVM=yes -DWITH_XEUS=yes -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -DCMAKE_BUILD_TYPE=@(BUILD_TYPE) ..
+cmake -G$LFORTRAN_CMAKE_GENERATOR -DCMAKE_VERBOSE_MAKEFILE=ON -DWITH_LSP=yes -DWITH_LLVM=yes -DWITH_XEUS=yes -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -DCMAKE_BUILD_TYPE=@(BUILD_TYPE) -DWITH_RUNTIME_STACKTRACE=$ENABLE_RUNTIME_STACKTRACE ..
 cmake --build . --target install
 ./src/lfortran/tests/test_lfortran
 ./src/bin/lfortran < ../src/bin/example_input.txt
@@ -82,7 +86,6 @@ jupyter nbconvert --to notebook --execute --ExecutePreprocessor.timeout=120 --ou
 cd ../../..
 
 cp lfortran-$lfortran_version/test-bld/src/bin/lfortran src/bin
-cp lfortran-$lfortran_version/test-bld/src/bin/cpptranslate src/bin
 if $IS_WIN:
     cp lfortran-$lfortran_version/test-bld/src/runtime/legacy/lfortran_runtime* src/runtime/
 else:

@@ -1,0 +1,160 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            print_03:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            x:
+                                (Variable
+                                    2
+                                    x
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (Integer 4)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                )
+                        })
+                    print_03
+                    []
+                    [(Assignment
+                        (Var 2 x)
+                        (IntegerConstant 24 (Integer 4) Decimal)
+                        ()
+                    )
+                    (FileWrite
+                        0
+                        ()
+                        ()
+                        ()
+                        ()
+                        [(StringConstant
+                            " "
+                            (String 1 1 () PointerString)
+                        )]
+                        ()
+                        (StringConstant
+                            ""
+                            (String 1 0 () PointerString)
+                        )
+                        ()
+                    )
+                    (Print
+                        (StringFormat
+                            ()
+                            [(StringConstant
+                                "x is "
+                                (String 1 5 () PointerString)
+                            )
+                            (Var 2 x)]
+                            FormatFortran
+                            (String -1 0 () PointerString)
+                            ()
+                        )
+                    )
+                    (FileWrite
+                        0
+                        ()
+                        ()
+                        ()
+                        ()
+                        [(StringConstant
+                            " "
+                            (String 1 1 () PointerString)
+                        )]
+                        ()
+                        (StringConstant
+                            ""
+                            (String 1 0 () PointerString)
+                        )
+                        ()
+                    )
+                    (FileWrite
+                        0
+                        ()
+                        ()
+                        ()
+                        ()
+                        [(StringFormat
+                            ()
+                            [(StringConstant
+                                "x is "
+                                (String 1 5 () PointerString)
+                            )
+                            (Var 2 x)]
+                            FormatFortran
+                            (String -1 0 () PointerString)
+                            ()
+                        )]
+                        ()
+                        ()
+                        ()
+                    )
+                    (FileWrite
+                        0
+                        ()
+                        ()
+                        ()
+                        ()
+                        [(StringConstant
+                            " "
+                            (String 1 1 () PointerString)
+                        )]
+                        ()
+                        (StringConstant
+                            ""
+                            (String 1 0 () PointerString)
+                        )
+                        ()
+                    )
+                    (Print
+                        (StringConstant
+                            "ok"
+                            (String 1 2 () PointerString)
+                        )
+                    )
+                    (FileWrite
+                        0
+                        ()
+                        ()
+                        ()
+                        ()
+                        [(StringConstant
+                            " "
+                            (String 1 1 () PointerString)
+                        )]
+                        ()
+                        (StringConstant
+                            ""
+                            (String 1 0 () PointerString)
+                        )
+                        ()
+                    )
+                    (FileWrite
+                        0
+                        ()
+                        ()
+                        ()
+                        ()
+                        [(StringConstant
+                            "ok"
+                            (String 1 2 () PointerString)
+                        )]
+                        ()
+                        ()
+                        ()
+                    )]
+                )
+        })
+    []
+)

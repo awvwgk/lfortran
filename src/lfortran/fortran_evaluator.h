@@ -1,7 +1,6 @@
 #ifndef LFORTRAN_FORTRAN_EVALUATOR_H
 #define LFORTRAN_FORTRAN_EVALUATOR_H
 
-#include <iostream>
 #include <memory>
 
 #include <libasr/alloc.h>
@@ -18,6 +17,7 @@
 namespace LCompilers {
 
 class LLVMModule;
+class MLIRModule;
 class LLVMEvaluator;
 
 /*
@@ -34,14 +34,17 @@ class LLVMEvaluator;
 class FortranEvaluator
 {
 public:
+    CompilerOptions compiler_options;
+
     FortranEvaluator(CompilerOptions compiler_options);
     ~FortranEvaluator();
 
     struct EvalResult {
         enum {
-            integer4, integer8, real4, real8, complex4, complex8, statement, none
+            integer4, integer8, real4, real8, complex4, complex8, boolean, statement, none
         } type;
         union {
+            bool b;
             int32_t i32;
             int64_t i64;
             float f32;
@@ -66,13 +69,14 @@ public:
     Result<LCompilers::LFortran::AST::TranslationUnit_t*> get_ast2(
         const std::string &code, LocationManager &lm,
         diag::Diagnostics &diagnostics);
-    Result<ASR::TranslationUnit_t*> get_asr3(
-        LCompilers::LFortran::AST::TranslationUnit_t &ast,
-        diag::Diagnostics &diagnostics);
     Result<std::string> get_asr(const std::string &code,
         LocationManager &lm, diag::Diagnostics &diagnostics);
+    ASR::asr_t* handle_lookup_name(LCompilers::ASR::TranslationUnit_t* tu, uint64_t pos);
     Result<ASR::TranslationUnit_t*> get_asr2(const std::string &code,
         LocationManager &lm, diag::Diagnostics &diagnostics);
+    Result<ASR::TranslationUnit_t*> get_asr3(
+        LCompilers::LFortran::AST::TranslationUnit_t &ast,
+        diag::Diagnostics &diagnostics, LCompilers::LocationManager &lm);
     Result<std::string> get_llvm(const std::string &code,
         LocationManager &lm, LCompilers::PassManager& pass_manager,
         diag::Diagnostics &diagnostics);
@@ -98,7 +102,14 @@ public:
         diag::Diagnostics &diagnostics, int64_t default_lower_bound);
     Result<std::string> get_c2(ASR::TranslationUnit_t &asr,
         diag::Diagnostics &diagnostics, int64_t default_lower_bound);
+    Result<std::string> get_c3(ASR::TranslationUnit_t &asr,
+        diag::Diagnostics &diagnostics, LCompilers::PassManager& pass_manager,
+        int64_t default_lower_bound);
     Result<std::string> get_julia(const std::string &code,
+        LocationManager &lm, diag::Diagnostics &diagnostics);
+    Result<std::unique_ptr<MLIRModule>> get_mlir(
+        ASR::asr_t &asr, diag::Diagnostics &diagnostics);
+    Result<std::string> get_fortran(const std::string &code,
         LocationManager &lm, diag::Diagnostics &diagnostics);
     Result<std::string> get_fmt(const std::string &code, LocationManager &lm,
         diag::Diagnostics &diagnostics);
@@ -109,7 +120,6 @@ private:
     std::unique_ptr<LLVMEvaluator> e;
     int eval_count;
 #endif
-    CompilerOptions compiler_options;
     SymbolTable *symbol_table;
     std::string run_fn;
 };

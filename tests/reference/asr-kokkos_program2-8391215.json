@@ -1,0 +1,13 @@
+{
+    "basename": "asr-kokkos_program2-8391215",
+    "cmd": "lfortran --show-asr --no-color {infile} -o {outfile}",
+    "infile": "tests/kokkos_program2.f90",
+    "infile_hash": "bba0b0329c504e01dd099058af96e20a7fe00294f66456fe3da634e0",
+    "outfile": null,
+    "outfile_hash": null,
+    "stdout": "asr-kokkos_program2-8391215.stdout",
+    "stdout_hash": "c02f6f19fb784f069696e7559975b860b6a2345c5111b0f1c92c8043",
+    "stderr": null,
+    "stderr_hash": null,
+    "returncode": 0
+}

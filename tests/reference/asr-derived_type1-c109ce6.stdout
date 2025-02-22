@@ -1,0 +1,165 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            derived_type1:
+                (Module
+                    (SymbolTable
+                        2
+                        {
+                            1_enum_escape_newline:
+                                (ExternalSymbol
+                                    2
+                                    1_enum_escape_newline
+                                    3 newline
+                                    enum_escape
+                                    []
+                                    newline
+                                    Public
+                                ),
+                            enum_escape:
+                                (Struct
+                                    (SymbolTable
+                                        3
+                                        {
+                                            newline:
+                                                (Variable
+                                                    3
+                                                    newline
+                                                    []
+                                                    Local
+                                                    (IntrinsicElementalFunction
+                                                        Achar
+                                                        [(IntegerConstant 10 (Integer 4) Decimal)]
+                                                        0
+                                                        (String 1 1 () PointerString)
+                                                        (StringConstant
+                                                            "\n"
+                                                            (String 1 1 () PointerString)
+                                                        )
+                                                    )
+                                                    (StringConstant
+                                                        "\n"
+                                                        (String 1 1 () PointerString)
+                                                    )
+                                                    Save
+                                                    (String 1 1 () PointerString)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                )
+                                        })
+                                    enum_escape
+                                    []
+                                    [newline]
+                                    Source
+                                    Public
+                                    .false.
+                                    .false.
+                                    []
+                                    ()
+                                    ()
+                                ),
+                            nl:
+                                (Variable
+                                    2
+                                    nl
+                                    [toml_escape]
+                                    Local
+                                    (StringConcat
+                                        (StringConstant
+                                            " "
+                                            (String 1 1 () PointerString)
+                                        )
+                                        (StructInstanceMember
+                                            (Var 2 toml_escape)
+                                            2 1_enum_escape_newline
+                                            (String 1 1 () PointerString)
+                                            (StringConstant
+                                                "\n"
+                                                (String 1 1 () PointerString)
+                                            )
+                                        )
+                                        (String 1 2 () PointerString)
+                                        (StringConstant
+                                            " \n"
+                                            (String 1 2 () PointerString)
+                                        )
+                                    )
+                                    (StringConstant
+                                        " \n"
+                                        (String 1 2 () PointerString)
+                                    )
+                                    Parameter
+                                    (String 1 2 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            tfc:
+                                (Variable
+                                    2
+                                    tfc
+                                    []
+                                    Local
+                                    (IntrinsicElementalFunction
+                                        SelectedCharKind
+                                        [(StringConstant
+                                            "DEFAULT"
+                                            (String 1 7 () PointerString)
+                                        )]
+                                        0
+                                        (Integer 4)
+                                        (IntegerConstant 1 (Integer 4) Decimal)
+                                    )
+                                    (IntegerConstant 1 (Integer 4) Decimal)
+                                    Parameter
+                                    (Integer 4)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            toml_escape:
+                                (Variable
+                                    2
+                                    toml_escape
+                                    []
+                                    Local
+                                    (StructConstructor
+                                        2 enum_escape
+                                        [(())]
+                                        (StructType
+                                            2 enum_escape
+                                        )
+                                        ()
+                                    )
+                                    ()
+                                    Parameter
+                                    (StructType
+                                        2 enum_escape
+                                    )
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                )
+                        })
+                    derived_type1
+                    []
+                    .false.
+                    .false.
+                )
+        })
+    []
+)

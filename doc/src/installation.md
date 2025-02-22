@@ -36,18 +36,32 @@ and selecting `New->Fortran`.
 
 This method is the recommended method if you just want to install LFortran, either yourself or in a package manager (Spack, Conda, Debian, etc.). The source tarball has all the generated files included and has minimal dependencies.
 
+The source tarball of LFortran depends on:
+
+* Python
+* cmake
+* LLVM 10-19
+* zstd-static
+* zlib
+
 First we have to install dependencies, for example using Conda:
 ```bash
-conda create -n lf python cmake llvmdev
+conda create -n lf python cmake llvmdev zstd-static zlib
 conda activate lf
 ```
+
+On a Linux system, we additionally need to install `libunwind`:
+```bash
+conda install libunwind
+```
+
 Then download a tarball from
 [https://lfortran.org/download/](https://lfortran.org/download/),
 e.g.:
 ```bash
-wget https://lfortran.github.io/tarballs/dev/lfortran-0.9.0.tar.gz
-tar xzf lfortran-0.9.0.tar.gz
-cd lfortran-0.9.0
+wget https://github.com/lfortran/lfortran/releases/download/v0.42.0/lfortran-0.42.0.tar.gz
+tar xzf lfortran-0.42.0.tar.gz
+cd lfortran-0.42.0
 ```
 And build:
 ```
@@ -55,7 +69,8 @@ cmake -DWITH_LLVM=yes -DCMAKE_INSTALL_PREFIX=`pwd`/inst .
 make -j8
 make install
 ```
-This will install the `lfortran` into the `inst/bin`.
+This will install `lfortran` into `inst/bin`.  It assumes that c++ and cc are available, which on Linux
+are typically the GNU C++/C compilers.
 
 ## Build From Git
 
@@ -69,24 +84,33 @@ wget --no-check-certificate https://repo.continuum.io/miniconda/Miniconda3-lates
 bash miniconda.sh -b -p $HOME/conda_root
 export PATH="$HOME/conda_root/bin:$PATH"
 ```
-Then prepare the environment:
-```bash
-conda create -n lf -c conda-forge llvmdev=11.0.1 bison=3.4 re2c python cmake make toml
-conda activate lf
-```
 Clone the LFortran git repository:
 ```
 git clone https://github.com/lfortran/lfortran.git
 cd lfortran
 ```
+Then prepare the environment:
+```bash
+conda env create -f environment_linux.yml
+conda activate lf
+```
 Generate files that are needed for the build (this step depends on `re2c`, `bison` and `python`):
 ```bash
 ./build0.sh
 ```
-Now the process is the same as installing from the source tarball. For example to build in Debug mode:
+Now you can use our script `./build1.sh` to build in Debug mode:
+```bash
+./build1.sh
 ```
-cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_LLVM=yes -DCMAKE_INSTALL_PREFIX=`pwd`/inst .
-make -j8
+
+and can use `ninja` to rebuild.
+
+To do a clean rebuild, you can use:
+```bash
+# NOTE: the below git command deletes all untracked files
+git clean -dfx  # reset repository to a clean state by removing artifacts generated during the build process
+./build0.sh
+./build1.sh
 ```
 
 Run tests:
@@ -134,7 +158,7 @@ build1.bat
 If everything compiled, then you can use LFortran as follows:
 ```
 inst\bin\lfortran examples/expr2.f90
-a.out
+expr2.exe
 inst\bin\lfortran
 ```
 And so on.
@@ -170,10 +194,17 @@ sudo nano .bashrc
 export PATH="$HOME/conda_root/bin:$PATH"
 ```
 * Then press ctrl + O (save), Enter (confirm), ctrl + X (exit)
-* After that restart Ubuntu
+* After that restart Ubuntu.
+* You can change the directory to a Windows location using 
+`cd /mnt/[drive letter]/[windows location]`, e.g. `cd mnt/c/Users/name/source/repos/`.
+* Now clone the LFortran git repository.
+```bash
+git clone https://github.com/lfortran/lfortran.git
+cd lfortran
+```
 * Run the following
 ```bash
-conda create -n lf -c conda-forge llvmdev=11.0.1 bison=3.4 re2c python cmake make toml
+conda env create -f environment_linux.yml
 conda init bash
 ```
 * Restart Ubuntu again
@@ -181,30 +212,22 @@ conda init bash
 conda activate lf
 sudo apt update
 sudo apt-get install build-essential
-sudo apt-get install zlib1g-dev
+sudo apt-get install zlib1g-dev libzstd-dev
 sudo apt install clang
-```
-* You can change the directory to a Windows location using `cd /mnt/[drive letter]/[windows location]`.
-* e.g. `cd mnt/c/Users/name/source/repos/`
-
-* Now clone the LFortran git repository
-```bash
-git clone https://github.com/lfortran/lfortran.git
-cd lfortran
 ```
 
 * Run the following commands
 ```bash
 conda activate lf
 ./build0.sh
-cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_LLVM=yes -DCMAKE_INSTALL_PREFIX=`pwd`/inst .\
+cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_LLVM=yes -DCMAKE_INSTALL_PREFIX=`pwd`/inst .
 make -j8
 ```
 
 * If everything compiles, you can use LFortran as follows
 ```bash
 ./src/bin/lfortran ./examples/expr2.f90
-./a.out
+./expr2.out
 ```
 
 * Run an interactive prompt
@@ -222,7 +245,7 @@ ctest
 
 To install the Jupyter kernel, install the following Conda packages also:
 ```
-conda install xeus xtl nlohmann_json cppzmq
+conda install xeus=5.1.0 xeus-zmq=3.0.0 nlohmann_json
 ```
 and enable the kernel by `-DWITH_XEUS=yes` and install into `$CONDA_PREFIX`. For
 example:
@@ -324,6 +347,11 @@ for developing the compiler itself to see where in LFortran the problem is. The
 stacktrace support is turned off by default, to enable it,
 compile LFortran with the `-DWITH_STACKTRACE=yes` cmake option after installing
 the prerequisites on each platform per the instructions below.
+
+### LLVM
+In all platforms having LLVM, stacktraces can be shown with LLVM, so no
+additional prerequisites are required. If LLVM is not available, you can use
+the following instructions, depending on your platform.
 
 ### Ubuntu
 

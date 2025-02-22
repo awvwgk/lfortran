@@ -1,0 +1,87 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            character2:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            char1:
+                                (Variable
+                                    2
+                                    char1
+                                    []
+                                    Local
+                                    (StringConstant
+                                        "Goat"
+                                        (String 1 4 () PointerString)
+                                    )
+                                    (StringConstant
+                                        "Goat"
+                                        (String 1 4 () PointerString)
+                                    )
+                                    Save
+                                    (String 1 4 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            char2:
+                                (Variable
+                                    2
+                                    char2
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (String 1 4 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            char_param:
+                                (Variable
+                                    2
+                                    char_param
+                                    []
+                                    Local
+                                    (StringConstant
+                                        "App"
+                                        (String 1 3 () PointerString)
+                                    )
+                                    (StringConstant
+                                        "App"
+                                        (String 1 3 () PointerString)
+                                    )
+                                    Parameter
+                                    (String 1 3 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                )
+                        })
+                    character2
+                    []
+                    [(Assignment
+                        (Var 2 char2)
+                        (StringConstant
+                            "Balle"
+                            (String 1 5 () PointerString)
+                        )
+                        ()
+                    )]
+                )
+        })
+    []
+)

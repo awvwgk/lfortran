@@ -1,0 +1,383 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            case_07:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            test_case:
+                                (Function
+                                    (SymbolTable
+                                        3
+                                        {
+                                            c:
+                                                (Variable
+                                                    3
+                                                    c
+                                                    []
+                                                    In
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (String 1 1 () PointerString)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            res:
+                                                (Variable
+                                                    3
+                                                    res
+                                                    []
+                                                    ReturnVar
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (String 1 10 () PointerString)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                )
+                                        })
+                                    test_case
+                                    (FunctionType
+                                        [(String 1 1 () PointerString)]
+                                        (String 1 10 () PointerString)
+                                        Source
+                                        Implementation
+                                        ()
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        []
+                                        .false.
+                                    )
+                                    []
+                                    [(Var 3 c)]
+                                    [(If
+                                        (LogicalBinOp
+                                            (StringCompare
+                                                (StringConstant
+                                                    "a"
+                                                    (String 1 1 () PointerString)
+                                                )
+                                                LtE
+                                                (Var 3 c)
+                                                (Logical 4)
+                                                ()
+                                            )
+                                            And
+                                            (StringCompare
+                                                (Var 3 c)
+                                                LtE
+                                                (StringConstant
+                                                    "j"
+                                                    (String 1 1 () PointerString)
+                                                )
+                                                (Logical 4)
+                                                ()
+                                            )
+                                            (Logical 4)
+                                            ()
+                                        )
+                                        [(Assignment
+                                            (Var 3 res)
+                                            (StringConstant
+                                                "a:j"
+                                                (String 1 3 () PointerString)
+                                            )
+                                            ()
+                                        )
+                                        (Print
+                                            (StringConstant
+                                                "one of the first ten letters"
+                                                (String 1 28 () PointerString)
+                                            )
+                                        )]
+                                        [(If
+                                            (LogicalBinOp
+                                                (StringCompare
+                                                    (StringConstant
+                                                        "l"
+                                                        (String 1 1 () PointerString)
+                                                    )
+                                                    LtE
+                                                    (Var 3 c)
+                                                    (Logical 4)
+                                                    ()
+                                                )
+                                                And
+                                                (StringCompare
+                                                    (Var 3 c)
+                                                    LtE
+                                                    (StringConstant
+                                                        "p"
+                                                        (String 1 1 () PointerString)
+                                                    )
+                                                    (Logical 4)
+                                                    ()
+                                                )
+                                                (Logical 4)
+                                                ()
+                                            )
+                                            [(Assignment
+                                                (Var 3 res)
+                                                (StringConstant
+                                                    "l:p"
+                                                    (String 1 3 () PointerString)
+                                                )
+                                                ()
+                                            )
+                                            (Print
+                                                (StringConstant
+                                                    "one of l, m, n, o, p"
+                                                    (String 1 20 () PointerString)
+                                                )
+                                            )]
+                                            [(If
+                                                (StringCompare
+                                                    (Var 3 c)
+                                                    Eq
+                                                    (StringConstant
+                                                        "z"
+                                                        (String 1 1 () PointerString)
+                                                    )
+                                                    (Logical 4)
+                                                    ()
+                                                )
+                                                [(Assignment
+                                                    (Var 3 res)
+                                                    (StringConstant
+                                                        "z"
+                                                        (String 1 1 () PointerString)
+                                                    )
+                                                    ()
+                                                )
+                                                (Print
+                                                    (StringConstant
+                                                        "one of z"
+                                                        (String 1 8 () PointerString)
+                                                    )
+                                                )]
+                                                [(Assignment
+                                                    (Var 3 res)
+                                                    (StringConstant
+                                                        "not found"
+                                                        (String 1 9 () PointerString)
+                                                    )
+                                                    ()
+                                                )
+                                                (Print
+                                                    (StringConstant
+                                                        "other characters, which may not be letters"
+                                                        (String 1 42 () PointerString)
+                                                    )
+                                                )]
+                                            )]
+                                        )]
+                                    )]
+                                    (Var 3 res)
+                                    Public
+                                    .false.
+                                    .false.
+                                    ()
+                                )
+                        })
+                    case_07
+                    []
+                    [(If
+                        (StringCompare
+                            (FunctionCall
+                                2 test_case
+                                ()
+                                [((StringConstant
+                                    "a"
+                                    (String 1 1 () PointerString)
+                                ))]
+                                (String 1 10 () PointerString)
+                                ()
+                                ()
+                            )
+                            NotEq
+                            (StringConstant
+                                "a:j"
+                                (String 1 3 () PointerString)
+                            )
+                            (Logical 4)
+                            ()
+                        )
+                        [(ErrorStop
+                            ()
+                        )]
+                        []
+                    )
+                    (If
+                        (StringCompare
+                            (FunctionCall
+                                2 test_case
+                                ()
+                                [((StringConstant
+                                    "d"
+                                    (String 1 1 () PointerString)
+                                ))]
+                                (String 1 10 () PointerString)
+                                ()
+                                ()
+                            )
+                            NotEq
+                            (StringConstant
+                                "a:j"
+                                (String 1 3 () PointerString)
+                            )
+                            (Logical 4)
+                            ()
+                        )
+                        [(ErrorStop
+                            ()
+                        )]
+                        []
+                    )
+                    (If
+                        (StringCompare
+                            (FunctionCall
+                                2 test_case
+                                ()
+                                [((StringConstant
+                                    "l"
+                                    (String 1 1 () PointerString)
+                                ))]
+                                (String 1 10 () PointerString)
+                                ()
+                                ()
+                            )
+                            NotEq
+                            (StringConstant
+                                "l:p"
+                                (String 1 3 () PointerString)
+                            )
+                            (Logical 4)
+                            ()
+                        )
+                        [(ErrorStop
+                            ()
+                        )]
+                        []
+                    )
+                    (If
+                        (StringCompare
+                            (FunctionCall
+                                2 test_case
+                                ()
+                                [((StringConstant
+                                    "p"
+                                    (String 1 1 () PointerString)
+                                ))]
+                                (String 1 10 () PointerString)
+                                ()
+                                ()
+                            )
+                            NotEq
+                            (StringConstant
+                                "l:p"
+                                (String 1 3 () PointerString)
+                            )
+                            (Logical 4)
+                            ()
+                        )
+                        [(ErrorStop
+                            ()
+                        )]
+                        []
+                    )
+                    (If
+                        (StringCompare
+                            (FunctionCall
+                                2 test_case
+                                ()
+                                [((StringConstant
+                                    "z"
+                                    (String 1 1 () PointerString)
+                                ))]
+                                (String 1 10 () PointerString)
+                                ()
+                                ()
+                            )
+                            NotEq
+                            (StringConstant
+                                "z"
+                                (String 1 1 () PointerString)
+                            )
+                            (Logical 4)
+                            ()
+                        )
+                        [(ErrorStop
+                            ()
+                        )]
+                        []
+                    )
+                    (If
+                        (StringCompare
+                            (FunctionCall
+                                2 test_case
+                                ()
+                                [((StringConstant
+                                    "k"
+                                    (String 1 1 () PointerString)
+                                ))]
+                                (String 1 10 () PointerString)
+                                ()
+                                ()
+                            )
+                            NotEq
+                            (StringConstant
+                                "not found"
+                                (String 1 9 () PointerString)
+                            )
+                            (Logical 4)
+                            ()
+                        )
+                        [(ErrorStop
+                            ()
+                        )]
+                        []
+                    )
+                    (If
+                        (StringCompare
+                            (FunctionCall
+                                2 test_case
+                                ()
+                                [((StringConstant
+                                    "r"
+                                    (String 1 1 () PointerString)
+                                ))]
+                                (String 1 10 () PointerString)
+                                ()
+                                ()
+                            )
+                            NotEq
+                            (StringConstant
+                                "not found"
+                                (String 1 9 () PointerString)
+                            )
+                            (Logical 4)
+                            ()
+                        )
+                        [(ErrorStop
+                            ()
+                        )]
+                        []
+                    )]
+                )
+        })
+    []
+)

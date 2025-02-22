@@ -1,0 +1,90 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            optmod:
+                (Module
+                    (SymbolTable
+                        2
+                        {
+                            optional_argument:
+                                (Function
+                                    (SymbolTable
+                                        3
+                                        {
+                                            name:
+                                                (Variable
+                                                    3
+                                                    name
+                                                    []
+                                                    In
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (String 1 10 () PointerString)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Optional
+                                                    .false.
+                                                    .false.
+                                                )
+                                        })
+                                    optional_argument
+                                    (FunctionType
+                                        [(String 1 10 () PointerString)]
+                                        ()
+                                        Source
+                                        Implementation
+                                        ()
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        []
+                                        .false.
+                                    )
+                                    []
+                                    [(Var 3 name)]
+                                    [(If
+                                        (IntrinsicElementalFunction
+                                            Present
+                                            [(Var 3 name)]
+                                            0
+                                            (Logical 4)
+                                            ()
+                                        )
+                                        [(Print
+                                            (StringConcat
+                                                (StringConstant
+                                                    "Hello "
+                                                    (String 1 6 () PointerString)
+                                                )
+                                                (Var 3 name)
+                                                (String 1 16 () PointerString)
+                                                ()
+                                            )
+                                        )]
+                                        [(Print
+                                            (StringConstant
+                                                "Hello world!"
+                                                (String 1 12 () PointerString)
+                                            )
+                                        )]
+                                    )]
+                                    ()
+                                    Public
+                                    .false.
+                                    .false.
+                                    ()
+                                )
+                        })
+                    optmod
+                    []
+                    .false.
+                    .false.
+                )
+        })
+    []
+)

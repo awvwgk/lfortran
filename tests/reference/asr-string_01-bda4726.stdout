@@ -1,0 +1,52 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            print_01:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            my_name:
+                                (Variable
+                                    2
+                                    my_name
+                                    []
+                                    Local
+                                    (StringConstant
+                                        "Dominic"
+                                        (String 1 7 () PointerString)
+                                    )
+                                    (StringConstant
+                                        "Dominic"
+                                        (String 1 7 () PointerString)
+                                    )
+                                    Save
+                                    (String 1 7 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                )
+                        })
+                    print_01
+                    []
+                    [(Print
+                        (StringFormat
+                            ()
+                            [(StringConstant
+                                "My name is "
+                                (String 1 11 () PointerString)
+                            )
+                            (Var 2 my_name)]
+                            FormatFortran
+                            (String -1 0 () PointerString)
+                            ()
+                        )
+                    )]
+                )
+        })
+    []
+)

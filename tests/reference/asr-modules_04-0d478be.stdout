@@ -1,0 +1,120 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            access_vars:
+                (Module
+                    (SymbolTable
+                        2
+                        {
+                            print_vars:
+                                (Function
+                                    (SymbolTable
+                                        3
+                                        {
+                                            
+                                        })
+                                    print_vars
+                                    (FunctionType
+                                        []
+                                        ()
+                                        Source
+                                        Implementation
+                                        ()
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        []
+                                        .false.
+                                    )
+                                    []
+                                    []
+                                    [(Print
+                                        (StringFormat
+                                            ()
+                                            [(StringConstant
+                                                "priv = "
+                                                (String 1 7 () PointerString)
+                                            )
+                                            (Var 2 priv)]
+                                            FormatFortran
+                                            (String -1 0 () PointerString)
+                                            ()
+                                        )
+                                    )
+                                    (Print
+                                        (StringFormat
+                                            ()
+                                            [(StringConstant
+                                                "publ = "
+                                                (String 1 7 () PointerString)
+                                            )
+                                            (Var 2 publ)]
+                                            FormatFortran
+                                            (String -1 0 () PointerString)
+                                            ()
+                                        )
+                                    )]
+                                    ()
+                                    Public
+                                    .false.
+                                    .false.
+                                    ()
+                                ),
+                            priv:
+                                (Variable
+                                    2
+                                    priv
+                                    []
+                                    Local
+                                    (RealConstant
+                                        1.500000
+                                        (Real 4)
+                                    )
+                                    (RealConstant
+                                        1.500000
+                                        (Real 4)
+                                    )
+                                    Save
+                                    (Real 4)
+                                    ()
+                                    Source
+                                    Private
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            publ:
+                                (Variable
+                                    2
+                                    publ
+                                    []
+                                    Local
+                                    (RealConstant
+                                        2.500000
+                                        (Real 4)
+                                    )
+                                    (RealConstant
+                                        2.500000
+                                        (Real 4)
+                                    )
+                                    Save
+                                    (Real 4)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                )
+                        })
+                    access_vars
+                    []
+                    .false.
+                    .false.
+                )
+        })
+    []
+)

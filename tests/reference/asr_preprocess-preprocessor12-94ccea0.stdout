@@ -1,0 +1,355 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            preprocessor12:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            f90_assert:
+                                (Function
+                                    (SymbolTable
+                                        4
+                                        {
+                                            file:
+                                                (Variable
+                                                    4
+                                                    file
+                                                    []
+                                                    In
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (String 1 -1 () PointerString)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            line:
+                                                (Variable
+                                                    4
+                                                    line
+                                                    []
+                                                    In
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Integer 4)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                )
+                                        })
+                                    f90_assert
+                                    (FunctionType
+                                        [(String 1 -1 () PointerString)
+                                        (Integer 4)]
+                                        ()
+                                        Source
+                                        Implementation
+                                        ()
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        []
+                                        .false.
+                                    )
+                                    []
+                                    [(Var 4 file)
+                                    (Var 4 line)]
+                                    [(Print
+                                        (StringFormat
+                                            ()
+                                            [(StringConcat
+                                                (StringConcat
+                                                    (StringConstant
+                                                        "Assertion failed at "
+                                                        (String 1 20 () PointerString)
+                                                    )
+                                                    (Var 4 file)
+                                                    (String 1 -1 () PointerString)
+                                                    ()
+                                                )
+                                                (StringConstant
+                                                    ":"
+                                                    (String 1 1 () PointerString)
+                                                )
+                                                (String 1 -1 () PointerString)
+                                                ()
+                                            )
+                                            (Var 4 line)]
+                                            FormatFortran
+                                            (String -1 0 () PointerString)
+                                            ()
+                                        )
+                                    )
+                                    (ErrorStop
+                                        ()
+                                    )]
+                                    ()
+                                    Public
+                                    .false.
+                                    .false.
+                                    ()
+                                ),
+                            fn:
+                                (Function
+                                    (SymbolTable
+                                        3
+                                        {
+                                            a:
+                                                (Variable
+                                                    3
+                                                    a
+                                                    []
+                                                    In
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Integer 4)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            b:
+                                                (Variable
+                                                    3
+                                                    b
+                                                    []
+                                                    In
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Integer 4)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            fn:
+                                                (Variable
+                                                    3
+                                                    fn
+                                                    []
+                                                    ReturnVar
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Logical 4)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                )
+                                        })
+                                    fn
+                                    (FunctionType
+                                        [(Integer 4)
+                                        (Integer 4)]
+                                        (Logical 4)
+                                        Source
+                                        Implementation
+                                        ()
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        []
+                                        .false.
+                                    )
+                                    []
+                                    [(Var 3 a)
+                                    (Var 3 b)]
+                                    [(Assignment
+                                        (Var 3 fn)
+                                        (IntegerCompare
+                                            (Var 3 a)
+                                            Lt
+                                            (Var 3 b)
+                                            (Logical 4)
+                                            ()
+                                        )
+                                        ()
+                                    )]
+                                    (Var 3 fn)
+                                    Public
+                                    .false.
+                                    .false.
+                                    ()
+                                )
+                        })
+                    preprocessor12
+                    []
+                    [(If
+                        (LogicalNot
+                            (LogicalConstant
+                                .true.
+                                (Logical 4)
+                            )
+                            (Logical 4)
+                            (LogicalConstant
+                                .false.
+                                (Logical 4)
+                            )
+                        )
+                        [(SubroutineCall
+                            2 f90_assert
+                            ()
+                            [((StringConstant
+                                "tests/preprocessor12.f90"
+                                (String 1 24 () PointerString)
+                            ))
+                            ((IntegerConstant 7 (Integer 4) Decimal))]
+                            ()
+                        )]
+                        []
+                    )
+                    (If
+                        (LogicalNot
+                            (IntegerCompare
+                                (IntegerConstant 5 (Integer 4) Decimal)
+                                Gt
+                                (IntegerConstant 3 (Integer 4) Decimal)
+                                (Logical 4)
+                                (LogicalConstant
+                                    .true.
+                                    (Logical 4)
+                                )
+                            )
+                            (Logical 4)
+                            (LogicalConstant
+                                .false.
+                                (Logical 4)
+                            )
+                        )
+                        [(SubroutineCall
+                            2 f90_assert
+                            ()
+                            [((StringConstant
+                                "tests/preprocessor12.f90"
+                                (String 1 24 () PointerString)
+                            ))
+                            ((IntegerConstant 8 (Integer 4) Decimal))]
+                            ()
+                        )]
+                        []
+                    )
+                    (If
+                        (LogicalNot
+                            (IntegerCompare
+                                (IntegerBinOp
+                                    (IntegerConstant 5 (Integer 4) Decimal)
+                                    Add
+                                    (IntegerBinOp
+                                        (IntegerConstant 3 (Integer 4) Decimal)
+                                        Mul
+                                        (IntegerConstant 8 (Integer 4) Decimal)
+                                        (Integer 4)
+                                        (IntegerConstant 24 (Integer 4) Decimal)
+                                    )
+                                    (Integer 4)
+                                    (IntegerConstant 29 (Integer 4) Decimal)
+                                )
+                                Gt
+                                (IntegerConstant 3 (Integer 4) Decimal)
+                                (Logical 4)
+                                (LogicalConstant
+                                    .true.
+                                    (Logical 4)
+                                )
+                            )
+                            (Logical 4)
+                            (LogicalConstant
+                                .false.
+                                (Logical 4)
+                            )
+                        )
+                        [(SubroutineCall
+                            2 f90_assert
+                            ()
+                            [((StringConstant
+                                "tests/preprocessor12.f90"
+                                (String 1 24 () PointerString)
+                            ))
+                            ((IntegerConstant 9 (Integer 4) Decimal))]
+                            ()
+                        )]
+                        []
+                    )
+                    (If
+                        (LogicalNot
+                            (FunctionCall
+                                2 fn
+                                ()
+                                [((IntegerConstant 3 (Integer 4) Decimal))
+                                ((IntegerConstant 5 (Integer 4) Decimal))]
+                                (Logical 4)
+                                ()
+                                ()
+                            )
+                            (Logical 4)
+                            ()
+                        )
+                        [(SubroutineCall
+                            2 f90_assert
+                            ()
+                            [((StringConstant
+                                "tests/preprocessor12.f90"
+                                (String 1 24 () PointerString)
+                            ))
+                            ((IntegerConstant 11 (Integer 4) Decimal))]
+                            ()
+                        )]
+                        []
+                    )
+                    (If
+                        (LogicalNot
+                            (IntegerCompare
+                                (IntegerConstant 5 (Integer 4) Decimal)
+                                Lt
+                                (IntegerConstant 3 (Integer 4) Decimal)
+                                (Logical 4)
+                                (LogicalConstant
+                                    .false.
+                                    (Logical 4)
+                                )
+                            )
+                            (Logical 4)
+                            (LogicalConstant
+                                .true.
+                                (Logical 4)
+                            )
+                        )
+                        [(SubroutineCall
+                            2 f90_assert
+                            ()
+                            [((StringConstant
+                                "tests/preprocessor12.f90"
+                                (String 1 24 () PointerString)
+                            ))
+                            ((IntegerConstant 13 (Integer 4) Decimal))]
+                            ()
+                        )]
+                        []
+                    )]
+                )
+        })
+    []
+)

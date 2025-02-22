@@ -1,0 +1,40 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            character_01:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            c_null_char:
+                                (Variable
+                                    2
+                                    c_null_char
+                                    []
+                                    Local
+                                    (StringConstant
+                                        "ball"
+                                        (String 1 4 () PointerString)
+                                    )
+                                    (StringConstant
+                                        "b"
+                                        (String 1 1 () PointerString)
+                                    )
+                                    Parameter
+                                    (String 1 1 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                )
+                        })
+                    character_01
+                    []
+                    []
+                )
+        })
+    []
+)

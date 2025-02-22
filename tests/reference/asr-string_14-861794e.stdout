@@ -1,0 +1,410 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            string_14:
+                (Program
+                    (SymbolTable
+                        6
+                        {
+                            
+                        })
+                    string_14
+                    []
+                    []
+                ),
+            string_14_stdlib_string_type:
+                (Module
+                    (SymbolTable
+                        2
+                        {
+                            read_formatted:
+                                (Function
+                                    (SymbolTable
+                                        5
+                                        {
+                                            iomsg:
+                                                (Variable
+                                                    5
+                                                    iomsg
+                                                    []
+                                                    InOut
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (String 1 -1 () PointerString)
+                                                    ()
+                                                    Source
+                                                    Private
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            iostat:
+                                                (Variable
+                                                    5
+                                                    iostat
+                                                    []
+                                                    Out
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Integer 4)
+                                                    ()
+                                                    Source
+                                                    Private
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            iotype:
+                                                (Variable
+                                                    5
+                                                    iotype
+                                                    []
+                                                    In
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (String 1 -1 () PointerString)
+                                                    ()
+                                                    Source
+                                                    Private
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            line:
+                                                (Variable
+                                                    5
+                                                    line
+                                                    []
+                                                    Local
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Allocatable
+                                                        (String 1 -2 () DescriptorString)
+                                                    )
+                                                    ()
+                                                    Source
+                                                    Private
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            string:
+                                                (Variable
+                                                    5
+                                                    string
+                                                    []
+                                                    InOut
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (StructType
+                                                        2 string_type
+                                                    )
+                                                    ()
+                                                    Source
+                                                    Private
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            unit:
+                                                (Variable
+                                                    5
+                                                    unit
+                                                    []
+                                                    In
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Integer 4)
+                                                    ()
+                                                    Source
+                                                    Private
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            v_list:
+                                                (Variable
+                                                    5
+                                                    v_list
+                                                    []
+                                                    In
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Array
+                                                        (Integer 4)
+                                                        [(()
+                                                        ())]
+                                                        DescriptorArray
+                                                    )
+                                                    ()
+                                                    Source
+                                                    Private
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                )
+                                        })
+                                    read_formatted
+                                    (FunctionType
+                                        [(StructType
+                                            2 string_type
+                                        )
+                                        (Integer 4)
+                                        (String 1 -1 () PointerString)
+                                        (Array
+                                            (Integer 4)
+                                            [(()
+                                            ())]
+                                            DescriptorArray
+                                        )
+                                        (Integer 4)
+                                        (String 1 -1 () PointerString)]
+                                        ()
+                                        Source
+                                        Implementation
+                                        ()
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        []
+                                        .false.
+                                    )
+                                    []
+                                    [(Var 5 string)
+                                    (Var 5 unit)
+                                    (Var 5 iotype)
+                                    (Var 5 v_list)
+                                    (Var 5 iostat)
+                                    (Var 5 iomsg)]
+                                    []
+                                    ()
+                                    Private
+                                    .false.
+                                    .false.
+                                    ()
+                                ),
+                            string_type:
+                                (Struct
+                                    (SymbolTable
+                                        3
+                                        {
+                                            raw:
+                                                (Variable
+                                                    3
+                                                    raw
+                                                    []
+                                                    Local
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Allocatable
+                                                        (String 1 -2 () DescriptorString)
+                                                    )
+                                                    ()
+                                                    Source
+                                                    Private
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                )
+                                        })
+                                    string_type
+                                    []
+                                    [raw]
+                                    Source
+                                    Private
+                                    .false.
+                                    .false.
+                                    []
+                                    ()
+                                    ()
+                                ),
+                            write_formatted:
+                                (Function
+                                    (SymbolTable
+                                        4
+                                        {
+                                            iomsg:
+                                                (Variable
+                                                    4
+                                                    iomsg
+                                                    []
+                                                    InOut
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (String 1 -1 () PointerString)
+                                                    ()
+                                                    Source
+                                                    Private
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            iostat:
+                                                (Variable
+                                                    4
+                                                    iostat
+                                                    []
+                                                    Out
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Integer 4)
+                                                    ()
+                                                    Source
+                                                    Private
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            iotype:
+                                                (Variable
+                                                    4
+                                                    iotype
+                                                    []
+                                                    In
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (String 1 -1 () PointerString)
+                                                    ()
+                                                    Source
+                                                    Private
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            string:
+                                                (Variable
+                                                    4
+                                                    string
+                                                    []
+                                                    In
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (StructType
+                                                        2 string_type
+                                                    )
+                                                    ()
+                                                    Source
+                                                    Private
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            unit:
+                                                (Variable
+                                                    4
+                                                    unit
+                                                    []
+                                                    In
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Integer 4)
+                                                    ()
+                                                    Source
+                                                    Private
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            v_list:
+                                                (Variable
+                                                    4
+                                                    v_list
+                                                    []
+                                                    In
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Array
+                                                        (Integer 4)
+                                                        [(()
+                                                        ())]
+                                                        DescriptorArray
+                                                    )
+                                                    ()
+                                                    Source
+                                                    Private
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                )
+                                        })
+                                    write_formatted
+                                    (FunctionType
+                                        [(StructType
+                                            2 string_type
+                                        )
+                                        (Integer 4)
+                                        (String 1 -1 () PointerString)
+                                        (Array
+                                            (Integer 4)
+                                            [(()
+                                            ())]
+                                            DescriptorArray
+                                        )
+                                        (Integer 4)
+                                        (String 1 -1 () PointerString)]
+                                        ()
+                                        Source
+                                        Implementation
+                                        ()
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        []
+                                        .false.
+                                    )
+                                    []
+                                    [(Var 4 string)
+                                    (Var 4 unit)
+                                    (Var 4 iotype)
+                                    (Var 4 v_list)
+                                    (Var 4 iostat)
+                                    (Var 4 iomsg)]
+                                    []
+                                    ()
+                                    Private
+                                    .false.
+                                    .false.
+                                    ()
+                                ),
+                            ~read_formatted:
+                                (CustomOperator
+                                    2
+                                    ~read_formatted
+                                    [2 read_formatted]
+                                    Public
+                                ),
+                            ~write_formatted:
+                                (CustomOperator
+                                    2
+                                    ~write_formatted
+                                    [2 write_formatted]
+                                    Public
+                                )
+                        })
+                    string_14_stdlib_string_type
+                    []
+                    .false.
+                    .false.
+                )
+        })
+    []
+)

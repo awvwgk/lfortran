@@ -1,0 +1,213 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            string_03:
+                (Program
+                    (SymbolTable
+                        3
+                        {
+                            combined:
+                                (Variable
+                                    3
+                                    combined
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (String 1 29 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            intro:
+                                (ExternalSymbol
+                                    3
+                                    intro
+                                    2 intro
+                                    string_03_mod
+                                    []
+                                    intro
+                                    Public
+                                ),
+                            last_name:
+                                (Variable
+                                    3
+                                    last_name
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (String 1 7 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            posit:
+                                (Variable
+                                    3
+                                    posit
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (String 1 5 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            title:
+                                (Variable
+                                    3
+                                    title
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (String 1 4 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            verb:
+                                (Variable
+                                    3
+                                    verb
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (String 1 8 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                )
+                        })
+                    string_03
+                    [string_03_mod]
+                    [(Assignment
+                        (Var 3 verb)
+                        (StringConstant
+                            "learned "
+                            (String 1 8 () PointerString)
+                        )
+                        ()
+                    )
+                    (Assignment
+                        (Var 3 posit)
+                        (StringConstant
+                            "from "
+                            (String 1 5 () PointerString)
+                        )
+                        ()
+                    )
+                    (Assignment
+                        (Var 3 title)
+                        (StringConstant
+                            "the "
+                            (String 1 4 () PointerString)
+                        )
+                        ()
+                    )
+                    (Assignment
+                        (Var 3 last_name)
+                        (StringConstant
+                            "best"
+                            (String 1 4 () PointerString)
+                        )
+                        ()
+                    )
+                    (Assignment
+                        (Var 3 combined)
+                        (StringConcat
+                            (StringConcat
+                                (StringConcat
+                                    (StringConcat
+                                        (StringConcat
+                                            (Var 3 intro)
+                                            (Var 3 verb)
+                                            (String 1 13 () PointerString)
+                                            ()
+                                        )
+                                        (Var 3 posit)
+                                        (String 1 18 () PointerString)
+                                        ()
+                                    )
+                                    (Var 3 title)
+                                    (String 1 22 () PointerString)
+                                    ()
+                                )
+                                (Var 3 last_name)
+                                (String 1 29 () PointerString)
+                                ()
+                            )
+                            (StringConstant
+                                "."
+                                (String 1 1 () PointerString)
+                            )
+                            (String 1 30 () PointerString)
+                            ()
+                        )
+                        ()
+                    )
+                    (Print
+                        (Var 3 combined)
+                    )]
+                ),
+            string_03_mod:
+                (Module
+                    (SymbolTable
+                        2
+                        {
+                            intro:
+                                (Variable
+                                    2
+                                    intro
+                                    []
+                                    Local
+                                    (StringConstant
+                                        "I've "
+                                        (String 1 5 () PointerString)
+                                    )
+                                    (StringConstant
+                                        "I've "
+                                        (String 1 5 () PointerString)
+                                    )
+                                    Parameter
+                                    (String 1 5 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                )
+                        })
+                    string_03_mod
+                    []
+                    .false.
+                    .false.
+                )
+        })
+    []
+)

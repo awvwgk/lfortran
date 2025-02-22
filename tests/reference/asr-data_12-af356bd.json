@@ -1,0 +1,13 @@
+{
+    "basename": "asr-data_12-af356bd",
+    "cmd": "lfortran --show-asr --no-color {infile} -o {outfile}",
+    "infile": "tests/../integration_tests/data_12.f90",
+    "infile_hash": "80710a15ea7a648779263ef05c92564bd17392b333fcaeeef1880a91",
+    "outfile": null,
+    "outfile_hash": null,
+    "stdout": "asr-data_12-af356bd.stdout",
+    "stdout_hash": "5032500d09298639db4667ec726d692dbb0ec6a93f67364afacb066f",
+    "stderr": null,
+    "stderr_hash": null,
+    "returncode": 0
+}

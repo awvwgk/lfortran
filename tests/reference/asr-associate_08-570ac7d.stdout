@@ -1,0 +1,615 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            associate2:
+                (Program
+                    (SymbolTable
+                        7
+                        {
+                            1_t_1_i:
+                                (ExternalSymbol
+                                    7
+                                    1_t_1_i
+                                    3 i
+                                    t_1
+                                    []
+                                    i
+                                    Public
+                                ),
+                            1_t_2_type_2:
+                                (ExternalSymbol
+                                    7
+                                    1_t_2_type_2
+                                    4 type_2
+                                    t_2
+                                    []
+                                    type_2
+                                    Public
+                                ),
+                            sub_1:
+                                (ExternalSymbol
+                                    7
+                                    sub_1
+                                    2 sub_1
+                                    associate_08_module_1
+                                    []
+                                    sub_1
+                                    Public
+                                ),
+                            sub_2:
+                                (ExternalSymbol
+                                    7
+                                    sub_2
+                                    2 sub_2
+                                    associate_08_module_1
+                                    []
+                                    sub_2
+                                    Public
+                                ),
+                            t_1:
+                                (ExternalSymbol
+                                    7
+                                    t_1
+                                    2 t_1
+                                    associate_08_module_1
+                                    []
+                                    t_1
+                                    Public
+                                ),
+                            t_2:
+                                (ExternalSymbol
+                                    7
+                                    t_2
+                                    2 t_2
+                                    associate_08_module_1
+                                    []
+                                    t_2
+                                    Public
+                                ),
+                            type_1:
+                                (Variable
+                                    7
+                                    type_1
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (StructType
+                                        7 t_2
+                                    )
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                )
+                        })
+                    associate2
+                    [associate_08_module_1]
+                    [(SubroutineCall
+                        7 sub_1
+                        ()
+                        [((Var 7 type_1))
+                        ((IntegerConstant 123 (Integer 4) Decimal))]
+                        ()
+                    )
+                    (Print
+                        (StringFormat
+                            ()
+                            [(StructInstanceMember
+                                (ArrayItem
+                                    (StructInstanceMember
+                                        (Var 7 type_1)
+                                        7 1_t_2_type_2
+                                        (Pointer
+                                            (Array
+                                                (StructType
+                                                    7 t_1
+                                                )
+                                                [(()
+                                                ())]
+                                                DescriptorArray
+                                            )
+                                        )
+                                        ()
+                                    )
+                                    [(()
+                                    (IntegerConstant 0 (Integer 4) Decimal)
+                                    ())]
+                                    (StructType
+                                        7 t_1
+                                    )
+                                    ColMajor
+                                    ()
+                                )
+                                7 1_t_1_i
+                                (Integer 4)
+                                ()
+                            )]
+                            FormatFortran
+                            (String -1 0 () PointerString)
+                            ()
+                        )
+                    )]
+                ),
+            associate_08_module_1:
+                (Module
+                    (SymbolTable
+                        2
+                        {
+                            sub_1:
+                                (Function
+                                    (SymbolTable
+                                        5
+                                        {
+                                            1_t_1_i:
+                                                (ExternalSymbol
+                                                    5
+                                                    1_t_1_i
+                                                    3 i
+                                                    t_1
+                                                    []
+                                                    i
+                                                    Public
+                                                ),
+                                            1_t_2_type_2:
+                                                (ExternalSymbol
+                                                    5
+                                                    1_t_2_type_2
+                                                    4 type_2
+                                                    t_2
+                                                    []
+                                                    type_2
+                                                    Public
+                                                ),
+                                            associate_block:
+                                                (AssociateBlock
+                                                    (SymbolTable
+                                                        8
+                                                        {
+                                                            target:
+                                                                (Variable
+                                                                    8
+                                                                    target
+                                                                    []
+                                                                    Local
+                                                                    ()
+                                                                    ()
+                                                                    Default
+                                                                    (Integer 4)
+                                                                    ()
+                                                                    Source
+                                                                    Private
+                                                                    Required
+                                                                    .false.
+                                                                    .false.
+                                                                )
+                                                        })
+                                                    associate_block
+                                                    [(Assignment
+                                                        (Var 8 target)
+                                                        (StructInstanceMember
+                                                            (ArrayItem
+                                                                (StructInstanceMember
+                                                                    (Var 5 type_1)
+                                                                    5 1_t_2_type_2
+                                                                    (Pointer
+                                                                        (Array
+                                                                            (StructType
+                                                                                2 t_1
+                                                                            )
+                                                                            [(()
+                                                                            ())]
+                                                                            DescriptorArray
+                                                                        )
+                                                                    )
+                                                                    ()
+                                                                )
+                                                                [(()
+                                                                (IntegerConstant 0 (Integer 4) Decimal)
+                                                                ())]
+                                                                (StructType
+                                                                    2 t_1
+                                                                )
+                                                                ColMajor
+                                                                ()
+                                                            )
+                                                            5 1_t_1_i
+                                                            (Integer 4)
+                                                            ()
+                                                        )
+                                                        ()
+                                                    )
+                                                    (Assignment
+                                                        (Var 8 target)
+                                                        (Var 5 i)
+                                                        ()
+                                                    )]
+                                                ),
+                                            i:
+                                                (Variable
+                                                    5
+                                                    i
+                                                    []
+                                                    In
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Integer 4)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                ),
+                                            type_1:
+                                                (Variable
+                                                    5
+                                                    type_1
+                                                    []
+                                                    InOut
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (ClassType
+                                                        2 t_2
+                                                    )
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                )
+                                        })
+                                    sub_1
+                                    (FunctionType
+                                        [(ClassType
+                                            2 t_2
+                                        )
+                                        (Integer 4)]
+                                        ()
+                                        Source
+                                        Implementation
+                                        ()
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        []
+                                        .false.
+                                    )
+                                    []
+                                    [(Var 5 type_1)
+                                    (Var 5 i)]
+                                    [(Allocate
+                                        [((StructInstanceMember
+                                            (Var 5 type_1)
+                                            5 1_t_2_type_2
+                                            (Pointer
+                                                (Array
+                                                    (StructType
+                                                        2 t_1
+                                                    )
+                                                    [(()
+                                                    ())]
+                                                    DescriptorArray
+                                                )
+                                            )
+                                            ()
+                                        )
+                                        [((IntegerConstant 1 (Integer 4) Decimal)
+                                        (IntegerConstant 0 (Integer 4) Decimal))]
+                                        ()
+                                        ())]
+                                        ()
+                                        ()
+                                        ()
+                                    )
+                                    (AssociateBlockCall
+                                        5 associate_block
+                                    )]
+                                    ()
+                                    Public
+                                    .false.
+                                    .false.
+                                    ()
+                                ),
+                            sub_2:
+                                (Function
+                                    (SymbolTable
+                                        6
+                                        {
+                                            1_t_2_type_2:
+                                                (ExternalSymbol
+                                                    6
+                                                    1_t_2_type_2
+                                                    4 type_2
+                                                    t_2
+                                                    []
+                                                    type_2
+                                                    Public
+                                                ),
+                                            associate_block:
+                                                (AssociateBlock
+                                                    (SymbolTable
+                                                        9
+                                                        {
+                                                            1_t_1_i:
+                                                                (ExternalSymbol
+                                                                    9
+                                                                    1_t_1_i
+                                                                    3 i
+                                                                    t_1
+                                                                    []
+                                                                    i
+                                                                    Public
+                                                                ),
+                                                            1_t_2_type_2:
+                                                                (ExternalSymbol
+                                                                    9
+                                                                    1_t_2_type_2
+                                                                    4 type_2
+                                                                    t_2
+                                                                    []
+                                                                    type_2
+                                                                    Public
+                                                                ),
+                                                            target:
+                                                                (Variable
+                                                                    9
+                                                                    target
+                                                                    []
+                                                                    Local
+                                                                    ()
+                                                                    ()
+                                                                    Default
+                                                                    (ClassType
+                                                                        2 t_2
+                                                                    )
+                                                                    ()
+                                                                    Source
+                                                                    Private
+                                                                    Required
+                                                                    .false.
+                                                                    .false.
+                                                                )
+                                                        })
+                                                    associate_block
+                                                    [(Assignment
+                                                        (Var 9 target)
+                                                        (ArrayItem
+                                                            (Var 6 progress)
+                                                            [(()
+                                                            (IntegerConstant 0 (Integer 4) Decimal)
+                                                            ())]
+                                                            (ClassType
+                                                                2 t_2
+                                                            )
+                                                            ColMajor
+                                                            ()
+                                                        )
+                                                        ()
+                                                    )
+                                                    (Assignment
+                                                        (StructInstanceMember
+                                                            (ArrayItem
+                                                                (StructInstanceMember
+                                                                    (Var 9 target)
+                                                                    9 1_t_2_type_2
+                                                                    (Pointer
+                                                                        (Array
+                                                                            (StructType
+                                                                                2 t_1
+                                                                            )
+                                                                            [(()
+                                                                            ())]
+                                                                            DescriptorArray
+                                                                        )
+                                                                    )
+                                                                    ()
+                                                                )
+                                                                [(()
+                                                                (IntegerConstant 0 (Integer 4) Decimal)
+                                                                ())]
+                                                                (StructType
+                                                                    2 t_1
+                                                                )
+                                                                ColMajor
+                                                                ()
+                                                            )
+                                                            9 1_t_1_i
+                                                            (Integer 4)
+                                                            ()
+                                                        )
+                                                        (IntegerConstant 345 (Integer 4) Decimal)
+                                                        ()
+                                                    )]
+                                                ),
+                                            progress:
+                                                (Variable
+                                                    6
+                                                    progress
+                                                    []
+                                                    InOut
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Allocatable
+                                                        (Array
+                                                            (ClassType
+                                                                2 t_2
+                                                            )
+                                                            [(()
+                                                            ())]
+                                                            DescriptorArray
+                                                        )
+                                                    )
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                )
+                                        })
+                                    sub_2
+                                    (FunctionType
+                                        [(Allocatable
+                                            (Array
+                                                (ClassType
+                                                    2 t_2
+                                                )
+                                                [(()
+                                                ())]
+                                                DescriptorArray
+                                            )
+                                        )]
+                                        ()
+                                        Source
+                                        Implementation
+                                        ()
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        .false.
+                                        []
+                                        .false.
+                                    )
+                                    []
+                                    [(Var 6 progress)]
+                                    [(Allocate
+                                        [((StructInstanceMember
+                                            (ArrayItem
+                                                (Var 6 progress)
+                                                [(()
+                                                (IntegerConstant 0 (Integer 4) Decimal)
+                                                ())]
+                                                (ClassType
+                                                    2 t_2
+                                                )
+                                                ColMajor
+                                                ()
+                                            )
+                                            6 1_t_2_type_2
+                                            (Pointer
+                                                (Array
+                                                    (StructType
+                                                        2 t_1
+                                                    )
+                                                    [(()
+                                                    ())]
+                                                    DescriptorArray
+                                                )
+                                            )
+                                            ()
+                                        )
+                                        [((IntegerConstant 1 (Integer 4) Decimal)
+                                        (IntegerConstant 0 (Integer 4) Decimal))]
+                                        ()
+                                        ())]
+                                        ()
+                                        ()
+                                        ()
+                                    )
+                                    (AssociateBlockCall
+                                        6 associate_block
+                                    )]
+                                    ()
+                                    Public
+                                    .false.
+                                    .false.
+                                    ()
+                                ),
+                            t_1:
+                                (Struct
+                                    (SymbolTable
+                                        3
+                                        {
+                                            i:
+                                                (Variable
+                                                    3
+                                                    i
+                                                    []
+                                                    Local
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Integer 4)
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                )
+                                        })
+                                    t_1
+                                    []
+                                    [i]
+                                    Source
+                                    Public
+                                    .false.
+                                    .false.
+                                    []
+                                    ()
+                                    ()
+                                ),
+                            t_2:
+                                (Struct
+                                    (SymbolTable
+                                        4
+                                        {
+                                            type_2:
+                                                (Variable
+                                                    4
+                                                    type_2
+                                                    []
+                                                    Local
+                                                    ()
+                                                    ()
+                                                    Default
+                                                    (Pointer
+                                                        (Array
+                                                            (StructType
+                                                                2 t_1
+                                                            )
+                                                            [(()
+                                                            ())]
+                                                            DescriptorArray
+                                                        )
+                                                    )
+                                                    ()
+                                                    Source
+                                                    Public
+                                                    Required
+                                                    .false.
+                                                    .false.
+                                                )
+                                        })
+                                    t_2
+                                    []
+                                    [type_2]
+                                    Source
+                                    Public
+                                    .false.
+                                    .false.
+                                    []
+                                    ()
+                                    ()
+                                )
+                        })
+                    associate_08_module_1
+                    []
+                    .false.
+                    .false.
+                )
+        })
+    []
+)

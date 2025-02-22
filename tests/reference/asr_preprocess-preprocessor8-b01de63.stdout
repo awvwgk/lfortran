@@ -1,0 +1,74 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            preprocessor8:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            
+                        })
+                    preprocessor8
+                    []
+                    [(Print
+                        (StringFormat
+                            ()
+                            [(IntegerConstant 1 (Integer 4) Decimal)]
+                            FormatFortran
+                            (String -1 0 () PointerString)
+                            ()
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "__VERSION__ present"
+                            (String 1 19 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "__LFORTRAN_MAJOR__ present"
+                            (String 1 26 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "__LFORTRAN_MINOR__ present"
+                            (String 1 26 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "__LFORTRAN_PATCHLEVEL__ present"
+                            (String 1 31 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "tests/preprocessor8.f90"
+                            (String 1 23 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringFormat
+                            ()
+                            [(IntegerConstant 19 (Integer 4) Decimal)]
+                            FormatFortran
+                            (String -1 0 () PointerString)
+                            ()
+                        )
+                    )
+                    (Print
+                        (StringFormat
+                            ()
+                            [(IntegerConstant 20 (Integer 4) Decimal)]
+                            FormatFortran
+                            (String -1 0 () PointerString)
+                            ()
+                        )
+                    )]
+                )
+        })
+    []
+)

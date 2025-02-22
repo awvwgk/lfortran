@@ -1,13 +1,14 @@
 # LFortran
 
 src/bin/lfortran
-src/bin/cpptranslate
 src/bin/parse
 src/bin/parse2
+src/bin/parse3
 src/lfortran/parser/parser.output
 tests/output
 src/lfortran/tests/test_asm
 src/lfortran/tests/test_ast
+src/lfortran/tests/test_asr
 src/lfortran/tests/test_llvm
 src/lfortran/tests/test_parse
 src/lfortran/tests/test_pickle
@@ -43,10 +44,16 @@ CPackConfig.cmake
 CPackSourceConfig.cmake
 _CPack_Packages
 /CMakeSettings.json
+.cmake
+
+## Pixi
+.pixi/
 
 ## libraries
 *.a
+*.a.*
 *.so
+*.so.*
 *.s
 *.ll
 *.dylib
@@ -71,10 +78,27 @@ src/lfortran/ast.h
 src/lfortran/asr.h
 src/libasr/asr.h
 src/libasr/ast.h
+src/libasr/asr_base_visitor.h
+src/libasr/asr_deserialization_visitor.h
+src/libasr/asr_expr_base_replacer_visitor.h
+src/libasr/asr_expr_call_replacer_visitor.h
+src/libasr/asr_expr_stmt_duplicator_visitor.h
+src/libasr/asr_expr_type_visitor.h
+src/libasr/asr_expr_value_visitor.h
+src/libasr/asr_json_visitor.h
+src/libasr/asr_lookup_name_visitor.h
+src/libasr/asr_pass_walk_visitor.h
+src/libasr/asr_pickle_visitor.h
+src/libasr/asr_serialization_visitor.h
+src/libasr/asr_stmt_base_replacer_visitor.h
+src/libasr/asr_tree_visitor.h
+src/libasr/asr_walk_visitor.h
 src/libasr/wasm_visitor.h
+src/libasr/pass/intrinsic_function_registry_util.h
 src/lfortran/config.h
 src/libasr/config.h
 share/jupyter/kernels/fortran/kernel.json
+share/jupyter/kernels/fortran/logo-svg.svg
 src/runtime/*.o.empty.c
 src/runtime/tests/test_abs
 src/runtime/tests/test_bit
@@ -90,6 +114,19 @@ src/runtime/tests/test_tan
 integration_tests/test-*
 input.txt
 input
+inst/
+src/libasr/libasr.a.*
+*.html
+*.o.tmp.c
+*.o.tmp.cpp
+*.tmp.f90
+*.clj
+pass_*.f90
+pass_json_*.json
+pass_tree_*.txt
+*_lines.txt
+*_ldd.txt
+*_lines.dat.txt
 
 ### https://raw.github.com/github/gitignore/218a941be92679ce67d0484547e3e142b2f5f6f0/Global/macOS.gitignore
 
@@ -161,6 +198,7 @@ MANIFEST
 ## Editor Files
 .vscode/
 .vs/
+*~
 
 ## Build Files
 */bin/lfortran
@@ -197,4 +235,6 @@ build.ninja
 /compile_commands.json
 
 ## Docs
+doc/man/lfortran.1
 !doc/src/javascripts/*.js
+!pass_array_by_data_*.f90

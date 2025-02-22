@@ -1,0 +1,321 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            character_parameter_padding_trimming:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            p_pad:
+                                (Variable
+                                    2
+                                    p_pad
+                                    []
+                                    Local
+                                    (ArrayConstant
+                                        12
+                                        ["2   ", "2   ", "2   "]
+                                        (Array
+                                            (String 1 4 () PointerString)
+                                            [((IntegerConstant 1 (Integer 4) Decimal)
+                                            (IntegerConstant 3 (Integer 4) Decimal))]
+                                            FixedSizeArray
+                                        )
+                                        ColMajor
+                                    )
+                                    (ArrayConstant
+                                        12
+                                        ["2   ", "2   ", "2   "]
+                                        (Array
+                                            (String 1 4 () PointerString)
+                                            [((IntegerConstant 1 (Integer 4) Decimal)
+                                            (IntegerConstant 3 (Integer 4) Decimal))]
+                                            FixedSizeArray
+                                        )
+                                        ColMajor
+                                    )
+                                    Parameter
+                                    (Array
+                                        (String 1 4 () PointerString)
+                                        [((IntegerConstant 1 (Integer 4) Decimal)
+                                        (IntegerConstant 3 (Integer 4) Decimal))]
+                                        FixedSizeArray
+                                    )
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            p_trim:
+                                (Variable
+                                    2
+                                    p_trim
+                                    []
+                                    Local
+                                    (ArrayConstant
+                                        3
+                                        ["2", "2", "2"]
+                                        (Array
+                                            (String 1 1 () PointerString)
+                                            [((IntegerConstant 1 (Integer 4) Decimal)
+                                            (IntegerConstant 3 (Integer 4) Decimal))]
+                                            FixedSizeArray
+                                        )
+                                        ColMajor
+                                    )
+                                    (ArrayConstant
+                                        3
+                                        ["2", "2", "2"]
+                                        (Array
+                                            (String 1 1 () PointerString)
+                                            [((IntegerConstant 1 (Integer 4) Decimal)
+                                            (IntegerConstant 3 (Integer 4) Decimal))]
+                                            FixedSizeArray
+                                        )
+                                        ColMajor
+                                    )
+                                    Parameter
+                                    (Array
+                                        (String 1 1 () PointerString)
+                                        [((IntegerConstant 1 (Integer 4) Decimal)
+                                        (IntegerConstant 3 (Integer 4) Decimal))]
+                                        FixedSizeArray
+                                    )
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            x_pad:
+                                (Variable
+                                    2
+                                    x_pad
+                                    []
+                                    Local
+                                    (StringConstant
+                                        "apple"
+                                        (String 1 5 () PointerString)
+                                    )
+                                    (StringConstant
+                                        "apple   "
+                                        (String 1 8 () PointerString)
+                                    )
+                                    Parameter
+                                    (String 1 8 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            x_trim:
+                                (Variable
+                                    2
+                                    x_trim
+                                    []
+                                    Local
+                                    (StringConstant
+                                        "apple"
+                                        (String 1 5 () PointerString)
+                                    )
+                                    (StringConstant
+                                        "ap"
+                                        (String 1 2 () PointerString)
+                                    )
+                                    Parameter
+                                    (String 1 2 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            y_pad:
+                                (Variable
+                                    2
+                                    y_pad
+                                    []
+                                    Local
+                                    (StringConstant
+                                        "Ball"
+                                        (String 1 4 () PointerString)
+                                    )
+                                    (StringConstant
+                                        "Ball      "
+                                        (String 1 10 () PointerString)
+                                    )
+                                    Parameter
+                                    (String 1 10 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            y_trim:
+                                (Variable
+                                    2
+                                    y_trim
+                                    []
+                                    Local
+                                    (StringConstant
+                                        "Ball"
+                                        (String 1 4 () PointerString)
+                                    )
+                                    (StringConstant
+                                        "Bal"
+                                        (String 1 3 () PointerString)
+                                    )
+                                    Parameter
+                                    (String 1 3 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            z_pad:
+                                (Variable
+                                    2
+                                    z_pad
+                                    [x_pad
+                                    y_pad]
+                                    Local
+                                    (StringConcat
+                                        (StringConcat
+                                            (Var 2 x_pad)
+                                            (Var 2 y_pad)
+                                            (String 1 18 () PointerString)
+                                            (StringConstant
+                                                "apple   Ball      "
+                                                (String 1 18 () PointerString)
+                                            )
+                                        )
+                                        (Var 2 x_pad)
+                                        (String 1 26 () PointerString)
+                                        (StringConstant
+                                            "apple   Ball      apple   "
+                                            (String 1 26 () PointerString)
+                                        )
+                                    )
+                                    (StringConstant
+                                        "apple   Ball      apple       "
+                                        (String 1 30 () PointerString)
+                                    )
+                                    Parameter
+                                    (String 1 30 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            z_trim:
+                                (Variable
+                                    2
+                                    z_trim
+                                    [x_trim
+                                    y_trim]
+                                    Local
+                                    (StringConcat
+                                        (StringConcat
+                                            (Var 2 x_trim)
+                                            (Var 2 y_trim)
+                                            (String 1 5 () PointerString)
+                                            (StringConstant
+                                                "apBal"
+                                                (String 1 5 () PointerString)
+                                            )
+                                        )
+                                        (Var 2 x_trim)
+                                        (String 1 7 () PointerString)
+                                        (StringConstant
+                                            "apBalap"
+                                            (String 1 7 () PointerString)
+                                        )
+                                    )
+                                    (StringConstant
+                                        "apBal"
+                                        (String 1 5 () PointerString)
+                                    )
+                                    Parameter
+                                    (String 1 5 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                )
+                        })
+                    character_parameter_padding_trimming
+                    []
+                    [(Print
+                        (StringConcat
+                            (StringConcat
+                                (StringConstant
+                                    "|"
+                                    (String 1 1 () PointerString)
+                                )
+                                (Var 2 x_pad)
+                                (String 1 9 () PointerString)
+                                (StringConstant
+                                    "|apple   "
+                                    (String 1 9 () PointerString)
+                                )
+                            )
+                            (StringConstant
+                                "|"
+                                (String 1 1 () PointerString)
+                            )
+                            (String 1 10 () PointerString)
+                            (StringConstant
+                                "|apple   |"
+                                (String 1 10 () PointerString)
+                            )
+                        )
+                    )
+                    (Print
+                        (Var 2 y_pad)
+                    )
+                    (Print
+                        (StringFormat
+                            ()
+                            [(Var 2 p_pad)]
+                            FormatFortran
+                            (String -1 0 () PointerString)
+                            ()
+                        )
+                    )
+                    (Print
+                        (Var 2 x_trim)
+                    )
+                    (Print
+                        (Var 2 y_trim)
+                    )
+                    (Print
+                        (Var 2 z_trim)
+                    )
+                    (Print
+                        (StringFormat
+                            ()
+                            [(Var 2 p_trim)]
+                            FormatFortran
+                            (String -1 0 () PointerString)
+                            ()
+                        )
+                    )]
+                )
+        })
+    []
+)

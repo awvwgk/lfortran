@@ -1,0 +1,106 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            test_get_command_argument:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            arg:
+                                (Variable
+                                    2
+                                    arg
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (String 1 32 () PointerString)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            count:
+                                (Variable
+                                    2
+                                    count
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (Integer 4)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            i:
+                                (Variable
+                                    2
+                                    i
+                                    []
+                                    Local
+                                    (IntegerConstant 0 (Integer 4) Decimal)
+                                    (IntegerConstant 0 (Integer 4) Decimal)
+                                    Save
+                                    (Integer 4)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                )
+                        })
+                    test_get_command_argument
+                    []
+                    [(Assignment
+                        (Var 2 count)
+                        (IntrinsicElementalFunction
+                            CommandArgumentCount
+                            []
+                            0
+                            (Integer 4)
+                            ()
+                        )
+                        ()
+                    )
+                    (Print
+                        (StringFormat
+                            ()
+                            [(StringConstant
+                                "count: "
+                                (String 1 7 () PointerString)
+                            )
+                            (Var 2 count)]
+                            FormatFortran
+                            (String -1 0 () PointerString)
+                            ()
+                        )
+                    )
+                    (IntrinsicImpureSubroutine
+                        GetCommandArgument
+                        [(Var 2 i)
+                        (Var 2 arg)]
+                        0
+                    )
+                    (Print
+                        (IntrinsicElementalFunction
+                            StringTrim
+                            [(Var 2 arg)]
+                            0
+                            (String 1 32 () PointerString)
+                            ()
+                        )
+                    )]
+                )
+        })
+    []
+)

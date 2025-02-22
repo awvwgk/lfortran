@@ -1,0 +1,13 @@
+{
+    "basename": "pass_class_constructor-derived_types_20-740d6ce",
+    "cmd": "lfortran --pass=class_constructor --show-asr --no-color {infile} -o {outfile}",
+    "infile": "tests/../integration_tests/derived_types_20.f90",
+    "infile_hash": "3e20d644b6494436542a85b2562820f202b087f231e662253e77af6b",
+    "outfile": null,
+    "outfile_hash": null,
+    "stdout": "pass_class_constructor-derived_types_20-740d6ce.stdout",
+    "stdout_hash": "8933658cf8a18135e384ec026391ea9ce4cf43edac41b836b7501290",
+    "stderr": null,
+    "stderr_hash": null,
+    "returncode": 0
+}

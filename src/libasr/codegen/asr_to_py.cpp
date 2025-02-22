@@ -1,5 +1,3 @@
-#include <iostream>
-#include <memory>
 #include <libasr/asr.h>
 #include <libasr/containers.h>
 #include <libasr/exception.h>
@@ -44,7 +42,7 @@
     _X(ASR::Complex_t, 8, "double _Complex" ) \
     \
     _X(ASR::Logical_t, 1,   "_Bool" ) \
-    _X(ASR::Character_t, 1, "char" )
+    _X(ASR::String_t, 1, "char" )
 
 
 /*
@@ -86,7 +84,7 @@
     _X(ASR::Complex_t, "c_long_double_complex", "long double _Complex" ) \
     \
     _X(ASR::Logical_t, "c_bool",          "_Bool" ) \
-    _X(ASR::Character_t, "c_char",        "char" )
+    _X(ASR::String_t, "c_char",        "char" )
  */
 
 namespace LCompilers {
@@ -138,7 +136,7 @@ public:
         // knock off ".h" from the c header filename
         pxdf.erase(--pxdf.end());
         pxdf.erase(--pxdf.end());
-        // this is an unfortuante hack, but we have to add something so that the pxd and pyx filenames
+        // this is an unfortunate hack, but we have to add something so that the pxd and pyx filenames
         // are different (beyond just their extensions). If we don't, the cython emits a warning.
         // TODO we definitely need to change this somehow because right now this "append _pxd" trick
         // exists in two places (bin/lfortran.cpp, and here), which could easily cause breakage.
@@ -177,21 +175,23 @@ public:
 
             // Generate a sequence of if-blocks to determine the type, using the type list defined above
             #define _X(ASR_TYPE, KIND, CTYPE_STR) \
-            if ( is_a<ASR_TYPE>(*arg->m_type) && (down_cast<ASR_TYPE>(arg->m_type)->m_kind == KIND) ) { \
+            if ( is_a<ASR_TYPE>(*ASRUtils::type_get_past_array(arg->m_type)) && \
+                (down_cast<ASR_TYPE>(arg->m_type)->m_kind == KIND) ) { \
+                ASR::dimension_t* m_dims = nullptr; \
+                size_t n_dims = ASRUtils::extract_dimensions_from_ttype(arg->m_type, m_dims); \
                 this_arg_info.asr_obj = arg;                                                       \
                 this_arg_info.ctype   = CTYPE_STR;                                                 \
-                auto tmp_arg          = down_cast<ASR_TYPE>(arg->m_type);                          \
-                this_arg_info.ndims   = tmp_arg->n_dims;                                           \
+                this_arg_info.ndims   = n_dims;                                                    \
                 for (int j = 0; j < this_arg_info.ndims; j++) {                                    \
-                    auto lbound_ptr = tmp_arg->m_dims[j].m_start;                                  \
+                    auto lbound_ptr = m_dims[j].m_start;                                           \
                     if (!is_a<ASR::IntegerConstant_t>(*lbound_ptr)) {                              \
                         throw CodeGenError(errmsg1);                                               \
                     }                                                                              \
                     if (down_cast<ASR::IntegerConstant_t>(lbound_ptr)->m_n != 1) {                 \
                         throw CodeGenError(errmsg1);                                               \
                     }                                                                              \
-                    if (is_a<ASR::Var_t>(*tmp_arg->m_dims[j].m_length)) {                             \
-                        ASR::Variable_t *dimvar = ASRUtils::EXPR2VAR(tmp_arg->m_dims[j].m_length);    \
+                    if (is_a<ASR::Var_t>(*m_dims[j].m_length)) {                                   \
+                        ASR::Variable_t *dimvar = ASRUtils::EXPR2VAR(m_dims[j].m_length);          \
                         this_arg_info.ubound_varnames.push_back(dimvar->m_name);                   \
                     } else if (!is_a<ASR::IntegerConstant_t>(*lbound_ptr)) {                       \
                         throw CodeGenError(errmsg2);                                               \
@@ -356,7 +356,7 @@ public:
         pyx_tmp += "cimport " + pxdf + " \n\n";
 
         // Process loose procedures first
-        for (auto &item : x.m_global_scope->get_scope()) {
+        for (auto &item : x.m_symtab->get_scope()) {
             if (is_a<ASR::Function_t>(*item.second)) {
                 visit_symbol(*item.second);
 
@@ -370,10 +370,10 @@ public:
         std::vector<std::string> build_order
             = ASRUtils::determine_module_dependencies(x);
         for (auto &item : build_order) {
-            LCOMPILERS_ASSERT(x.m_global_scope->get_scope().find(item)
-                    != x.m_global_scope->get_scope().end());
+            LCOMPILERS_ASSERT(x.m_symtab->get_scope().find(item)
+                    != x.m_symtab->get_scope().end());
             if (!startswith(item, "lfortran_intrinsic")) {
-                ASR::symbol_t *mod = x.m_global_scope->get_symbol(item);
+                ASR::symbol_t *mod = x.m_symtab->get_symbol(item);
                 visit_symbol(*mod);
 
                 chdr_tmp += chdr;
@@ -420,11 +420,12 @@ public:
     void visit_Function(const ASR::Function_t &x) {
 
         // Only process bind(c) subprograms for now
-        if (x.m_abi != ASR::abiType::BindC) return;
+        if (ASRUtils::get_FunctionType(x)->m_abi != ASR::abiType::BindC) return;
 
         // Return type and function name
-        bool bindc_name_not_given = x.m_bindc_name == NULL || !strcmp("",x.m_bindc_name);
-        std::string effective_name = bindc_name_not_given ? x.m_name : x.m_bindc_name;
+        bool bindc_name_not_given = ASRUtils::get_FunctionType(x)->m_bindc_name == NULL ||
+                                    !strcmp("", ASRUtils::get_FunctionType(x)->m_bindc_name);
+        std::string effective_name = bindc_name_not_given ? x.m_name : ASRUtils::get_FunctionType(x)->m_bindc_name;
 
         ASR::Variable_t *rtnvar = ASRUtils::EXPR2VAR(x.m_return_var);
         std::string rtnvar_type;

@@ -1,0 +1,318 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            logical3:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            a:
+                                (Variable
+                                    2
+                                    a
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (Logical 4)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            b:
+                                (Variable
+                                    2
+                                    b
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (Logical 4)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                )
+                        })
+                    logical3
+                    []
+                    [(Assignment
+                        (Var 2 a)
+                        (LogicalConstant
+                            .true.
+                            (Logical 4)
+                        )
+                        ()
+                    )
+                    (Assignment
+                        (Var 2 b)
+                        (LogicalConstant
+                            .false.
+                            (Logical 4)
+                        )
+                        ()
+                    )
+                    (If
+                        (LogicalBinOp
+                            (Var 2 a)
+                            And
+                            (Var 2 b)
+                            (Logical 4)
+                            ()
+                        )
+                        [(Print
+                            (StringConstant
+                                "Line 1 - Condition is true"
+                                (String 1 26 () PointerString)
+                            )
+                        )
+                        (ErrorStop
+                            ()
+                        )]
+                        [(Print
+                            (StringConstant
+                                "Line 1 - Condition is false"
+                                (String 1 27 () PointerString)
+                            )
+                        )]
+                    )
+                    (If
+                        (LogicalBinOp
+                            (Var 2 a)
+                            Or
+                            (Var 2 b)
+                            (Logical 4)
+                            ()
+                        )
+                        [(Print
+                            (StringConstant
+                                "Line 2 - Condition is true"
+                                (String 1 26 () PointerString)
+                            )
+                        )]
+                        [(Print
+                            (StringConstant
+                                "Line 2 - Condition is false"
+                                (String 1 27 () PointerString)
+                            )
+                        )
+                        (ErrorStop
+                            ()
+                        )]
+                    )
+                    (If
+                        (LogicalBinOp
+                            (Var 2 a)
+                            Xor
+                            (Var 2 b)
+                            (Logical 4)
+                            ()
+                        )
+                        [(Print
+                            (StringConstant
+                                "Line xor - Condition is true"
+                                (String 1 28 () PointerString)
+                            )
+                        )]
+                        [(Print
+                            (StringConstant
+                                "Line xor - Condition is false"
+                                (String 1 29 () PointerString)
+                            )
+                        )
+                        (ErrorStop
+                            ()
+                        )]
+                    )
+                    (Assignment
+                        (Var 2 a)
+                        (LogicalConstant
+                            .false.
+                            (Logical 4)
+                        )
+                        ()
+                    )
+                    (Assignment
+                        (Var 2 b)
+                        (LogicalConstant
+                            .true.
+                            (Logical 4)
+                        )
+                        ()
+                    )
+                    (If
+                        (LogicalNot
+                            (LogicalBinOp
+                                (Var 2 a)
+                                And
+                                (Var 2 b)
+                                (Logical 4)
+                                ()
+                            )
+                            (Logical 4)
+                            ()
+                        )
+                        [(Print
+                            (StringConstant
+                                "Line 3 - Condition is true"
+                                (String 1 26 () PointerString)
+                            )
+                        )]
+                        [(Print
+                            (StringConstant
+                                "Line 3 - Condition is false"
+                                (String 1 27 () PointerString)
+                            )
+                        )
+                        (ErrorStop
+                            ()
+                        )]
+                    )
+                    (If
+                        (LogicalBinOp
+                            (Var 2 b)
+                            NEqv
+                            (Var 2 a)
+                            (Logical 4)
+                            ()
+                        )
+                        [(Print
+                            (StringConstant
+                                "Line 4 - Condition is true"
+                                (String 1 26 () PointerString)
+                            )
+                        )]
+                        [(Print
+                            (StringConstant
+                                "Line 4 - Condition is false"
+                                (String 1 27 () PointerString)
+                            )
+                        )
+                        (ErrorStop
+                            ()
+                        )]
+                    )
+                    (If
+                        (LogicalBinOp
+                            (Var 2 b)
+                            Eqv
+                            (Var 2 a)
+                            (Logical 4)
+                            ()
+                        )
+                        [(Print
+                            (StringConstant
+                                "Line 5 - Condition is true"
+                                (String 1 26 () PointerString)
+                            )
+                        )
+                        (ErrorStop
+                            ()
+                        )]
+                        [(Print
+                            (StringConstant
+                                "Line 5 - Condition is false"
+                                (String 1 27 () PointerString)
+                            )
+                        )]
+                    )
+                    (Assignment
+                        (Var 2 a)
+                        (LogicalConstant
+                            .true.
+                            (Logical 4)
+                        )
+                        ()
+                    )
+                    (Assignment
+                        (Var 2 b)
+                        (LogicalConstant
+                            .true.
+                            (Logical 4)
+                        )
+                        ()
+                    )
+                    (If
+                        (LogicalBinOp
+                            (Var 2 a)
+                            And
+                            (Var 2 b)
+                            (Logical 4)
+                            ()
+                        )
+                        [(Print
+                            (StringConstant
+                                "Line 6 - Condition is true"
+                                (String 1 26 () PointerString)
+                            )
+                        )]
+                        [(Print
+                            (StringConstant
+                                "Line 6 - Condition is false"
+                                (String 1 27 () PointerString)
+                            )
+                        )
+                        (ErrorStop
+                            ()
+                        )]
+                    )
+                    (If
+                        (LogicalBinOp
+                            (Var 2 a)
+                            Or
+                            (Var 2 b)
+                            (Logical 4)
+                            ()
+                        )
+                        [(Print
+                            (StringConstant
+                                "Line 7 - Condition is true"
+                                (String 1 26 () PointerString)
+                            )
+                        )]
+                        [(Print
+                            (StringConstant
+                                "Line 7 - Condition is false"
+                                (String 1 27 () PointerString)
+                            )
+                        )
+                        (ErrorStop
+                            ()
+                        )]
+                    )
+                    (If
+                        (LogicalBinOp
+                            (Var 2 a)
+                            Xor
+                            (Var 2 b)
+                            (Logical 4)
+                            ()
+                        )
+                        [(Print
+                            (StringConstant
+                                "Line 8 xor - Condition is true"
+                                (String 1 30 () PointerString)
+                            )
+                        )
+                        (ErrorStop
+                            ()
+                        )]
+                        [(Print
+                            (StringConstant
+                                "Line 8 xor - Condition is false"
+                                (String 1 31 () PointerString)
+                            )
+                        )]
+                    )]
+                )
+        })
+    []
+)

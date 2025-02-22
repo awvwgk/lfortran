@@ -1,0 +1,183 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            case_01:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            i:
+                                (Variable
+                                    2
+                                    i
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (Integer 4)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                ),
+                            out:
+                                (Variable
+                                    2
+                                    out
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (Integer 4)
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                )
+                        })
+                    case_01
+                    []
+                    [(Assignment
+                        (Var 2 i)
+                        (IntegerConstant 4 (Integer 4) Decimal)
+                        ()
+                    )
+                    (Select
+                        (Var 2 i)
+                        [(CaseStmt
+                            [(IntegerConstant 1 (Integer 4) Decimal)]
+                            [(Assignment
+                                (Var 2 out)
+                                (IntegerConstant 10 (Integer 4) Decimal)
+                                ()
+                            )
+                            (Print
+                                (StringConstant
+                                    "1"
+                                    (String 1 1 () PointerString)
+                                )
+                            )]
+                            .false.
+                        )
+                        (CaseStmt
+                            [(IntegerConstant 2 (Integer 4) Decimal)]
+                            [(Assignment
+                                (Var 2 out)
+                                (IntegerConstant 20 (Integer 4) Decimal)
+                                ()
+                            )
+                            (Print
+                                (StringConstant
+                                    "2"
+                                    (String 1 1 () PointerString)
+                                )
+                            )]
+                            .false.
+                        )
+                        (CaseStmt
+                            [(IntegerConstant 3 (Integer 4) Decimal)]
+                            [(Assignment
+                                (Var 2 out)
+                                (IntegerConstant 30 (Integer 4) Decimal)
+                                ()
+                            )
+                            (Print
+                                (StringConstant
+                                    "3"
+                                    (String 1 1 () PointerString)
+                                )
+                            )]
+                            .false.
+                        )
+                        (CaseStmt
+                            [(IntegerConstant 4 (Integer 4) Decimal)]
+                            [(Assignment
+                                (Var 2 out)
+                                (IntegerConstant 40 (Integer 4) Decimal)
+                                ()
+                            )
+                            (Print
+                                (StringConstant
+                                    "4"
+                                    (String 1 1 () PointerString)
+                                )
+                            )]
+                            .false.
+                        )]
+                        []
+                        .false.
+                    )
+                    (If
+                        (IntegerCompare
+                            (Var 2 out)
+                            NotEq
+                            (IntegerConstant 40 (Integer 4) Decimal)
+                            (Logical 4)
+                            ()
+                        )
+                        [(ErrorStop
+                            ()
+                        )]
+                        []
+                    )
+                    (Select
+                        (Var 2 i)
+                        [(CaseStmt
+                            [(IntegerConstant 1 (Integer 4) Decimal)]
+                            [(Assignment
+                                (Var 2 out)
+                                (IntegerConstant 11 (Integer 4) Decimal)
+                                ()
+                            )
+                            (Print
+                                (StringConstant
+                                    "1"
+                                    (String 1 1 () PointerString)
+                                )
+                            )]
+                            .false.
+                        )
+                        (CaseStmt
+                            [(IntegerConstant 2 (Integer 4) Decimal)
+                            (IntegerConstant 3 (Integer 4) Decimal)
+                            (IntegerConstant 4 (Integer 4) Decimal)]
+                            [(Assignment
+                                (Var 2 out)
+                                (IntegerConstant 22 (Integer 4) Decimal)
+                                ()
+                            )
+                            (Print
+                                (StringConstant
+                                    "2,3,4"
+                                    (String 1 5 () PointerString)
+                                )
+                            )]
+                            .false.
+                        )]
+                        []
+                        .false.
+                    )
+                    (If
+                        (IntegerCompare
+                            (Var 2 out)
+                            NotEq
+                            (IntegerConstant 22 (Integer 4) Decimal)
+                            (Logical 4)
+                            ()
+                        )
+                        [(ErrorStop
+                            ()
+                        )]
+                        []
+                    )]
+                )
+        })
+    []
+)
