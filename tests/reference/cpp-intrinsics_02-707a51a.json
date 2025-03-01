@@ -1,0 +1,13 @@
+{
+    "basename": "cpp-intrinsics_02-707a51a",
+    "cmd": "lfortran --no-color --show-cpp {infile}",
+    "infile": "tests/../integration_tests/intrinsics_02.f90",
+    "infile_hash": "9042eb55a868aba778eaccfaba75217700b9f99f157df367ffc005fd",
+    "outfile": null,
+    "outfile_hash": null,
+    "stdout": "cpp-intrinsics_02-707a51a.stdout",
+    "stdout_hash": "a1f83c72eea53eb896f15485945d9abdb352500563305d14f1a9c594",
+    "stderr": null,
+    "stderr_hash": null,
+    "returncode": 0
+}

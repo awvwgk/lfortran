@@ -6,8 +6,6 @@
 #include <libasr/pass/loop_vectorise.h>
 #include <libasr/pass/pass_utils.h>
 
-#include <vector>
-#include <utility>
 #include <cmath>
 
 
@@ -129,6 +127,13 @@ public:
         ASR::expr_t* loop_start = x.m_head.m_start;
         ASR::expr_t* loop_end = x.m_head.m_end;
         ASR::expr_t* loop_inc = x.m_head.m_increment;
+        LCOMPILERS_ASSERT(loop_start);
+        LCOMPILERS_ASSERT(loop_end);
+        if (!loop_inc) {
+            int a_kind = ASRUtils::extract_kind_from_ttype_t(ASRUtils::expr_type(x.m_head.m_v));
+            ASR::ttype_t *type = ASRUtils::TYPE(ASR::make_Integer_t(al, x.base.base.loc, a_kind));
+            loop_inc = ASRUtils::EXPR(ASR::make_IntegerConstant_t(al, x.base.base.loc, 1, type));
+        }
         ASR::expr_t* loop_start_value = ASRUtils::expr_value(loop_start);
         ASR::expr_t* loop_end_value = ASRUtils::expr_value(loop_end);
         ASR::expr_t* loop_inc_value = ASRUtils::expr_value(loop_inc);
@@ -167,8 +172,8 @@ public:
         vectorised_loop_head.loc = x.m_head.loc;
 
         ASR::stmt_t* vectorised_loop = ASRUtils::STMT(ASR::make_DoLoop_t(al, x.base.base.loc,
-                                            vectorised_loop_head, vectorised_loop_body.p,
-                                            vectorised_loop_body.size()));
+                                            x.m_name, vectorised_loop_head, vectorised_loop_body.p,
+                                            vectorised_loop_body.size(), nullptr, 0));
         pass_result.push_back(al, vectorised_loop);
     }
 

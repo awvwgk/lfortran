@@ -6,6 +6,7 @@
 #include <lfortran/ast_serialization.h>
 #include <libasr/modfile.h>
 #include <lfortran/pickle.h>
+#include <libasr/pickle.h>
 #include <lfortran/parser/parser.h>
 #include <lfortran/semantics/ast_to_asr.h>
 #include <libasr/asr_utils.h>
@@ -58,7 +59,9 @@ void ast_ser(const std::string &src) {
 
     LCompilers::LFortran::AST::TranslationUnit_t* result;
     LCompilers::diag::Diagnostics diagnostics;
-    result = TRY(LCompilers::LFortran::parse(al, src, diagnostics));
+    LCompilers::CompilerOptions co;
+    co.interactive = true;
+    result = TRY(LCompilers::LFortran::parse(al, src, diagnostics, co));
     std::string ast_orig = LCompilers::LFortran::pickle(*result);
     std::string binary = LCompilers::LFortran::serialize(*result);
 
@@ -77,23 +80,24 @@ void asr_ser(const std::string &src) {
     LCompilers::LFortran::AST::TranslationUnit_t* ast0;
     LCompilers::diag::Diagnostics diagnostics;
     LCompilers::CompilerOptions compiler_options;
-    ast0 = TRY(LCompilers::LFortran::parse(al, src, diagnostics));
+    ast0 = TRY(LCompilers::LFortran::parse(al, src, diagnostics, compiler_options));
+    LCompilers::LocationManager lm;
     LCompilers::ASR::TranslationUnit_t* asr = TRY(LCompilers::LFortran::ast_to_asr(al, *ast0,
-        diagnostics, nullptr, false, compiler_options));
+        diagnostics, nullptr, false, compiler_options, lm));
 
-    std::string asr_orig = LCompilers::LFortran::pickle(*asr);
+    std::string asr_orig = LCompilers::pickle(*asr);
     std::string binary = LCompilers::serialize(*asr);
 
     LCompilers::ASR::asr_t *asr_new0;
     LCompilers::SymbolTable symtab(nullptr);
-    asr_new0 = LCompilers::deserialize_asr(al, binary, true, symtab);
+    asr_new0 = LCompilers::deserialize_asr(al, binary, true, symtab, 0);
     CHECK(LCompilers::ASR::is_a<LCompilers::ASR::unit_t>(*asr_new0));
     LCompilers::ASR::TranslationUnit_t *tu
         = LCompilers::ASR::down_cast2<LCompilers::ASR::TranslationUnit_t>(asr_new0);
     fix_external_symbols(*tu, symtab);
     LCOMPILERS_ASSERT(LCompilers::asr_verify(*tu, true, diagnostics));
 
-    std::string asr_new = LCompilers::LFortran::pickle(*asr_new0);
+    std::string asr_new = LCompilers::pickle(*asr_new0);
 
     CHECK(asr_orig == asr_new);
 }
@@ -104,18 +108,26 @@ void asr_mod(const std::string &src) {
     LCompilers::LFortran::AST::TranslationUnit_t* ast0;
     LCompilers::diag::Diagnostics diagnostics;
     LCompilers::CompilerOptions compiler_options;
-    ast0 = TRY(LCompilers::LFortran::parse(al, src, diagnostics));
+    ast0 = TRY(LCompilers::LFortran::parse(al, src, diagnostics, compiler_options));
+    LCompilers::LocationManager lm;
+    lm.file_ends.push_back(0);
+    LCompilers::LocationManager::FileLocations file;
+    file.out_start.push_back(0); file.in_start.push_back(0); file.in_newlines.push_back(0);
+    file.in_filename = "test"; file.current_line = 1; file.preprocessor = false; file.out_start0.push_back(0);
+    file.in_start0.push_back(0); file.in_size0.push_back(0); file.interval_type0.push_back(0);
+    file.in_newlines0.push_back(0);
+    lm.files.push_back(file);
     LCompilers::ASR::TranslationUnit_t* asr = TRY(LCompilers::LFortran::ast_to_asr(al, *ast0,
-        diagnostics, nullptr, false, compiler_options));
+        diagnostics, nullptr, false, compiler_options, lm));
 
-    std::string modfile = LCompilers::save_modfile(*asr);
+    std::string modfile = LCompilers::save_modfile(*asr, lm);
     LCompilers::SymbolTable symtab(nullptr);
     LCompilers::ASR::TranslationUnit_t *asr2 = LCompilers::load_modfile(al,
-            modfile, true, symtab);
+            modfile, true, symtab, lm);
     fix_external_symbols(*asr2, symtab);
     LCOMPILERS_ASSERT(LCompilers::asr_verify(*asr2, true, diagnostics));
 
-    CHECK(LCompilers::LFortran::pickle(*asr) == LCompilers::LFortran::pickle(*asr2));
+    CHECK(LCompilers::pickle(*asr) == LCompilers::pickle(*asr2));
 }
 
 TEST_CASE("AST Tests") {

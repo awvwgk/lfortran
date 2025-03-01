@@ -1,0 +1,13 @@
+{
+    "basename": "pass_init_expr-array13-db4fb0f",
+    "cmd": "lfortran --pass=init_expr --show-asr --no-color {infile} -o {outfile}",
+    "infile": "tests/array13.f90",
+    "infile_hash": "9a8fc967d5ae775229d7d6e3fff0a1927b7bc3ec0b5209bedf864ff8",
+    "outfile": null,
+    "outfile_hash": null,
+    "stdout": "pass_init_expr-array13-db4fb0f.stdout",
+    "stdout_hash": "01cf755f3fce4caac23995c8e3f147edb61e2e0615567bf41d682cc6",
+    "stderr": null,
+    "stderr_hash": null,
+    "returncode": 0
+}

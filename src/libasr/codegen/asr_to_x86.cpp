@@ -1,13 +1,12 @@
 #include <iostream>
-#include <memory>
 #include <chrono>
 
 #include <libasr/asr.h>
 #include <libasr/containers.h>
 #include <libasr/codegen/asr_to_x86.h>
 #include <libasr/codegen/x86_assembler.h>
-#include <libasr/pass/do_loops.h>
-#include <libasr/pass/global_stmts.h>
+#include <libasr/pass/replace_do_loops.h>
+#include <libasr/pass/wrap_global_stmts.h>
 #include <libasr/exception.h>
 #include <libasr/asr_utils.h>
 
@@ -62,15 +61,16 @@ public:
 
         emit_elf32_header(m_a);
 
+        emit_data_string(m_a, "string_neg", "-"); // - symbol for printing negative ints/floats
         // Add runtime library functions
         emit_print_int(m_a, "print_int");
         emit_exit(m_a, "my_exit", 0);
         emit_exit(m_a, "exit_error_stop", 1);
 
 
-        std::vector<std::string> global_func_order = ASRUtils::determine_function_definition_order(x.m_global_scope);
+        std::vector<std::string> global_func_order = ASRUtils::determine_function_definition_order(x.m_symtab);
         for (size_t i = 0; i < global_func_order.size(); i++) {
-            ASR::symbol_t* sym = x.m_global_scope->get_symbol(global_func_order[i]);
+            ASR::symbol_t* sym = x.m_symtab->get_symbol(global_func_order[i]);
             // Ignore external symbols because they are already defined by the loop above.
             if( !sym || ASR::is_a<ASR::ExternalSymbol_t>(*sym) ) {
                 continue;
@@ -78,14 +78,33 @@ public:
             visit_symbol(*sym);
         }
 
+        std::vector<std::string> build_order = ASRUtils::determine_module_dependencies(x);
+        for (auto &item : build_order) {
+            ASR::symbol_t *mod = x.m_symtab->get_symbol(item);
+            visit_symbol(*mod);
+        }
+
         // Then the main program:
-        for (auto &item : x.m_global_scope->get_scope()) {
+        for (auto &item : x.m_symtab->get_scope()) {
             if (ASR::is_a<ASR::Program_t>(*item.second)) {
                 visit_symbol(*item.second);
             }
         }
 
         emit_elf32_footer(m_a);
+    }
+
+    void visit_Module(const ASR::Module_t &x) {
+        std::vector<std::string> func_order
+            = ASRUtils::determine_function_definition_order(x.m_symtab);
+        for (size_t i = 0; i < func_order.size(); i++) {
+            ASR::symbol_t* sym = x.m_symtab->get_symbol(func_order[i]);
+            // Ignore external symbols because they are already defined by the loop above.
+            if( !sym || ASR::is_a<ASR::ExternalSymbol_t>(*sym) ) {
+                continue;
+            }
+            visit_symbol(*sym);
+        }
     }
 
     void visit_Program(const ASR::Program_t &x) {
@@ -358,8 +377,13 @@ public:
     }
 
     void visit_Print(const ASR::Print_t &x) {
-        LCOMPILERS_ASSERT(x.n_values == 1);
-        ASR::expr_t *e = x.m_values[0];
+        LCOMPILERS_ASSERT(x.m_text != nullptr);
+        ASR::expr_t *e = x.m_text;
+        //HACKISH way to handle print refactoring (always using stringformat).
+        // TODO : Implement stringformat visitor.
+        if(e && ASR::is_a<ASR::StringFormat_t>(*e)){
+            e = ASR::down_cast<ASR::StringFormat_t>(e)->m_args[0];
+        }
         if (e->type == ASR::exprType::StringConstant) {
             ASR::StringConstant_t *s = down_cast<ASR::StringConstant_t>(e);
             std::string msg = s->m_s;
@@ -376,7 +400,7 @@ public:
                 m_a.asm_add_r32_imm8(X86Reg::esp, 4);
             } else if (t->type == ASR::ttypeType::Real) {
                 throw LCompilersException("Type not implemented");
-            } else if (t->type == ASR::ttypeType::Character) {
+            } else if (t->type == ASR::ttypeType::String) {
                 throw LCompilersException("Type not implemented");
             } else {
                 throw LCompilersException("Type not implemented");
@@ -503,7 +527,8 @@ public:
     }
 
     void visit_SubroutineCall(const ASR::SubroutineCall_t &x) {
-        ASR::Function_t *s = ASR::down_cast<ASR::Function_t>(x.m_name);
+        ASR::Function_t *s = ASR::down_cast<ASR::Function_t>(
+            ASRUtils::symbol_get_past_external(x.m_name));
 
         uint32_t h = get_hash((ASR::asr_t*)s);
         if (x86_symtab.find(h) == x86_symtab.end()) {
@@ -556,7 +581,7 @@ Result<int> asr_to_x86(ASR::TranslationUnit_t &asr, Allocator &al,
 
     {
         auto t1 = std::chrono::high_resolution_clock::now();
-        pass_wrap_global_stmts_into_function(al, asr, pass_options);
+        pass_wrap_global_stmts(al, asr, pass_options);
         auto t2 = std::chrono::high_resolution_clock::now();
         time_pass_global = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
     }

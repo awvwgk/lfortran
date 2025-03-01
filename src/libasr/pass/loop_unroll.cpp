@@ -6,9 +6,6 @@
 #include <libasr/pass/loop_unroll.h>
 #include <libasr/pass/pass_utils.h>
 
-#include <vector>
-#include <map>
-#include <utility>
 #include <cmath>
 
 
@@ -21,17 +18,14 @@ class LoopUnrollVisitor : public PassUtils::PassVisitor<LoopUnrollVisitor>
 {
 private:
 
-    std::string rl_path;
-
     int64_t unroll_factor;
 
     ASRUtils::ExprStmtDuplicator node_duplicator;
 
 public:
 
-    LoopUnrollVisitor(Allocator &al_, const std::string& rl_path_,
-                      size_t unroll_factor_) :
-    PassVisitor(al_, nullptr), rl_path(rl_path_),
+    LoopUnrollVisitor(Allocator &al_, size_t unroll_factor_) :
+    PassVisitor(al_, nullptr),
     unroll_factor(unroll_factor_), node_duplicator(al_)
     {
         pass_result.reserve(al, 1);
@@ -46,7 +40,7 @@ public:
         if( x_head.m_increment ) {
             x_inc = ASRUtils::expr_value(x_head.m_increment);
         } else {
-            ASR::ttype_t* int32_type = ASRUtils::TYPE(ASR::make_Integer_t(al, x.base.base.loc, 4, nullptr, 0));
+            ASR::ttype_t* int32_type = ASRUtils::TYPE(ASR::make_Integer_t(al, x.base.base.loc, 4));
             x_inc = ASRUtils::EXPR(ASR::make_IntegerConstant_t(al, x_head.m_end->base.loc, 1, int32_type));
         }
 
@@ -66,8 +60,7 @@ public:
         int64_t groups = loop_size / unroll_factor_;
         int64_t new_end = _start + (groups - 1) * _inc * unroll_factor_ + (unroll_factor_ - 1) * _inc;
         int64_t remaining_part = loop_size % unroll_factor_;
-        ASR::ttype_t *int32_type = ASRUtils::TYPE(ASR::make_Integer_t(al, x.base.base.loc,
-                                                            4, nullptr, 0));
+        ASR::ttype_t *int32_type = ASRUtils::TYPE(ASR::make_Integer_t(al, x.base.base.loc, 4));
         xx.m_head.m_end = ASRUtils::EXPR(ASR::make_IntegerConstant_t(al, x_end->base.loc, new_end, int32_type));
 
         Vec<ASR::stmt_t*> init_and_whileloop = PassUtils::replace_doloop(al, x);
@@ -94,7 +87,7 @@ public:
 
         pass_result.push_back(al, init_stmt);
         ASR::stmt_t* unrolled_whileloop = ASRUtils::STMT(ASR::make_WhileLoop_t(al, x.base.base.loc,
-                                                            whileloop->m_test, unrolled_loop.p, unrolled_loop.size()));
+            whileloop->m_name, whileloop->m_test, unrolled_loop.p, unrolled_loop.size(), x.m_orelse, x.n_orelse));
         pass_result.push_back(al, unrolled_whileloop);
         for( int64_t i = 0; i < remaining_part; i++ ) {
             for( size_t i = 0; i < whileloop->n_body; i++ ) {
@@ -108,9 +101,7 @@ public:
 
 void pass_loop_unroll(Allocator &al, ASR::TranslationUnit_t &unit,
                       const LCompilers::PassOptions& pass_options) {
-    std::string rl_path = pass_options.runtime_library_dir;
-    int64_t unroll_factor = pass_options.unroll_factor;
-    LoopUnrollVisitor v(al, rl_path, unroll_factor);
+    LoopUnrollVisitor v(al, pass_options.unroll_factor);
     v.visit_TranslationUnit(unit);
 }
 
