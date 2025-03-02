@@ -1,6 +1,7 @@
 #ifndef LFORTRAN_STACKTRACE_H
 #define LFORTRAN_STACKTRACE_H
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -49,6 +50,8 @@ void get_local_addresses(std::vector<StacktraceItem> &d);
 // Fills in the `function_name` if available, and if so, also fills in
 // `source_filename` and `line_number` if available
 void get_local_info(std::vector<StacktraceItem> &d);
+
+void get_llvm_info(std::vector<StacktraceItem> &d);
 
 // Converts the information stored in `d` into a string
 std::string stacktrace2str(const std::vector<StacktraceItem> &d,

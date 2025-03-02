@@ -1,0 +1,95 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            __xx_main:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            
+                        })
+                    __xx_main
+                    []
+                    [(Print
+                        (StringConstant
+                            "1 LFortran"
+                            (String 1 10 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "2 LFortran 1"
+                            (String 1 12 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "3 LFortran 1"
+                            (String 1 12 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "4 LFortran 1"
+                            (String 1 12 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "42 LFortran 1"
+                            (String 1 13 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "X is 1"
+                            (String 1 6 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "1 Y is 1"
+                            (String 1 8 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "X is 2"
+                            (String 1 6 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "2 Y is 3"
+                            (String 1 8 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "X is 4"
+                            (String 1 6 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "4 Y is 4"
+                            (String 1 8 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "X is not 1-4"
+                            (String 1 12 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "5 Y is not 1-4"
+                            (String 1 14 () PointerString)
+                        )
+                    )]
+                )
+        })
+    []
+)

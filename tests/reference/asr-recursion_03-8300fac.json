@@ -1,0 +1,13 @@
+{
+    "basename": "asr-recursion_03-8300fac",
+    "cmd": "lfortran --show-asr --no-color {infile} -o {outfile}",
+    "infile": "tests/../integration_tests/recursion_03.f90",
+    "infile_hash": "ca5d64a5bc86665cf6168763480264f56ea25b3bfcc7217348fb14c0",
+    "outfile": null,
+    "outfile_hash": null,
+    "stdout": "asr-recursion_03-8300fac.stdout",
+    "stdout_hash": "494c7ba8fdd2ee40acef819b0c0d2cfc3ab79af9f3fb6a22fbb7ab2a",
+    "stderr": null,
+    "stderr_hash": null,
+    "returncode": 0
+}

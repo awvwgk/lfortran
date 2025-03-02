@@ -28,12 +28,8 @@ public:
     cpp_symtab macro_definitions;
     CPreprocessor(CompilerOptions &compiler_options);
     std::string token(unsigned char *tok, unsigned char* cur) const;
-    std::string run(const std::string &input, LocationManager &lm,
-        cpp_symtab &macro_definitions) const;
-    std::string function_like_macro_expansion(
-                std::vector<std::string> &def_args,
-                std::string &expansion,
-                std::vector<std::string> &call_args) const;
+    Result<std::string> run(const std::string &input, LocationManager &lm,
+        cpp_symtab &macro_definitions, diag::Diagnostics &diagnostics) const;
 
     // Return the current token's location
     void token_loc(Location &loc, unsigned char *tok, unsigned char* cur,
@@ -43,6 +39,11 @@ public:
         loc.last = cur-string_start-1;
     }
 };
+
+std::string function_like_macro_expansion(
+            std::vector<std::string> &def_args,
+            std::string &expansion,
+            std::vector<std::string> &call_args);
 
 } // namespace LCompilers::LFortran
 

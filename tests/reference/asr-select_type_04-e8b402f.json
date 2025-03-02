@@ -1,0 +1,13 @@
+{
+    "basename": "asr-select_type_04-e8b402f",
+    "cmd": "lfortran --show-asr --no-color {infile} -o {outfile}",
+    "infile": "tests/../integration_tests/select_type_04.f90",
+    "infile_hash": "901a8af19672501e52484cba169d1249539f51e0a8f928a0851445dc",
+    "outfile": null,
+    "outfile_hash": null,
+    "stdout": "asr-select_type_04-e8b402f.stdout",
+    "stdout_hash": "273eb9d48bd56ef2442c5e6ac865e6751e8ce9673ad2a85b3350ead2",
+    "stderr": null,
+    "stderr_hash": null,
+    "returncode": 0
+}

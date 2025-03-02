@@ -30,7 +30,7 @@ public:
 
     // Get next token. Token ID is returned as function result, the semantic
     // value is put into `yylval`.
-    int lex(Allocator &al, YYSTYPE &yylval, Location &loc, diag::Diagnostics &diagnostics);
+    int lex(Allocator &al, YYSTYPE &yylval, Location &loc, diag::Diagnostics &diagnostics, bool continue_compilation);
 
     // Return the current token as std::string
     std::string token() const
@@ -46,10 +46,12 @@ public:
     }
 
     // Return the current token as YYSTYPE::Str, strips first and last character
-    void token_str(Str &s) const
+    void token_str(Allocator &al, Str &s, char ch) const
     {
         s.p = (char*) tok + 1;
         s.n = cur-tok-2;
+        s.p = str_unescape_fortran(al, s, ch);
+        s.n = strlen(s.p);
     }
 
     // Return the current token's location
@@ -66,7 +68,7 @@ bool lex_int(const unsigned char *s, const unsigned char *e, uint64_t &u,
 void lex_int_large(Allocator &al, const unsigned char *s,
     const unsigned char *e, BigInt::BigInt &u, Str &suffix);
 void lex_format(unsigned char *&cur, Location &loc,
-        unsigned char *&start);
+        unsigned char *&start, diag::Diagnostics &diagnostics, bool continue_compilation);
 
 
 } // namespace LCompilers::LFortran

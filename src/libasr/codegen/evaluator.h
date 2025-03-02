@@ -24,6 +24,11 @@ namespace llvm {
     }
 }
 
+namespace mlir {
+    class MLIRContext;
+    class ModuleOp;
+}
+
 namespace LCompilers {
 
 class LLVMModule
@@ -37,6 +42,20 @@ public:
     std::string get_return_type(const std::string &fn_name);
 };
 
+class MLIRModule {
+public:
+    std::unique_ptr<mlir::ModuleOp> mlir_m;
+    std::unique_ptr<mlir::MLIRContext> mlir_ctx;
+    std::unique_ptr<llvm::Module> llvm_m;
+    std::unique_ptr<llvm::LLVMContext> llvm_ctx;
+    MLIRModule(std::unique_ptr<mlir::ModuleOp> m,
+        std::unique_ptr<mlir::MLIRContext> ctx);
+    ~MLIRModule();
+    std::string mlir_str();
+    std::string llvm_str();
+    void mlir_to_llvm(llvm::LLVMContext &ctx);
+};
+
 class LLVMEvaluator
 {
 private:
@@ -47,19 +66,12 @@ private:
 public:
     LLVMEvaluator(const std::string &t = "");
     ~LLVMEvaluator();
-    std::unique_ptr<llvm::Module> parse_module(const std::string &source);
+    std::unique_ptr<llvm::Module> parse_module(const std::string &source, const std::string &filename);
+    std::unique_ptr<LLVMModule> parse_module2(const std::string &source, const std::string &filename);
     void add_module(const std::string &source);
     void add_module(std::unique_ptr<llvm::Module> mod);
     void add_module(std::unique_ptr<LLVMModule> m);
     intptr_t get_symbol_address(const std::string &name);
-    int32_t int32fn(const std::string &name);
-    int64_t int64fn(const std::string &name);
-    bool boolfn(const std::string &name);
-    float floatfn(const std::string &name);
-    double doublefn(const std::string &name);
-    std::complex<float> complex4fn(const std::string &name);
-    std::complex<double> complex8fn(const std::string &name);
-    void voidfn(const std::string &name);
     std::string get_asm(llvm::Module &m);
     void save_asm_file(llvm::Module &m, const std::string &filename);
     void save_object_file(llvm::Module &m, const std::string &filename);
@@ -67,9 +79,17 @@ public:
     void opt(llvm::Module &m);
     static std::string module_to_string(llvm::Module &m);
     static void print_version_message();
+    static std::string llvm_version();
     llvm::LLVMContext &get_context();
     static void print_targets();
     static std::string get_default_target_triple();
+
+    template<class T>
+    T execfn(const std::string &name) {
+        intptr_t addr = get_symbol_address(name);
+        T (*f)() = (T (*)())addr;
+        return f();
+    }
 };
 
 

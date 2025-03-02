@@ -59,6 +59,49 @@ struct Vec {
 #endif
     }
 
+    template <class Q = T>
+    typename std::enable_if<std::is_same<Q, char*>::value, bool>::type present(Q x, size_t& index) {
+        for( size_t i = 0; i < n; i++ ) {
+            if( strcmp(p[i], x) == 0 ) {
+                index = i;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    template <class Q = T>
+    typename std::enable_if<!std::is_same<Q, char*>::value, bool>::type present(Q x, size_t& index) {
+        for( size_t i = 0; i < n; i++ ) {
+            if( p[i] == x ) {
+                index = i;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void erase(T x) {
+        size_t delete_index;
+        if( !present(x, delete_index) ) {
+            return ;
+        }
+
+        for( int64_t i = delete_index; i < (int64_t) n - 1; i++ ) {
+            p[i] = p[i + 1];
+        }
+        if( n >= 1 ) {
+            n = n - 1;
+        }
+    }
+
+    void push_back_unique(Allocator &al, T x) {
+        size_t index;
+        if( !Vec<T>::present(x, index) ) {
+            Vec<T>::push_back(al, x);
+        }
+    }
+
     void push_back(Allocator &al, T x) {
         // This can pass by accident even if reserve() is not called (if
         // reserve_called happens to be equal to vec_called_const when Vec is
@@ -76,8 +119,27 @@ struct Vec {
         n++;
     }
 
+    void push_front(Allocator &al, T x) {
+        LCOMPILERS_ASSERT(reserve_called == vec_called_const);
+        if (n == max) {
+            size_t max2 = 2*max;
+            T* p2 = al.allocate<T>(max2);
+            std::memcpy(p2+1, p, sizeof(T) * n);
+            p = p2;
+            max = max2;
+        } else {
+            std::memmove(p+1, p, sizeof(T) * n);
+        }
+        p[0] = x;
+        n++;
+    }
+
     size_t size() const {
         return n;
+    }
+
+    bool empty() const {
+        return n == 0;
     }
 
     void resize(Allocator &al, size_t max){
@@ -135,6 +197,55 @@ struct Vec {
 static_assert(std::is_standard_layout<Vec<int>>::value);
 static_assert(std::is_trivial<Vec<int>>::value);
 
+/*
+SetChar emulates the std::set<std::string> API
+so that it acts as a drop in replacement.
+*/
+struct SetChar: Vec<char*> {
+
+    bool reserved;
+
+    SetChar():
+        reserved(false) {
+        clear();
+    }
+
+    void clear() {
+        n = 0;
+        p = nullptr;
+        max = 0;
+    }
+
+    void clear(Allocator& al) {
+        reserve(al, 0);
+    }
+
+    void reserve(Allocator& al, size_t max) {
+        Vec<char*>::reserve(al, max);
+        reserved = true;
+    }
+
+    void from_pointer_n_copy(Allocator &al, char** p, size_t n) {
+        reserve(al, n);
+        for (size_t i = 0; i < n; i++) {
+            push_back(al, p[i]);
+        }
+    }
+
+    void from_pointer_n(char** p, size_t n) {
+        Vec<char*>::from_pointer_n(p, n);
+        reserved = true;
+    }
+
+    void push_back(Allocator &al, char* x) {
+         if( !reserved ) {
+             reserve(al, 0);
+         }
+
+         Vec<char*>::push_back_unique(al, x);
+     }
+};
+
 // String implementation (not null-terminated)
 struct Str {
     size_t n;
@@ -142,6 +253,10 @@ struct Str {
 
     // Returns a copy of the string as a NULL terminated std::string
     std::string str() const { return std::string(p, n); }
+
+    char operator[](size_t pos) {
+        return p[pos];
+    }
 
     // Initializes Str from std::string by making a copy excluding the null char
     void from_str(Allocator &al, const std::string &s) {
@@ -177,6 +292,10 @@ struct Str {
 
     size_t size() const {
         return n;
+    }
+
+    char back() const {
+        return p[n - 1];
     }
 };
 

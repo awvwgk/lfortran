@@ -1,0 +1,13 @@
+{
+    "basename": "pass_array_op-arrays_op_10-be689f7",
+    "cmd": "lfortran --pass=array_op --show-asr --no-color {infile} -o {outfile}",
+    "infile": "tests/../integration_tests/arrays_op_10.f90",
+    "infile_hash": "b9f29a5f12342cf162fe90d308dfb51ffdf3b181b06f27fe34d52d26",
+    "outfile": null,
+    "outfile_hash": null,
+    "stdout": "pass_array_op-arrays_op_10-be689f7.stdout",
+    "stdout_hash": "29983d8bfa0a93c3636bfa8765cada53f3f20e74e352b97306fe9569",
+    "stderr": null,
+    "stderr_hash": null,
+    "returncode": 0
+}

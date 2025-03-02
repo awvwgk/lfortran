@@ -29,6 +29,7 @@ LIBASR_DIR = os.path.dirname(TESTER_DIR)
 SRC_DIR = os.path.dirname(LIBASR_DIR)
 ROOT_DIR = os.path.dirname(SRC_DIR)
 
+no_color = False
 
 class RunException(Exception):
     pass
@@ -124,6 +125,14 @@ def _compare_eq_dict(
         )
     return explanation
 
+def test_for_duplicates(test_data):
+    tests = test_data["test"]
+    filenames = [t["filename"] for t in tests]
+    if len(set(filenames)) != len(filenames):
+        print("There are duplicate test filenames:")
+        duplicates = [item for item in set(filenames) if filenames.count(item) > 1]
+        print(duplicates)
+        sys.exit(1)
 
 def fixdir(s: bytes) -> bytes:
     local_dir = os.getcwd()
@@ -166,7 +175,7 @@ def run(basename: str, cmd: Union[pathlib.Path, str],
     assert basename is not None and basename != ""
     pathlib.Path(out_dir).mkdir(parents=True, exist_ok=True)
     if infile and not os.path.exists(infile):
-        raise RunException("The input file does not exist")
+        raise RunException("The input file %s does not exist" % (infile))
     outfile = os.path.join(out_dir, basename + "." + "out")
 
     infile = infile.replace("\\\\", "\\").replace("\\", "/")
@@ -254,9 +263,27 @@ def do_update_reference(jo, jr, do):
             f_r = os.path.join(os.path.dirname(jr), do[f])
             shutil.copyfile(f_o, f_r)
 
+def do_verify_reference_hash(jr, dr, s):
+    for f in ["outfile", "stdout", "stderr"]:
+        if dr[f]:
+            f_r = os.path.join(os.path.dirname(jr), dr[f])
+            temp = unl_loop_del(open(f_r, "rb").read())
+            f_r_hash = hashlib.sha224(temp).hexdigest()
+            if (f_r_hash != dr[f + "_hash"]):
+                # This string builds up the error message.
+                # Print test name in red in the beginning.
+                # More information is added afterwards.
+                full_err_str = f"\n{(color(fg.red)+color(style.bold))}{s}{color(fg.reset)+color(style.reset)}\n"
+                full_err_str += "The generated hash for the reference file and its committed hash are different\n"
+                full_err_str += "Reference File: " + f_r + "\n"
+                full_err_str += "Reference Json File: " + jr + "\n"
+                full_err_str += "Reference File Hash Expected: " + f_r_hash + "\n"
+                full_err_str += "Reference File Hash Found: " + dr[f + "_hash"] + "\n"
+                raise RunException("Verifying reference hash failed." +
+                    full_err_str)
 
 def run_test(testname, basename, cmd, infile, update_reference=False,
-             extra_args=None):
+            verify_hash=False, extra_args=None):
     """
     Runs the test `cmd` and compare against reference results.
 
@@ -272,6 +299,9 @@ def run_test(testname, basename, cmd, infile, update_reference=False,
     infile ............. optional input file. If present, it will check that
                          it exists and hash it.
     update_reference ... if True, it will copy the output into the reference
+                         directory as reference results, overwriting old ones
+    verify_hash ...... if True, it will check the hash in the committed
+                         json file and the hash for the committed references
                          directory as reference results, overwriting old ones
     extra_args ......... Extra arguments to append to the command that are not
                          part of the hash
@@ -292,7 +322,12 @@ def run_test(testname, basename, cmd, infile, update_reference=False,
         raise FileNotFoundError(
             f"The output json file '{jo}' for {testname} does not exist")
 
-    do = json.load(open(jo))
+    try:
+        do = json.load(open(jo))
+    except json.decoder.JSONDecodeError:
+        print("JSON failed to be decoded")
+        print(f"Filename: {jo}")
+        raise
     if update_reference:
         do_update_reference(jo, jr, do)
         return
@@ -302,6 +337,11 @@ def run_test(testname, basename, cmd, infile, update_reference=False,
             f"The reference json file '{jr}' for {testname} does not exist")
 
     dr = json.load(open(jr))
+
+    if verify_hash:
+        do_verify_reference_hash(jr, dr, s)
+        return
+
     if do != dr:
         # This string builds up the error message. Print test name in red in the beginning.
         # More information is added afterwards.
@@ -329,13 +369,18 @@ def run_test(testname, basename, cmd, infile, update_reference=False,
         raise RunException(
             "Testing with reference output failed." +
             full_err_str)
-    log.debug(s + " " + check())
+    if no_color:
+        log.debug(s + " PASS")
+    else:
+        log.debug(s + " " + check())
 
 
-def tester_main(compiler, single_test):
+def tester_main(compiler, single_test, is_lcompilers_executable_installed=False):
     parser = argparse.ArgumentParser(description=f"{compiler} Test Suite")
     parser.add_argument("-u", "--update", action="store_true",
                         help="update all reference results")
+    parser.add_argument("-vh", "--verify-hash", action="store_true",
+                        help="Verify all reference hashes")
     parser.add_argument("-l", "--list", action="store_true",
                         help="list all tests")
     parser.add_argument("-t", "--test",
@@ -354,10 +399,15 @@ def tester_main(compiler, single_test):
                         help="Exclude specific backends, only works when -b is not specified"),
     parser.add_argument("--no-llvm", action="store_true",
                         help="Skip LLVM tests")
+    parser.add_argument("--skip-run-with-dbg", action="store_true",
+                        help="Skip runtime tests with debugging information enabled")
     parser.add_argument("-s", "--sequential", action="store_true",
                         help="Run all tests sequentially")
+    parser.add_argument("--no-color", action="store_true",
+                    help="Turn off colored tests output")
     args = parser.parse_args()
     update_reference = args.update
+    verify_hash = args.verify_hash
     list_tests = args.list
     specific_tests = list(
         itertools.chain.from_iterable(
@@ -371,11 +421,16 @@ def tester_main(compiler, single_test):
         args.exclude_backend)) if args.exclude_backend and specific_backends is None else None
     verbose = args.verbose
     no_llvm = args.no_llvm
+    skip_run_with_dbg = args.skip_run_with_dbg
+    global no_color
+    no_color = args.no_color
 
     # So that the tests find the `lcompiler` executable
-    os.environ["PATH"] = os.path.join(SRC_DIR, "bin") \
-        + os.pathsep + os.environ["PATH"]
+    if not is_lcompilers_executable_installed:
+        os.environ["PATH"] = os.path.join(SRC_DIR, "bin") \
+            + os.pathsep + os.environ["PATH"]
     test_data = toml.load(open(os.path.join(ROOT_DIR, "tests", "tests.toml")))
+    test_for_duplicates(test_data)
     filtered_tests = test_data["test"]
     if specific_tests:
         filtered_tests = [test for test in filtered_tests if any(
@@ -390,23 +445,43 @@ def tester_main(compiler, single_test):
     if excluded_backends:
         filtered_tests = [test for test in filtered_tests if any(
             b not in excluded_backends and b != "filename" for b in test)]
+
+    for test in filtered_tests:
+        if 'extrafiles' in test:
+            single_test(test,
+                update_reference=update_reference,
+                verify_hash=verify_hash,
+                specific_backends=specific_backends,
+                excluded_backends=excluded_backends,
+                verbose=verbose,
+                no_llvm=no_llvm,
+                skip_run_with_dbg=True,
+                no_color=True)
+    filtered_tests = [test for test in filtered_tests if 'extrafiles' not in test]
+
     if args.sequential:
         for test in filtered_tests:
             single_test(test,
                         update_reference=update_reference,
+                        verify_hash=verify_hash,
                         specific_backends=specific_backends,
                         excluded_backends=excluded_backends,
                         verbose=verbose,
-                        no_llvm=no_llvm)
+                        no_llvm=no_llvm,
+                        skip_run_with_dbg=skip_run_with_dbg,
+                        no_color=no_color)
     # run in parallel
     else:
         single_tester_partial_args = partial(
             single_test,
             update_reference=update_reference,
+            verify_hash=verify_hash,
             specific_backends=specific_backends,
             excluded_backends=excluded_backends,
             verbose=verbose,
-            no_llvm=no_llvm)
+            no_llvm=no_llvm,
+            skip_run_with_dbg=skip_run_with_dbg,
+            no_color=no_color)
         with ThreadPoolExecutor() as ex:
             futures = ex.map(single_tester_partial_args, filtered_tests)
             for f in futures:
@@ -417,6 +492,17 @@ def tester_main(compiler, single_test):
 
     if update_reference:
         log.info("Test references updated.")
+    elif verify_hash:
+        if no_color:
+            log.info("Test references hash verfied.")
+        else:
+            log.info(
+                f"{(color(fg.green) + color(style.bold))}Test references hash verfied."
+                f"{color(fg.reset) + color(style.reset)}")
     else:
-        log.info(
-            f"{(color(fg.green) + color(style.bold))}TESTS PASSED{color(fg.reset) + color(style.reset)}")
+        if no_color:
+            log.info("TESTS PASSED")
+        else:
+            log.info(
+                f"{(color(fg.green) + color(style.bold))}TESTS PASSED"
+                f"{color(fg.reset) + color(style.reset)}")

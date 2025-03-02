@@ -3,216 +3,191 @@
 #include <libasr/exception.h>
 #include <libasr/asr_utils.h>
 #include <libasr/asr_verify.h>
-#include <libasr/pass/subroutine_from_function.h>
+#include <libasr/pass/create_subroutine_from_function.h>
+#include <libasr/pass/intrinsic_function_registry.h>
+#include <libasr/pass/intrinsic_array_function_registry.h>
 #include <libasr/pass/pass_utils.h>
-
-#include <vector>
-#include <string>
-
 
 namespace LCompilers {
 
 using ASR::down_cast;
 using ASR::is_a;
 
-class CreateFunctionFromSubroutine: public PassUtils::PassVisitor<CreateFunctionFromSubroutine> {
+class CreateFunctionFromSubroutine: public ASR::BaseWalkVisitor<CreateFunctionFromSubroutine> {
 
     public:
 
-        CreateFunctionFromSubroutine(Allocator &al_) :
-        PassVisitor(al_, nullptr)
+        Allocator& al;
+
+        CreateFunctionFromSubroutine(Allocator &al_): al(al_)
         {
-            pass_result.reserve(al, 1);
         }
 
-        ASR::symbol_t* create_subroutine_from_function(ASR::Function_t* s) {
-            for( auto& s_item: s->m_symtab->get_scope() ) {
-                ASR::symbol_t* curr_sym = s_item.second;
-                if( curr_sym->type == ASR::symbolType::Variable ) {
-                    ASR::Variable_t* var = ASR::down_cast<ASR::Variable_t>(curr_sym);
-                    if( var->m_intent == ASR::intentType::Unspecified ) {
-                        var->m_intent = ASR::intentType::In;
-                    } else if( var->m_intent == ASR::intentType::ReturnVar ) {
-                        var->m_intent = ASR::intentType::Out;
-                    }
-                }
-            }
-            Vec<ASR::expr_t*> a_args;
-            a_args.reserve(al, s->n_args + 1);
-            for( size_t i = 0; i < s->n_args; i++ ) {
-                a_args.push_back(al, s->m_args[i]);
-            }
-            LCOMPILERS_ASSERT(s->m_return_var)
-            a_args.push_back(al, s->m_return_var);
-            ASR::asr_t* s_sub_asr = ASR::make_Function_t(al, s->base.base.loc,
-                s->m_symtab,
-                s->m_name, s->m_dependencies, s->n_dependencies,
-                a_args.p, a_args.size(), s->m_body, s->n_body,
-                nullptr,
-                s->m_abi, s->m_access, s->m_deftype, nullptr, false, false,
-                false, s->m_inline, s->m_static,
-                s->m_type_params, s->n_type_params,
-                s->m_restrictions, s->n_restrictions,
-                s->m_is_restriction);
-            ASR::symbol_t* s_sub = ASR::down_cast<ASR::symbol_t>(s_sub_asr);
-            return s_sub;
-        }
-
-        void visit_TranslationUnit(const ASR::TranslationUnit_t &x) {
-            std::vector<std::pair<std::string, ASR::symbol_t*>> replace_vec;
-            // Transform functions returning arrays to subroutines
-            for (auto &item : x.m_global_scope->get_scope()) {
-                if (is_a<ASR::Function_t>(*item.second)) {
-                    ASR::Function_t *s = down_cast<ASR::Function_t>(item.second);
-                    if (s->m_return_var) {
-                        /*
-                        * A function which returns a aggregate type like array, struct will be converted
-                        * to a subroutine with the destination array as the last
-                        * argument. This helps in avoiding deep copies and the
-                        * destination memory directly gets filled inside the subroutine.
-                        */
-                        if( PassUtils::is_aggregate_type(s->m_return_var) ) {
-                            ASR::symbol_t* s_sub = create_subroutine_from_function(s);
-                            replace_vec.push_back(std::make_pair(item.first, s_sub));
-                        }
-                    }
-                }
-            }
-
-            // FIXME: this is a hack, we need to pass in a non-const `x`,
-            // which requires to generate a TransformVisitor.
-            ASR::TranslationUnit_t &xx = const_cast<ASR::TranslationUnit_t&>(x);
-            // Updating the symbol table so that now the name
-            // of the function (which returned array) now points
-            // to the newly created subroutine.
-            for( auto& item: replace_vec ) {
-                xx.m_global_scope->add_symbol(item.first, item.second);
-            }
-
-            // Now visit everything else
-            for (auto &item : x.m_global_scope->get_scope()) {
-                this->visit_symbol(*item.second);
-            }
-        }
-
-        void visit_Program(const ASR::Program_t &x) {
-            std::vector<std::pair<std::string, ASR::symbol_t*> > replace_vec;
-            // FIXME: this is a hack, we need to pass in a non-const `x`,
-            // which requires to generate a TransformVisitor.
-            ASR::Program_t &xx = const_cast<ASR::Program_t&>(x);
-            current_scope = xx.m_symtab;
-
-            for (auto &item : x.m_symtab->get_scope()) {
-                if (is_a<ASR::Function_t>(*item.second)) {
-                    ASR::Function_t *s = ASR::down_cast<ASR::Function_t>(item.second);
-                    if (s->m_return_var) {
-                        /*
-                        * A function which returns an array will be converted
-                        * to a subroutine with the destination array as the last
-                        * argument. This helps in avoiding deep copies and the
-                        * destination memory directly gets filled inside the subroutine.
-                        */
-                        if( PassUtils::is_aggregate_type(s->m_return_var) ) {
-                            ASR::symbol_t* s_sub = create_subroutine_from_function(s);
-                            replace_vec.push_back(std::make_pair(item.first, s_sub));
-                        }
-                    }
-                }
-            }
-
-            // Updating the symbol table so that now the name
-            // of the function (which returned array) now points
-            // to the newly created subroutine.
-            for( auto& item: replace_vec ) {
-                current_scope->add_symbol(item.first, item.second);
-            }
-
-            for (auto &item : x.m_symtab->get_scope()) {
-                if (is_a<ASR::AssociateBlock_t>(*item.second)) {
-                    ASR::AssociateBlock_t *s = ASR::down_cast<ASR::AssociateBlock_t>(item.second);
-                    visit_AssociateBlock(*s);
-                }
-                if (is_a<ASR::Function_t>(*item.second)) {
-                    ASR::Function_t *s = ASR::down_cast<ASR::Function_t>(item.second);
-                    visit_Function(*s);
-                }
-            }
-
-            current_scope = xx.m_symtab;
-            transform_stmts(xx.m_body, xx.n_body);
-
+        void visit_Function(const ASR::Function_t& x) {
+            ASR::Function_t& xx = const_cast<ASR::Function_t&>(x);
+            ASR::Function_t* x_ptr = ASR::down_cast<ASR::Function_t>(&(xx.base));
+            PassUtils::handle_fn_return_var(al, x_ptr, PassUtils::is_aggregate_or_array_or_nonPrimitive_type);
         }
 
 };
 
-class ReplaceFunctionCallWithSubroutineCall: public PassUtils::PassVisitor<ReplaceFunctionCallWithSubroutineCall> {
+class ReplaceFunctionCallWithSubroutineCall:
+    public ASR::BaseExprReplacer<ReplaceFunctionCallWithSubroutineCall> {
+private :
+public :
+    Allocator & al;
+    int result_counter = 0;
+    SymbolTable* current_scope;
+    Vec<ASR::stmt_t*> &pass_result;
+    ReplaceFunctionCallWithSubroutineCall(Allocator& al_, Vec<ASR::stmt_t*> &pass_result_) :
+        al(al_),pass_result(pass_result_) {}
+
+    void traverse_functionCall_args(ASR::call_arg_t* call_args, size_t call_args_n){
+        for(size_t i = 0; i < call_args_n; i++){
+            ASR::expr_t** current_expr_copy = current_expr;
+            current_expr = &call_args[i].m_value;
+            replace_expr(call_args[i].m_value);
+            current_expr = current_expr_copy;
+        }
+    }
+
+    void replace_FunctionCall(ASR::FunctionCall_t* x){
+        traverse_functionCall_args(x->m_args, x->n_args);
+        if(PassUtils::is_non_primitive_return_type(x->m_type)){ // Arrays and structs are handled by the array_struct_temporary. No need to check for them here.
+            // Create variable in current_scope to be holding the return + Deallocate.
+            ASR::expr_t* result_var = PassUtils::create_var(result_counter++,
+                "_func_call_res", x->base.base.loc, ASRUtils::duplicate_type(al, x->m_type), al, current_scope);
+            if(ASRUtils::is_allocatable(result_var)){
+                Vec<ASR::expr_t*> to_be_deallocated;
+                to_be_deallocated.reserve(al, 1);
+                to_be_deallocated.push_back(al, result_var);
+                pass_result.push_back(al, ASRUtils::STMT(
+                ASR::make_ImplicitDeallocate_t(al, result_var->base.loc,
+                    to_be_deallocated.p, to_be_deallocated.size())));
+            }
+            // Create new call args with `result_var` as last argument capturing return + Create a `subroutineCall`.
+            Vec<ASR::call_arg_t> new_call_args;
+            new_call_args.reserve(al,1);
+            new_call_args.from_pointer_n_copy(al, x->m_args, x->n_args);
+            new_call_args.push_back(al, {result_var->base.loc, result_var});
+            ASR::stmt_t* subrout_call = ASRUtils::STMT(ASRUtils::make_SubroutineCall_t_util(al, x->base.base.loc,
+                                                x->m_name, nullptr, new_call_args.p, new_call_args.size(), x->m_dt,
+                                                nullptr, false, false));
+            // replace functionCall with `result_var` + push subroutineCall into the body.
+            *current_expr = result_var;
+            pass_result.push_back(al, subrout_call);
+        }
+    }
+};
+class ReplaceFunctionCallWithSubroutineCallVisitor:
+    public ASR::CallReplacerOnExpressionsVisitor<ReplaceFunctionCallWithSubroutineCallVisitor> {
 
     private:
 
-        ASR::expr_t *result_var;
+        Allocator& al;
+        Vec<ASR::stmt_t*> pass_result;
+        ReplaceFunctionCallWithSubroutineCall replacer;
+        bool remove_original_statement = false;
+        Vec<ASR::stmt_t*>* parent_body = nullptr;
+
 
     public:
 
-        ReplaceFunctionCallWithSubroutineCall(Allocator& al_):
-        PassVisitor(al_, nullptr), result_var(nullptr)
+        ReplaceFunctionCallWithSubroutineCallVisitor(Allocator& al_): al(al_), replacer(al, pass_result)
         {
+            pass_result.n = 0;
             pass_result.reserve(al, 1);
         }
 
-        void visit_Assignment(const ASR::Assignment_t& x) {
-            if( PassUtils::is_aggregate_type(x.m_target) ) {
-                result_var = x.m_target;
-                this->visit_expr(*(x.m_value));
-            }
-            result_var = nullptr;
+        void call_replacer(){
+            replacer.current_expr = current_expr;
+            replacer.current_scope = current_scope;
+            replacer.replace_expr(*current_expr);
         }
 
-        void visit_FunctionCall(const ASR::FunctionCall_t& x) {
-            std::string x_name;
-            if( x.m_name->type == ASR::symbolType::ExternalSymbol ) {
-                x_name = down_cast<ASR::ExternalSymbol_t>(x.m_name)->m_name;
-            } else if( x.m_name->type == ASR::symbolType::Function ) {
-                x_name = down_cast<ASR::Function_t>(x.m_name)->m_name;
+        void transform_stmts(ASR::stmt_t **&m_body, size_t &n_body) {
+            Vec<ASR::stmt_t*> body;
+            body.reserve(al, n_body);
+            if(!pass_result.empty()){  // Flush `pass_result`.
+                LCOMPILERS_ASSERT(parent_body != nullptr);
+                for(size_t i = 0; i < pass_result.size(); i++){
+                    parent_body->push_back(al, pass_result[i]);
+                }
+                pass_result.n = 0;
             }
-            // The following checks if the name of a function actually
-            // points to a subroutine. If true this would mean that the
-            // original function returned an array and is now a subroutine.
-            // So the current function call will be converted to a subroutine
-            // call. In short, this check acts as a signal whether to convert
-            // a function call to a subroutine call.
-            if (current_scope == nullptr) {
+            bool remove_original_statement_copy = remove_original_statement;
+            for (size_t i = 0; i < n_body; i++) {
+                parent_body = &body;
+                remove_original_statement = false;
+                visit_stmt(*m_body[i]);
+                if( pass_result.size() > 0 ) {
+                    for (size_t j=0; j < pass_result.size(); j++) {
+                        body.push_back(al, pass_result[j]);
+                    }
+                    pass_result.n = 0;
+                }
+                if (!remove_original_statement){
+                    body.push_back(al, m_body[i]);
+                }
+            }
+            remove_original_statement = remove_original_statement_copy;
+            m_body = body.p;
+            n_body = body.size();
+        }
+
+        bool is_function_call_returning_aggregate_type(ASR::expr_t* m_value) {
+            bool is_function_call = ASR::is_a<ASR::FunctionCall_t>(*m_value);
+            bool is_aggregate_type = (ASRUtils::is_aggregate_type(
+                ASRUtils::expr_type(m_value)) ||
+                PassUtils::is_aggregate_or_array_type(m_value));
+            return is_function_call && is_aggregate_type;
+        }
+
+        void visit_Assignment(const ASR::Assignment_t &x) {
+            ASR::CallReplacerOnExpressionsVisitor \
+            <ReplaceFunctionCallWithSubroutineCallVisitor>::visit_Assignment(x);
+            if( !is_function_call_returning_aggregate_type(x.m_value)) {
                 return ;
             }
 
-            ASR::symbol_t *sub = current_scope->resolve_symbol(x_name);
-            if (sub && ASR::is_a<ASR::Function_t>(*sub)
-                && ASR::down_cast<ASR::Function_t>(sub)->m_return_var == nullptr) {
-                LCOMPILERS_ASSERT(result_var != nullptr);
-                Vec<ASR::call_arg_t> s_args;
-                s_args.reserve(al, x.n_args + 1);
-                for( size_t i = 0; i < x.n_args; i++ ) {
-                    s_args.push_back(al, x.m_args[i]);
-                }
-                ASR::call_arg_t result_arg;
-                result_arg.loc = result_var->base.loc;
-                result_arg.m_value = result_var;
-                s_args.push_back(al, result_arg);
-                ASR::stmt_t* subrout_call = ASRUtils::STMT(ASR::make_SubroutineCall_t(al, x.base.base.loc,
-                                                    sub, nullptr,
-                                                    s_args.p, s_args.size(), nullptr));
-                pass_result.push_back(al, subrout_call);
+            ASR::FunctionCall_t* fc = ASR::down_cast<ASR::FunctionCall_t>(x.m_value);
+            if( PassUtils::is_elemental(fc->m_name) && ASRUtils::is_array(fc->m_type) ) {
+                return ;
             }
-            result_var = nullptr;
+            const Location& loc = x.base.base.loc;
+            Vec<ASR::call_arg_t> s_args;
+            s_args.reserve(al, fc->n_args + 1);
+            for( size_t i = 0; i < fc->n_args; i++ ) {
+                s_args.push_back(al, fc->m_args[i]);
+            }
+            if(ASRUtils::is_allocatable(x.m_value) &&
+               ASRUtils::is_allocatable(x.m_target)){ // Make sure to deallocate the argument that will hold the return of function.
+                Vec<ASR::expr_t*> to_be_deallocated;
+                to_be_deallocated.reserve(al, 1);
+                to_be_deallocated.push_back(al, x.m_target);
+                pass_result.push_back(al, ASRUtils::STMT(
+                    ASR::make_ImplicitDeallocate_t(al, x.m_target->base.loc,
+                    to_be_deallocated.p, to_be_deallocated.size())));
+            }
+            ASR::call_arg_t result_arg;
+            result_arg.loc = x.m_target->base.loc;
+            result_arg.m_value = x.m_target;
+            s_args.push_back(al, result_arg);
+            ASR::stmt_t* subrout_call = ASRUtils::STMT(ASRUtils::make_SubroutineCall_t_util(al, loc,
+                fc->m_name, fc->m_original_name, s_args.p, s_args.size(), fc->m_dt, nullptr, false, false));
+            pass_result.push_back(al, subrout_call);
+            remove_original_statement = true;
         }
-
 };
 
 void pass_create_subroutine_from_function(Allocator &al, ASR::TranslationUnit_t &unit,
                                           const LCompilers::PassOptions& /*pass_options*/) {
     CreateFunctionFromSubroutine v(al);
     v.visit_TranslationUnit(unit);
-    ReplaceFunctionCallWithSubroutineCall u(al);
+    ReplaceFunctionCallWithSubroutineCallVisitor u(al);
     u.visit_TranslationUnit(unit);
+    PassUtils::UpdateDependenciesVisitor w(al);
+    w.visit_TranslationUnit(unit);
 }
 
 
