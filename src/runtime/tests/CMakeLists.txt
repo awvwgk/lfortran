@@ -6,11 +6,6 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug
         CACHE STRING "Build type (Debug, Release)" FORCE)
 endif ()
-if (NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
-        CMAKE_BUILD_TYPE STREQUAL "Release"))
-    message("${CMAKE_BUILD_TYPE}")
-    message(FATAL_ERROR "CMAKE_BUILD_TYPE must be one of: Debug, Release (current value: '${CMAKE_BUILD_TYPE}')")
-endif ()
 
 enable_testing()
 
@@ -20,27 +15,15 @@ message("---------------------")
 message("Fortran compiler: ${CMAKE_Fortran_COMPILER}")
 message("C compiler      : ${CMAKE_C_COMPILER}")
 message("Build type: ${CMAKE_BUILD_TYPE}")
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message("Fortran compiler flags: ${CMAKE_Fortran_FLAGS_DEBUG}")
-    message("C compiler flags      : ${CMAKE_C_FLAGS_DEBUG}")
-else ()
-    message("Fortran compiler flags: ${CMAKE_Fortran_FLAGS_RELEASE}")
-    message("C compiler flags      : ${CMAKE_C_FLAGS_RELEASE}")
-endif ()
+string(TOUPPER "${CMAKE_BUILD_TYPE}" BTYPE)
+message("Fortran compiler flags: ${CMAKE_Fortran_FLAGS_${BTYPE}}")
+message("C compiler flags      : ${CMAKE_C_FLAGS_${BTYPE}}")
 message("Installation prefix: ${CMAKE_INSTALL_PREFIX}")
 
 set(SRC
     ../../../src/libasr/runtime/lfortran_intrinsics.c
-    ../impure/lfortran_intrinsic_math.f90
-    ../impure/lfortran_intrinsic_bit.f90
-    ../pure/lfortran_intrinsic_math2.f90
-    ../pure/lfortran_intrinsic_math3.f90
-    ../pure/lfortran_intrinsic_string.f90
-    ../impure/lfortran_intrinsic_sin.f90
     ../impure/lfortran_intrinsic_sin_c.c
-    ../pure/lfortran_intrinsic_kind.f90
     ../builtin/lfortran_intrinsic_builtin.f90
-    ../builtin/lfortran_intrinsic_optimization.f90
     ../pure/lfortran_intrinsic_iso_fortran_env.f90
     ../pure/lfortran_intrinsic_ieee_arithmetic.f90
     ../pure/lfortran_intrinsic_iso_c_binding.f90

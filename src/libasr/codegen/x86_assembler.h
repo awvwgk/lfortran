@@ -30,6 +30,7 @@ Old Link: https://www.systutorials.com/go/intel-x86-64-reference-manual/
 #include <sstream>
 #include <fstream>
 #include <map>
+#include <cmath>
 
 #include <libasr/alloc.h>
 #include <libasr/containers.h>
@@ -40,13 +41,11 @@ Old Link: https://www.systutorials.com/go/intel-x86-64-reference-manual/
 #ifdef LFORTRAN_ASM_PRINT
 #    define EMIT(s) emit("    ", s)
 #    define EMIT_LABEL(s) emit("", s)
-#    define EMIT_VAR(a, b) emit("\n", a + " equ " + i2s(b) + "\n")
-#    define EMIT_VAR_SIZE(a) emit("\n", a + " equ $ - $$\n") // $ is current addr, $$ is start addr
+#    define EMIT_VAR(a, b, c) emit("    ", a + " equ " + c + " - " + b)
 #else
 #    define EMIT(s)
 #    define EMIT_LABEL(s)
 #    define EMIT_VAR(a, b)
-#    define EMIT_VAR_SIZE(a)
 #endif
 
 namespace LCompilers {
@@ -185,6 +184,15 @@ static std::string r2s(X64FReg xmm) {
         default : throw AssemblerError("Unknown instruction");
     }
 }
+
+enum Fcmp : uint8_t {
+    eq = 0,
+    gt = 6, // (NLE in docs)
+    ge = 5, // (NLT in docs)
+    lt = 1,
+    le = 2,
+    ne = 4
+};
 
 static std::string m2s(X64Reg *base, X64Reg *index, uint8_t scale, int64_t disp) {
     std::string r;
@@ -428,8 +436,7 @@ public:
         m_origin = 0x08048000;
 #ifdef LFORTRAN_ASM_PRINT
         if (bits64) {
-            m_asm_code = "BITS 64\n";
-            emit("    ", "org " + i2s((uint64_t)m_origin) + "\n"); // specify origin info
+            m_asm_code = "";
         } else {
             m_asm_code = "BITS 32\n";
             emit("    ", "org " + i2s(m_origin) + "\n"); // specify origin info
@@ -440,6 +447,88 @@ public:
 #ifdef LFORTRAN_ASM_PRINT
     std::string get_asm() {
         return m_asm_code;
+    }
+
+    std::string get_asm64() {
+        std::string header =
+R"(BITS 64
+    org )" + i2s((uint64_t) m_origin) + R"(
+
+ehdr:
+    db 0x7f
+    db 0x45
+    db 0x4c
+    db 0x46
+    db 0x02
+    db 0x01
+    db 0x01
+    db 0x00
+    db 0x00
+    db 0x00
+    db 0x00
+    db 0x00
+    db 0x00
+    db 0x00
+    db 0x00
+    db 0x00
+    dw 0x0002
+    dw 0x003e
+    dd 0x00000001
+    dq _start
+    dq e_phoff
+    dq 0x0000000000000000
+    dd 0x00000000
+    dw ehdrsize
+    dw phdrsize
+    dw 0x0003
+    dw 0x0000
+    dw 0x0000
+    dw 0x0000
+phdr:
+    dd 0x00000001
+    dd 0x00000004
+    dq header_segment_offset
+    dq header_segment_start
+    dq header_segment_start
+    dq header_segment_size
+    dq header_segment_size
+    dq 0x0000000000001000
+text_phdr:
+    dd 0x00000001
+    dd 0x00000005
+    dq text_segment_offset
+    dq text_segment_start
+    dq text_segment_start
+    dq text_segment_size
+    dq text_segment_size
+    dq 0x0000000000001000
+data_phdr:
+    dd 0x00000001
+    dd 0x00000006
+    dq data_segment_offset
+    dq data_segment_start
+    dq data_segment_start
+    dq data_segment_size
+    dq data_segment_size
+    dq 0x0000000000001000
+
+	align 4096, db 0
+
+)";
+
+        std::string footer = R"(
+    ehdrsize equ phdr - ehdr
+    phdrsize equ text_phdr - phdr
+    e_phoff equ phdr - ehdr
+    header_segment_offset equ ehdr - ehdr
+    header_segment_start equ ehdr
+    header_segment_size equ text_segment_start - ehdr
+    text_segment_offset equ text_segment_start - ehdr
+    text_segment_size equ text_segment_end - text_segment_start
+    data_segment_offset equ data_segment_start - ehdr
+    data_segment_size equ data_segment_end - data_segment_start
+)";
+        return header + m_asm_code + footer;
     }
 
     // Saves the generated assembly into a file
@@ -454,6 +543,19 @@ public:
 
     Vec<uint8_t>& get_machine_code() {
         return m_code;
+    }
+
+    void align_by_byte(uint64_t alignment) {
+        uint64_t code_size = m_code.size() ;
+        uint64_t padding_size = (alignment * ceil(code_size / (double)alignment)) - code_size;
+        for (size_t i = 0; i < padding_size; i++) {
+            m_code.push_back(m_al, 0);
+        }
+        EMIT("\n\talign " + std::to_string(alignment) + ", db 0");
+    }
+
+    uint64_t compute_seg_size(std::string start_flag, std::string end_flag) {
+        return get_defined_symbol(end_flag).value - get_defined_symbol(start_flag).value;
     }
 
     void define_symbol(const std::string &name, uint32_t value) {
@@ -539,22 +641,17 @@ public:
         EMIT_LABEL(label + ":");
     }
 
-    void add_var_size(const std::string &var) {
-        uint64_t val = pos() - origin();
+    void add_var64(const std::string &var, const std::string &start, const std::string &end) {
         // TODO: Support 64-bit or 8 byte parameter val in define_symbol()
+        uint64_t val = get_defined_symbol(end).value - get_defined_symbol(start).value;
         define_symbol(var, val);
-        EMIT_VAR_SIZE(var);
+        EMIT_VAR(var, start, end);
     }
 
-    void add_var64(const std::string &var, uint64_t val) {
-        // TODO: Support 64-bit or 8 byte parameter val in define_symbol()
+    void add_var(const std::string &var, const std::string &start, const std::string &end) {
+        uint32_t val = get_defined_symbol(end).value - get_defined_symbol(start).value;
         define_symbol(var, val);
-        EMIT_VAR(var, val);
-    }
-
-    void add_var(const std::string &var, uint32_t val) {
-        define_symbol(var, val);
-        EMIT_VAR(var, val);
+        EMIT_VAR(var, start, end);
     }
 
     uint32_t pos() {
@@ -576,6 +673,7 @@ public:
 
     // Saves the generated machine code into a binary file
     void save_binary(const std::string &filename);
+    void save_binary64(const std::string &filename);
 
     void asm_pop_r64(X64Reg r64) {
         X86Reg r32 = X86Reg(r64 & 7);
@@ -766,13 +864,6 @@ public:
         EMIT("ret");
     }
 
-    void asm_xor_r32_r32(X86Reg r32, X86Reg s32) {
-        m_code.push_back(m_al, 0x31);
-        modrm_sib_disp(m_code, m_al,
-                s32, &r32, nullptr, 1, 0, false);
-        EMIT("xor " + r2s(r32) + ", " + r2s(s32));
-    }
-
     void asm_mov_r32_imm32(X86Reg r32, uint32_t imm32) {
         m_code.push_back(m_al, 0xb8 + r32);
         push_back_uint32(m_code, m_al, imm32);
@@ -897,9 +988,27 @@ public:
         EMIT("sub " + r2s(r32) + ", " + i2s(imm8));
     }
 
+    void asm_sub_r32_imm32(X86Reg r32, uint32_t imm32) {
+        m_code.push_back(m_al, 0x81);
+        modrm_sib_disp(m_code, m_al,
+                X86Reg::ebp, &r32, nullptr, 1, 0, false);
+        push_back_uint32(m_code, m_al, imm32);
+        EMIT("sub " + r2s(r32) + ", " + i2s(imm32));
+    }
+
+    void asm_sub_r64_imm32(X64Reg r64, uint32_t imm32) {
+        X86Reg r32 = X86Reg(r64 & 7);
+        m_code.push_back(m_al, rex(1, 0, 0, r64 >> 3));
+        m_code.push_back(m_al, 0x81);
+        modrm_sib_disp(m_code, m_al,
+                X86Reg::ebp, &r32, nullptr, 1, 0, false);
+        push_back_uint32(m_code, m_al, imm32);
+        EMIT("sub " + r2s(r64) + ", " + i2s(imm32));
+    }
+
     void asm_sub_r64_r64(X64Reg r64, X64Reg s64) {
         X86Reg r32 = X86Reg(r64 & 7), s32 = X86Reg(s64 & 7);
-        m_code.push_back(m_al, rex(1, r64 >> 3, 0, s64 >> 3));
+        m_code.push_back(m_al, rex(1, s64 >> 3, 0, r64 >> 3));
         m_code.push_back(m_al, 0x29);
         modrm_sib_disp(m_code, m_al,
                 s32, &r32, nullptr, 1, 0, false);
@@ -944,7 +1053,7 @@ public:
 
     void asm_cmp_r64_r64(X64Reg r64, X64Reg s64) {
         X86Reg r32 = X86Reg(r64 & 7), s32 = X86Reg(s64 & 7);
-        m_code.push_back(m_al, rex(1, r64 >> 3, 0, s64 >> 3));
+        m_code.push_back(m_al, rex(1, s64 >> 3, 0, r64 >> 3));
         m_code.push_back(m_al, 0x39);
         modrm_sib_disp(m_code, m_al,
                 s32, &r32, nullptr, 1, 0, false);
@@ -956,6 +1065,19 @@ public:
         modrm_sib_disp(m_code, m_al,
                 s32, &r32, nullptr, 1, 0, false);
         EMIT("cmp " + r2s(r32) + ", " + r2s(s32));
+    }
+
+    // CMPSD—Compare Scalar Double Precision Floating-Point Value
+    void asm_cmpsd_r64_r64(X64FReg r64, X64FReg s64, uint8_t imm8) {
+        X86Reg r32 = X86Reg(r64 & 7), s32 = X86Reg(s64 & 7);
+        m_code.push_back(m_al, 0xf2);
+        m_code.push_back(m_al, rex(1, r64 >> 3, 0, s64 >> 3));
+        m_code.push_back(m_al, 0x0f);
+        m_code.push_back(m_al, 0xc2);
+        modrm_sib_disp(m_code, m_al,
+                r32, &s32, nullptr, 1, 0, false);
+        m_code.push_back(m_al, imm8);
+        EMIT("cmpsd " + r2s(r64) + ", " + r2s(s64) + ", " + i2s(imm8));
     }
 
     void asm_jmp_imm8(uint8_t imm8) {
@@ -1153,6 +1275,15 @@ public:
         EMIT("lea " + r2s(r32) + ", " + m2s(base, index, scale, disp));
     }
 
+    void asm_and_r64_imm8(X64Reg r64, uint8_t imm8) {
+        X86Reg r32 = X86Reg(r64 & 7);
+        m_code.push_back(m_al, rex(1, 0, 0, r64 >> 3));
+        m_code.push_back(m_al, 0x83);
+        modrm_sib_disp(m_code, m_al, X86Reg::esp, &r32, nullptr, 1, 0, false);
+        m_code.push_back(m_al, imm8);
+        EMIT("and " + r2s(r32) + ", " + i2s(imm8));
+    }
+
     void asm_and_r32_imm32(X86Reg r32, uint32_t imm32) {
         if (r32 == X86Reg::eax) {
             m_code.push_back(m_al, 0x25);
@@ -1163,10 +1294,85 @@ public:
         EMIT("and " + r2s(r32) + ", " + i2s(imm32));
     }
 
+    void asm_and_r64_r64(X64Reg r64, X64Reg s64) {
+        X86Reg r32 = X86Reg(r64 & 7), s32 = X86Reg(s64 & 7);
+        m_code.push_back(m_al, rex(1, r64 >> 3, 0, s64 >> 3));
+        m_code.push_back(m_al, 0x23);
+        modrm_sib_disp(m_code, m_al, r32, &s32, nullptr, 1, 0, false);
+        EMIT("and " + r2s(r64) + ", " + r2s(s64));
+    }
+
+    void asm_and_r32_r32(X86Reg r32, X86Reg s32) {
+        m_code.push_back(m_al, 0x23);
+        modrm_sib_disp(m_code, m_al, r32, &s32, nullptr, 1, 0, false);
+        EMIT("and " + r2s(r32) + ", " + r2s(r32));
+    }
+
+    void asm_or_r64_r64(X64Reg r64, X64Reg s64) {
+        X86Reg r32 = X86Reg(r64 & 7), s32 = X86Reg(s64 & 7);
+        m_code.push_back(m_al, rex(1, r64 >> 3, 0, s64 >> 3));
+        m_code.push_back(m_al, 0x0B);
+        modrm_sib_disp(m_code, m_al, r32, &s32, nullptr, 1, 0, false);
+        EMIT("or " + r2s(r64) + ", " + r2s(s64));
+    }
+
+    void asm_or_r32_r32(X86Reg r32, X86Reg s32) {
+        m_code.push_back(m_al, 0x0B);
+        modrm_sib_disp(m_code, m_al, r32, &s32, nullptr, 1, 0, false);
+        EMIT("or " + r2s(r32) + ", " + r2s(r32));
+    }
+
+    void asm_xor_r64_r64(X64Reg r64, X64Reg s64) {
+        X86Reg r32 = X86Reg(r64 & 7), s32 = X86Reg(s64 & 7);
+        m_code.push_back(m_al, rex(1, r64 >> 3, 0, s64 >> 3));
+        m_code.push_back(m_al, 0x33);
+        modrm_sib_disp(m_code, m_al, r32, &s32, nullptr, 1, 0, false);
+        EMIT("xor " + r2s(r64) + ", " + r2s(s64));
+    }
+
+    void asm_xor_r32_r32(X86Reg r32, X86Reg s32) {
+        m_code.push_back(m_al, 0x31);
+        modrm_sib_disp(m_code, m_al,
+                s32, &r32, nullptr, 1, 0, false);
+        EMIT("xor " + r2s(r32) + ", " + r2s(s32));
+    }
+
     void asm_syscall() {
         m_code.push_back(m_al, 0x0F);
         m_code.push_back(m_al, 0x05);
         EMIT("syscall");
+    }
+
+    // SHL - Shift Logical/Unsigned Left
+    void asm_shl_r64_cl(X64Reg r64) {
+        X86Reg r32 = X86Reg(r64 & 7);
+        m_code.push_back(m_al, rex(1, 0, 0, r64 >> 3));
+        m_code.push_back(m_al, 0xD3);
+        modrm_sib_disp(m_code, m_al, X86Reg::esp, &r32, nullptr, 1, 0, false);
+        EMIT("shl " + r2s(r64) + ", cl");
+    }
+
+    // SHL - Shift Logical/Unsigned Left
+    void asm_shl_r32_cl(X86Reg r32) {
+        m_code.push_back(m_al, 0xD3);
+        modrm_sib_disp(m_code, m_al, X86Reg::esp, &r32, nullptr, 1, 0, false);
+        EMIT("shl " + r2s(r32) + ", cl");
+    }
+
+    // SAR - Shift Arithmetic/Signed Right
+    void asm_sar_r64_cl(X64Reg r64) {
+        X86Reg r32 = X86Reg(r64 & 7);
+        m_code.push_back(m_al, rex(1, 0, 0, r64 >> 3));
+        m_code.push_back(m_al, 0xD3);
+        modrm_sib_disp(m_code, m_al, X86Reg::edi, &r32, nullptr, 1, 0, false);
+        EMIT("sar " + r2s(r64) + ", cl");
+    }
+
+    // SAR - Shift Arithmetic/Signed Right
+    void asm_sar_r32_cl(X86Reg r32) {
+        m_code.push_back(m_al, 0xD3);
+        modrm_sib_disp(m_code, m_al, X86Reg::edi, &r32, nullptr, 1, 0, false);
+        EMIT("sar " + r2s(r32) + ", cl");
     }
 
     void asm_fld_m32(X86Reg *base, X86Reg *index,
@@ -1338,11 +1544,58 @@ public:
                 r32, &s32, nullptr, 1, 0, false);
         EMIT("cvttsd2si " + r2s(r64) + ", " + r2s(s64));
     }
+
+    // PMOVMSKB—Move Byte Mask
+    // Creates a mask made up of the most significant bit of each byte
+    // of the source operand (second operand) and stores the result in the low byte
+    // or word of the destination operand (first operand)
+    void asm_pmovmskb_r32_r64(X86Reg r32, X64FReg s64) {
+        X86Reg s32 = X86Reg(s64 & 7);
+        m_code.push_back(m_al, rex(1, 0, 0, s64 >> 3));
+        m_code.push_back(m_al, 0x66);
+        m_code.push_back(m_al, 0x0f);
+        m_code.push_back(m_al, 0xd7);
+        modrm_sib_disp(m_code, m_al, r32, &s32, nullptr, 1, 0, false);
+        EMIT("pmovmskb " + r2s(r32) + ", " + r2s(s64));
+    }
+
+    // UCOMISD—Unordered Compare Scalar Double Precision Floating-Point Values and Set EFLAGS
+    void asm_ucomisd_r64_r64(X64FReg r64, X64FReg s64) {
+        X86Reg r32 = X86Reg(r64 & 7), s32 = X86Reg(s64 & 7);
+        m_code.push_back(m_al, rex(1, r64 >> 3, 0, s64 >> 3));
+        m_code.push_back(m_al, 0x66);
+        m_code.push_back(m_al, 0x0f);
+        m_code.push_back(m_al, 0x2e);
+        modrm_sib_disp(m_code, m_al, r32, &s32, nullptr, 1, 0, false);
+        EMIT("ucomisd " + r2s(r64) + ", " + r2s(s64));
+    }
+
+    // COMISD—Compare Scalar Ordered Double Precision Floating-Point Values and Set EFLAGS
+    void asm_comisd_r64_r64(X64FReg r64, X64FReg s64) {
+        X86Reg r32 = X86Reg(r64 & 7), s32 = X86Reg(s64 & 7);
+        m_code.push_back(m_al, rex(1, r64 >> 3, 0, s64 >> 3));
+        m_code.push_back(m_al, 0x66);
+        m_code.push_back(m_al, 0x0f);
+        m_code.push_back(m_al, 0x2f);
+        modrm_sib_disp(m_code, m_al, r32, &s32, nullptr, 1, 0, false);
+        EMIT("comisd " + r2s(r64) + ", " + r2s(s64));
+    }
+
+    // SQRTSD—Compute Square Root of Scalar Double Precision Floating-Point Value
+    void asm_sqrtsd_r64_r64(X64FReg r64, X64FReg s64) {
+        X86Reg r32 = X86Reg(r64 & 7), s32 = X86Reg(s64 & 7);
+        m_code.push_back(m_al, rex(1, r64 >> 3, 0, s64 >> 3));
+        m_code.push_back(m_al, 0xf2);
+        m_code.push_back(m_al, 0x0f);
+        m_code.push_back(m_al, 0x51);
+        modrm_sib_disp(m_code, m_al, r32, &s32, nullptr, 1, 0, false);
+        EMIT("sqrtsd " + r2s(r64) + ", " + r2s(s64));
+    }
 };
 
 
 // Generate an ELF 32 bit header and footer
-// With these two functions, one only has to generate a `_start` assembly
+// With these two functions, one only must generate a `_start` assembly
 // function to have a working binary on Linux.
 void emit_elf32_header(X86Assembler &a, uint32_t p_flags=5);
 void emit_elf32_footer(X86Assembler &a);
@@ -1351,7 +1604,7 @@ void emit_exit(X86Assembler &a, const std::string &name,
     uint32_t exit_code);
 
 // this is similar to emit_exit() but takes the argument (i.e. exit code)
-// from top of stack. To call this exit2, one needs to jump to it
+// from top of stack. To call this exit2, one must jump to it
 // instead of call it. (Because calling pushes the instruction address and
 // base pointer value (ebp) of previous function and thus makes the
 // exit code parameter less reachable)
@@ -1359,6 +1612,10 @@ void emit_exit2(X86Assembler &a, const std::string &name);
 
 void emit_data_string(X86Assembler &a, const std::string &label,
     const std::string &s);
+void emit_i32_const(X86Assembler &a, const std::string &label,
+    const int32_t z);
+void emit_i64_const(X86Assembler &a, const std::string &label,
+    const int64_t z);
 void emit_float_const(X86Assembler &a, const std::string &label,
     const float z);
 void emit_double_const(X86Assembler &a, const std::string &label,
@@ -1369,12 +1626,13 @@ void emit_print_int(X86Assembler &a, const std::string &name);
 void emit_print_float(X86Assembler &a, const std::string &name);
 
 // Generate an ELF 64 bit header and footer
-// With these two functions, one only has to generate a `_start` assembly
+// With these three functions, one only must generate a `_start` assembly
 // function to have a working binary on Linux.
-void emit_elf64_header(X86Assembler &a, uint32_t p_flags=5);
-void emit_elf64_footer(X86Assembler &a);
-
-void emit_exit_64(X86Assembler &a, std::string label, int exit_code);
+template <typename T>
+void append_header_bytes(Allocator &al, T src, Vec<uint8_t> &des);
+void align_by_byte(Allocator &al, Vec<uint8_t> &code, uint64_t alignment);
+Vec<uint8_t> create_elf64_x86_header(Allocator &al, uint64_t origin, uint64_t entry,
+    uint64_t text_seg_size, uint64_t data_seg_size);
 
 void emit_print_64(X86Assembler &a, const std::string &msg_label, uint64_t size);
 void emit_print_int_64(X86Assembler &a, const std::string &name);

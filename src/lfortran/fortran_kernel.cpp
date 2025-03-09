@@ -17,8 +17,8 @@
 #include <xeus/xinterpreter.hpp>
 #include <xeus/xkernel.hpp>
 #include <xeus/xkernel_configuration.hpp>
-#include <xeus/xserver_zmq.hpp>
-#include "xeus/xserver_shell_main.hpp"
+#include <xeus-zmq/xzmq_context.hpp>
+#include <xeus-zmq/xserver_zmq_split.hpp>
 
 #include <nlohmann/json.hpp>
 
@@ -76,19 +76,22 @@ namespace LCompilers::LFortran {
         FortranEvaluator e;
 
     public:
-        custom_interpreter() : e{CompilerOptions()} {}
+        custom_interpreter() : e{CompilerOptions()} {
+            e.compiler_options.interactive = true;
+        }
         virtual ~custom_interpreter() = default;
 
     private:
 
         void configure_impl() override;
 
-        nl::json execute_request_impl(int execution_counter,
-                                      const std::string& code,
-                                      bool silent,
-                                      bool store_history,
-                                      nl::json user_expressions,
-                                      bool allow_stdin) override;
+        void execute_request_impl(send_reply_callback cb,
+                                  int execution_counter,
+                                  const std::string& code,
+                                  //bool silent,
+                                  //bool store_history,
+                                  xeus::execute_request_config config,
+                                  nl::json user_expressions) override;
 
         nl::json complete_request_impl(const std::string& code,
                                        int cursor_pos) override;
@@ -104,13 +107,12 @@ namespace LCompilers::LFortran {
         void shutdown_request_impl() override;
     };
 
-
-    nl::json custom_interpreter::execute_request_impl(int execution_counter, // Typically the cell number
-                                                      const std::string& code, // Code to execute
-                                                      bool /*silent*/,
-                                                      bool /*store_history*/,
-                                                      nl::json /*user_expressions*/,
-                                                      bool /*allow_stdin*/)
+    
+    void custom_interpreter::execute_request_impl(send_reply_callback cb,
+                                                  int execution_counter, // Typically the cell number
+                                                  const std::string& code, // Code to execute
+                                                  xeus::execute_request_config, //config
+                                                  nl::json /*user_expressions*/)
     {
         FortranEvaluator::EvalResult r;
         std::string std_out;
@@ -144,7 +146,8 @@ namespace LCompilers::LFortran {
                     result["evalue"] = msg;
                     result["traceback"] = nl::json::array();
                 }
-                return result;
+                cb(result);
+                return;
             }
             if (startswith(code, "%%showasr")) {
                 code0 = code.substr(code.find("\n")+1);
@@ -173,7 +176,8 @@ namespace LCompilers::LFortran {
                     result["evalue"] = msg;
                     result["traceback"] = nl::json::array();
                 }
-                return result;
+                cb(result);
+                return;
             }
             if (startswith(code, "%%showllvm")) {
                 code0 = code.substr(code.find("\n")+1);
@@ -187,7 +191,6 @@ namespace LCompilers::LFortran {
                 }
                 LCompilers::PassManager lpm;
                 lpm.use_default_passes();
-                lpm.do_not_use_optimization_passes();
                 diag::Diagnostics diagnostics;
                 Result<std::string>
                 res = e.get_llvm(code0, lm, lpm, diagnostics);
@@ -205,7 +208,8 @@ namespace LCompilers::LFortran {
                     result["evalue"] = msg;
                     result["traceback"] = nl::json::array();
                 }
-                return result;
+                cb(result);
+                return;
             }
             if (startswith(code, "%%showasm")) {
                 code0 = code.substr(code.find("\n")+1);
@@ -219,7 +223,6 @@ namespace LCompilers::LFortran {
                 }
                 LCompilers::PassManager lpm;
                 lpm.use_default_passes();
-                lpm.do_not_use_optimization_passes();
                 diag::Diagnostics diagnostics;
                 Result<std::string>
                 res = e.get_asm(code0, lm, lpm, diagnostics);
@@ -237,7 +240,8 @@ namespace LCompilers::LFortran {
                     result["evalue"] = msg;
                     result["traceback"] = nl::json::array();
                 }
-                return result;
+                cb(result);
+                return;
             }
             if (startswith(code, "%%showcpp")) {
                 code0 = code.substr(code.find("\n")+1);
@@ -266,7 +270,8 @@ namespace LCompilers::LFortran {
                     result["evalue"] = msg;
                     result["traceback"] = nl::json::array();
                 }
-                return result;
+                cb(result);
+                return;
             }
             if (startswith(code, "%%showfmt")) {
                 code0 = code.substr(code.find("\n")+1);
@@ -295,7 +300,8 @@ namespace LCompilers::LFortran {
                     result["evalue"] = msg;
                     result["traceback"] = nl::json::array();
                 }
-                return result;
+                cb(result);
+                return;
             }
 
             RedirectStdout s(std_out);
@@ -310,7 +316,6 @@ namespace LCompilers::LFortran {
             }
             LCompilers::PassManager lpm;
             lpm.use_default_passes();
-            lpm.do_not_use_optimization_passes();
             diag::Diagnostics diagnostics;
             Result<FortranEvaluator::EvalResult>
             res = e.evaluate(code0, false, lm, lpm, diagnostics);
@@ -324,7 +329,8 @@ namespace LCompilers::LFortran {
                 result["ename"] = "CompilerError";
                 result["evalue"] = msg;
                 result["traceback"] = nl::json::array();
-                return result;
+                cb(result);
+                return;
             }
         } catch (const LCompilersException &e) {
             publish_stream("stderr", "LFortran Exception: " + e.msg());
@@ -333,7 +339,8 @@ namespace LCompilers::LFortran {
             result["ename"] = "LCompilersException";
             result["evalue"] = e.msg();
             result["traceback"] = nl::json::array();
-            return result;
+            cb(result);
+            return;
         }
 
         if (std_out.size() > 0) {
@@ -390,9 +397,10 @@ namespace LCompilers::LFortran {
         result["status"] = "ok";
         result["payload"] = nl::json::array();
         result["user_expressions"] = nl::json::object();
-        return result;
+        cb(result);
+        return;
     }
-
+    
     void custom_interpreter::configure_impl()
     {
         // Perform some operations
@@ -483,9 +491,7 @@ namespace LCompilers::LFortran {
 
     int run_kernel(const std::string &connection_filename)
     {
-        using context_type = xeus::xcontext_impl<zmq::context_t>;
-        using context_ptr = std::unique_ptr<context_type>;
-        context_ptr context = context_ptr(new context_type());
+        std::unique_ptr<xeus::xcontext> context = xeus::make_zmq_context();
 
         // Create interpreter instance
         using interpreter_ptr = std::unique_ptr<custom_interpreter>;

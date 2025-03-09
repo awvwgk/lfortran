@@ -51,7 +51,7 @@ struct Label {
     Label(const std::string &message, const std::vector<Location> &locations,
             bool primary=true) : primary{primary}, message{message} {
         for (auto &loc : locations) {
-            spans.push_back(Span(loc));
+            spans.emplace_back(loc);
         }
     }
 };
@@ -122,6 +122,8 @@ struct Diagnostics {
 
     // Returns true iff diagnostics contains at least one error message
     bool has_error() const;
+    bool has_warning() const;
+    bool has_style() const;
 
     void add(const Diagnostic &d) {
         diagnostics.push_back(d);
@@ -184,6 +186,10 @@ struct Diagnostics {
             const std::vector<Location> &locations, const std::string &error_label) {
         message_label(message, locations, error_label,
             Level::Style, Stage::Parser);
+    }
+
+    void clear() {
+        diagnostics.clear();
     }
 };
 

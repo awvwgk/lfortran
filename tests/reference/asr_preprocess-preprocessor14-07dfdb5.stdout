@@ -1,0 +1,53 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            preprocessor14:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            
+                        })
+                    preprocessor14
+                    []
+                    [(Print
+                        (StringConstant
+                            "X == 1"
+                            (String 1 6 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "X == 1"
+                            (String 1 6 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "X == 1"
+                            (String 1 6 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "X == 1"
+                            (String 1 6 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "X == 1"
+                            (String 1 6 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "X == 1"
+                            (String 1 6 () PointerString)
+                        )
+                    )]
+                )
+        })
+    []
+)

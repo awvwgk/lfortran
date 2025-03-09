@@ -63,6 +63,28 @@ static inline char* name2char(const ast_t *n)
     return down_cast2<Name_t>(n)->m_id;
 }
 
+static inline bool streql(const char *s1, const char *s2)
+{
+#if defined(_MSC_VER)
+    return _stricmp(s1, s2) == 0;
+#else
+    return strcasecmp(s1, s2) == 0;
+#endif
+}
+
+static inline char* name2char_with_check(const ast_t *n1, const ast_t *n2,
+        Location &loc, std::string unit, LCompilers::diag::Diagnostics &diagnostics) {
+    char* n1c = name2char(n1);
+    if(n2) {
+        char* n2c = name2char(n2);
+        if (!streql(n1c, n2c)) {
+            diagnostics.add(LCompilers::LFortran::parser_local::ParserError(
+                "End " + unit + " name does not match " + unit + " name", {loc}).d);
+        }
+    }
+    return n1c;
+}
+
 template <typename T, astType type>
 static inline T** vec_cast(const Vec<ast_t*> &x) {
     T **s = (T**)x.p;
@@ -145,6 +167,8 @@ static inline Vec<kind_item_t> a2kind_list(Allocator &al,
 
 #define SIMPLE_ATTR(x, l) make_SimpleAttribute_t( \
             p.m_a, l, simple_attributeType::Attr##x)
+#define SIMPLE_ATTR_INVALID(l) make_SimpleAttribute_t( \
+            p.m_a, l, (simple_attributeType)-1)
 #define INTENT(x, l) make_AttrIntent_t( \
             p.m_a, l, attr_intentType::x)
 #define BIND(x, l) make_AttrBind_t( \
@@ -160,6 +184,16 @@ static inline Vec<kind_item_t> a2kind_list(Allocator &al,
 #define CODIMENSION(dim, l) make_AttrCodimension_t( \
             p.m_a, l, \
             dim.p, dim.size())
+
+decl_attribute_t** COMMON(Allocator &al, Location &loc,
+            common_block_t* args, size_t n_args) {
+    Vec<decl_attribute_t*> v;
+    v.reserve(al, 1);
+    ast_t* a = make_AttrCommon_t(al, loc, args, n_args);
+    v.push_back(al, down_cast<decl_attribute_t>(a));
+    return v.p;
+}
+
 ast_t* PASS1(Allocator &al, Location &loc, ast_t* id) {
     char* name;
     if(id == nullptr) {
@@ -197,6 +231,31 @@ static inline LCompilers::LFortran::IntSuffix divide_int_by_2(
     return n2;
 }
 
+static inline ast_t* VAR_DECL_PRAGMA2(Allocator &al, Location &loc,
+        const LCompilers::Str &text, trivia_t *trivia, LCompilers::diag::Diagnostics &diagnostics)
+{
+    std::string t = text.str();
+    if (LCompilers::startswith(t, "!LF$")) {
+        if (LCompilers::startswith(t, "!LF$ ")) {
+            t = t.substr(5);
+            return make_DeclarationPragma_t(al, loc,
+                LCompilers::LFortran::AST::LFortranPragma, LCompilers::s2c(al, t),
+                trivia);
+        } else {
+            diagnostics.add(LCompilers::LFortran::parser_local::ParserError(
+                "The LFortran pragma !LF$ must be followed by a space", {loc}).d);
+            return nullptr;
+        }
+    } else {
+            diagnostics.add(LCompilers::LFortran::parser_local::ParserError(
+                "Unsupported compiler directive (pragma)", {loc}).d);
+            return nullptr;
+    }
+}
+
+#define VAR_DECL_PRAGMA(text, trivia, l) \
+        VAR_DECL_PRAGMA2(p.m_a, l, text, trivia_cast(trivia), p.diag)
+
 #define VAR_DECL_EQUIVALENCE(args, trivia, l) make_Declaration_t(p.m_a, l, \
         nullptr, EQUIVALENCE(p.m_a, l, args.p, args.n), 1, \
         nullptr, 0, trivia_cast(trivia))
@@ -207,32 +266,42 @@ static inline LCompilers::LFortran::IntSuffix divide_int_by_2(
 #define ATTR_TYPE(x, l) make_AttrType_t( \
             p.m_a, l, \
             decl_typeType::Type##x, \
-            nullptr, 0, \
+            nullptr, 0, nullptr, \
             nullptr, None)
 
 #define ATTR_TYPE_INT(x, n, l) make_AttrType_t( \
             p.m_a, l, \
             decl_typeType::Type##x, \
             a2kind_list(p.m_a, l, INTEGER(n, l)).p, 1, \
-            nullptr, None)
+            nullptr, nullptr, None)
 
 #define ATTR_TYPE_KIND(x, kind, l) make_AttrType_t( \
             p.m_a, l, \
             decl_typeType::Type##x, \
             kind.p, kind.size(), \
-            nullptr, None)
+            nullptr, nullptr, None)
 
 #define ATTR_TYPE_NAME(x, name, l) make_AttrType_t( \
             p.m_a, l, \
             decl_typeType::Type##x, \
-            nullptr, 0, \
+            nullptr, 0, nullptr, \
             name2char(name), None)
 
 #define ATTR_TYPE_STAR(x, sym, l) make_AttrType_t( \
             p.m_a, l, \
             decl_typeType::Type##x, \
-            nullptr, 0, \
+            nullptr, 0, nullptr, \
             nullptr, sym)
+
+#define ATTR_TYPE_ATTR(x, attr, l) make_AttrType_t( \
+            p.m_a, l, \
+            decl_typeType::Type##x, \
+            nullptr, 0, \
+            down_cast<decl_attribute_t>(attr), \
+            nullptr, None)
+
+#define ATTR_NAME(x, l) make_AttrNamelist_t \
+            (p.m_a, l, name2char(x))
 
 #define IMPORT0(x, trivia, l) make_Import_t( \
             p.m_a, l, \
@@ -245,12 +314,35 @@ static inline LCompilers::LFortran::IntSuffix divide_int_by_2(
             import_modifierType::Import##x, \
             trivia_cast(trivia))
 
-
-#define VAR_DECL1(vartype, xattr, varsym, trivia, l) \
+ #define VAR_DECL1a(vartype, xattr, varsym, trivia, l) \
         make_Declaration_t(p.m_a, l, \
         down_cast<decl_attribute_t>(vartype), \
         VEC_CAST(xattr, decl_attribute), xattr.n, \
         varsym.p, varsym.n, trivia_cast(trivia))
+
+ #define VAR_DECL1b(vartype,  varsym, trivia, l) \
+        make_Declaration_t(p.m_a, l, \
+        down_cast<decl_attribute_t>(vartype), \
+        nullptr, 0, \
+        varsym.p, varsym.n, trivia_cast(trivia))
+
+ast_t* fn_VAR_DECL1c(Allocator &al,
+    ast_t *vartype, const Vec<var_sym_t> &varsym, ast_t *trivia,
+            Location l, LCompilers::diag::Diagnostics &diagnostics) {
+    for (size_t i=0; i<varsym.size(); i++) {
+        if (varsym[i].m_sym == symbolType::Equal) {
+            diagnostics.add(LCompilers::LFortran::parser_local::ParserError(
+                "Invalid syntax for variable initialization (try inserting '::' after the type)", {l}).d);
+        }
+    }
+    return make_Declaration_t(al, l,
+        down_cast<decl_attribute_t>(vartype),
+        nullptr, 0,
+        varsym.p, varsym.n, trivia_cast(trivia));
+}
+
+#define VAR_DECL1c(vartype, varsym, trivia, l) \
+    fn_VAR_DECL1c(p.m_a, vartype, varsym, trivia, l, p.diag)
 
 decl_attribute_t** VAR_DECL2b(Allocator &al,
             ast_t *xattr0) {
@@ -288,16 +380,6 @@ decl_attribute_t** VAR_DECL_PARAMETERb(Allocator &al,
     return v.p;
 }
 
-decl_attribute_t** ATTRCOMMON(Allocator &al,
-        Location &loc) {
-    Vec<decl_attribute_t*> v;
-    v.reserve(al, 1);
-    ast_t* a = make_SimpleAttribute_t(al, loc,
-            simple_attributeType::AttrCommon);
-    v.push_back(al, down_cast<decl_attribute_t>(a));
-    return v.p;
-}
-
 #define VAR_DECL2(xattr0, trivia, l) \
         make_Declaration_t(p.m_a, l, \
         nullptr, \
@@ -324,12 +406,87 @@ decl_attribute_t** ATTRCOMMON(Allocator &al,
         varsym.p, varsym.n, \
         trivia_cast(trivia))
 
-#define VAR_DECL_COMMON(varsym, trivia, l) \
-        make_Declaration_t(p.m_a, l, \
-        nullptr, \
-        ATTRCOMMON(p.m_a, l), 1, \
-        varsym.p, varsym.n, \
-        trivia_cast(trivia))
+
+
+static inline bool has_num_val(expr_t const * const expr, int64_t val) {
+    if (expr && is_a<Num_t>(*expr)) {
+	Num_t const *num = down_cast<Num_t>(expr);
+	return (num->m_n == val);
+    }
+    return false;
+}
+
+/* Convert a var_sym_t to an expr_t*.  This is used to mimic the old way that common block
+   objects were stored as an expr, and decoded in ast_common_visitor. */
+static inline expr_t* dims2expr(Allocator &al, var_sym_t const &vs) {
+    if (vs.n_dim == 0) {
+	// There aren't any dimensions, just make a name
+	return EXPR(make_Name_t(al, vs.loc, vs.m_name, nullptr, 0));
+    } else {
+	// Convert each dimension_t to fnarg_t
+	fnarg_t* args = al.allocate<fnarg_t>(vs.n_dim);
+	fnarg_t* ca = args;
+	for (size_t i = 0; i < vs.n_dim; ++i) {
+	    dimension_t const &d = vs.m_dim[i];
+	    ca->loc = d.loc;
+	    if (has_num_val(d.m_start, 1)) {
+		ca->m_start = nullptr;
+		ca->m_step = nullptr;
+	    } else {
+		ca->m_start = d.m_start;
+		ca->m_step = EXPR(make_Num_t(al, vs.loc, 1, nullptr));
+	    }
+	    ca->m_end = d.m_end;
+	    ca->m_label = 0;
+	    ++ca;
+	}
+	return EXPR(make_FuncCallOrArray_t(al, vs.loc, vs.m_name,
+					   nullptr, 0, /* member */
+					   args, vs.n_dim,
+					   nullptr, 0, /* keywords */
+					   nullptr, 0, /* subargs */
+					   nullptr, 0 /* temp_args */ ));
+    }
+}
+
+#define VAR_DECL_COMMON(blks, trivia, l) \
+    make_Declaration_t(p.m_a, l, \
+		       nullptr, \
+		       COMMON(p.m_a, l, blks.p, blks.n), 1, nullptr, 0, trivia_cast(trivia))
+
+
+static inline common_block_t *make_common_block(Allocator &al, Location const &loc,
+        ast_t const *name, Vec<var_sym_t> const & varsym) {
+    common_block_t * r = al.allocate<common_block_t>(1);
+    r->loc = loc;
+    if (name)
+	r->m_name = name2char(name);
+    else
+	r->m_name = nullptr;
+    r->m_objects = varsym.p;
+    r->n_objects = varsym.n;
+    for (size_t i = 0; i < varsym.n; ++i) {
+	r->m_objects[i].m_initializer = dims2expr(al, r->m_objects[i]);
+    }
+    return r;
+}
+
+#define COMMON_BLOCK(name, varsym, l) \
+    make_common_block(p.m_a, l, name, varsym)
+
+/* Add (name,varsym) to curr_list, then append other_list */
+static inline void  merge_common_block_lists(Allocator &al, Location const &loc,
+        Vec<common_block_t> &curr_list, ast_t const *name, Vec<var_sym_t> const & varsym,
+	Vec<common_block_t> const &other_list) {
+    curr_list.reserve(al, 1+other_list.size());
+    curr_list.push_back(al, *make_common_block(al, loc, name, varsym));
+    for(common_block_t const & o : other_list) {
+	curr_list.push_back(al, o);
+    }
+}
+
+#define COMMON_BLOCK_MERGE(list, name, varsym, other_list, loc) \
+    merge_common_block_lists(p.m_a, loc, list, name, varsym, other_list)
 
 ast_t* data_implied_do(Allocator &al, Location &loc,
         Vec<ast_t*> obj_list,
@@ -366,24 +523,62 @@ ast_t* data_implied_do(Allocator &al, Location &loc,
 #define IMPLICIT_NONE_EXTERNAL(l) make_ImplicitNoneExternal_t(p.m_a, l, 0)
 #define IMPLICIT_NONE_TYPE(l) make_ImplicitNoneType_t(p.m_a, l)
 
-#define IMPLICIT(t, spec, trivia, l) make_Implicit_t(p.m_a, l, \
-        down_cast<decl_attribute_t>(t), nullptr, 0, \
-        VEC_CAST(spec, letter_spec), spec.size(), \
-        trivia_cast(trivia))
-#define IMPLICIT1(t, spec, specs, trivia, l) make_Implicit_t(p.m_a, l, \
-        down_cast<decl_attribute_t>(t), \
-        VEC_CAST(spec, letter_spec), spec.size(), \
-        VEC_CAST(specs, letter_spec), specs.size(), \
-        trivia_cast(trivia))
 
-#define LETTER_SPEC1(a, l) make_LetterSpec_t(p.m_a, l, \
-        nullptr, name2char(a))
-#define LETTER_SPEC2(a, b, l) make_LetterSpec_t(p.m_a, l, \
-        name2char(a), name2char(b))
+static inline char * id_if_Name_t(expr_t const * exprNode) {
+  char *id = nullptr;
+  if(exprNode->type == LCompilers::LFortran::AST::exprType::Name) {
+    Name_t const * nameNode = down_cast<Name_t>(exprNode);
+    id = const_cast<char*>(nameNode->m_id);
+  }
+  return id;
+}
+
+Vec<ast_t*> vec_kind_item2ast(Allocator &al, const Vec<kind_item_t> &kind_items, LCompilers::diag::Diagnostics &diagnostics) {
+    Vec<ast_t*> ast_nodes;
+    ast_nodes.reserve(al, kind_items.size());
+
+    for (const auto &kind_item : kind_items) {
+      /*  Each of these kind_items should be of the form:
+	     : letter
+	     | letter - letter
+	  We need to convert each one into a LetterSpec, which we
+	  return a list of.
+      */
+      expr_t const * exprNode = kind_item.m_value;
+      Location const & loc = exprNode->base.loc;
+      ast_t *ls_node = nullptr;
+      char *end_name = id_if_Name_t(exprNode);
+      if(end_name) {
+	ls_node = make_LetterSpec_t(al, loc, nullptr, end_name);
+      } else if (exprNode->type == LCompilers::LFortran::AST::exprType::BinOp) {
+	BinOp_t const * binOpNode = down_cast<BinOp_t>(exprNode);
+	if (binOpNode->m_op == LCompilers::LFortran::AST::operatorType::Sub) {
+	  char *start_name = id_if_Name_t(binOpNode->m_left);
+	  end_name = id_if_Name_t(binOpNode->m_right);
+	  if (start_name && end_name) {
+	    ls_node = make_LetterSpec_t(al, loc, start_name, end_name);
+	  }
+	}
+      }
+      if (ls_node) {
+	ast_nodes.push_back(al, ls_node);
+      } else {
+        diagnostics.add(LCompilers::LFortran::parser_local::ParserError(
+            "Bad implicit letter specification", {loc}).d);
+      }
+    }
+
+    return ast_nodes;
+}
+#define IMPLICIT(specs, trivia, l) make_Implicit_t(p.m_a, l, \
+	VEC_CAST(specs, implicit_spec), specs.size(), trivia_cast(trivia))
+#define IMPLICIT_SPEC(t, specs, l) make_ImplicitSpec_t(p.m_a, l, \
+        down_cast<decl_attribute_t>(t), \
+        VEC_CAST(vec_kind_item2ast(p.m_a, specs, p.diag), letter_spec), specs.size())
 
 static inline var_sym_t* VARSYM(Allocator &al, Location &l,
         char* name, dimension_t* dim, size_t n_dim,
-        codimension_t* codim, size_t n_codim, expr_t* init,
+        codimension_t* codim, size_t n_codim, expr_t* length, expr_t* init,
         LCompilers::LFortran::AST::symbolType sym, decl_attribute_t* x)
 {
     var_sym_t *r = al.allocate<var_sym_t>(1);
@@ -393,6 +588,7 @@ static inline var_sym_t* VARSYM(Allocator &al, Location &l,
     r->n_dim = n_dim;
     r->m_codim = codim;
     r->n_codim = n_codim;
+    r->m_length = length;
     r->m_initializer = init;
     r->m_sym = sym;
     r->m_spec = x;
@@ -400,21 +596,27 @@ static inline var_sym_t* VARSYM(Allocator &al, Location &l,
 }
 
 #define VAR_SYM_NAME(name, sym, loc) VARSYM(p.m_a, loc, \
-        name2char(name), nullptr, 0, nullptr, 0, nullptr, sym, nullptr)
+        name2char(name), nullptr, 0, nullptr, 0, nullptr, nullptr, sym, nullptr)
 #define VAR_SYM_DIM_EXPR(exp, sym, loc) VARSYM(p.m_a, loc, nullptr, \
-        nullptr, 0, nullptr, 0, down_cast<expr_t>(exp), sym, nullptr)
+        nullptr, 0, nullptr, 0, nullptr, down_cast<expr_t>(exp), sym, nullptr)
 #define VAR_SYM_DIM_INIT(name, dim, n_dim, init, sym, loc) VARSYM(p.m_a, loc, \
-        name2char(name), dim, n_dim, nullptr, 0, \
+        name2char(name), dim, n_dim, nullptr, 0, nullptr, \
+        down_cast<expr_t>(init), sym, nullptr)
+#define VAR_SYM_DIM_LEN(name, dim, n_dim, len, sym, loc) VARSYM(p.m_a, loc, \
+        name2char(name), dim, n_dim, nullptr, 0, down_cast<expr_t>(len), \
+        nullptr, sym, nullptr)
+#define VAR_SYM_DIM_LEN_INIT(name, dim, n_dim, len, init, sym, loc) VARSYM(p.m_a, loc, \
+        name2char(name), dim, n_dim, nullptr, 0, down_cast<expr_t>(len), \
         down_cast<expr_t>(init), sym, nullptr)
 #define VAR_SYM_DIM(name, dim, n_dim, sym, loc) VARSYM(p.m_a, loc, \
-        name2char(name), dim, n_dim, nullptr, 0, nullptr, sym, nullptr)
+        name2char(name), dim, n_dim, nullptr, 0, nullptr, nullptr, sym, nullptr)
 #define VAR_SYM_CODIM(name, codim, n_codim, sym, loc) VARSYM(p.m_a, loc, \
-        name2char(name), nullptr, 0, codim, n_codim, nullptr, sym, nullptr)
+        name2char(name), nullptr, 0, codim, n_codim, nullptr, nullptr, sym, nullptr)
 #define VAR_SYM_DIM_CODIM(name, dim, n_dim, codim, n_codim, sym, loc) \
         VARSYM(p.m_a, loc, name2char(name), \
-        dim, n_dim, codim, n_codim, nullptr, sym, nullptr)
+        dim, n_dim, codim, n_codim, nullptr, nullptr, sym, nullptr)
 #define VAR_SYM_SPEC(x, sym, loc) VARSYM(p.m_a, loc, \
-        nullptr, nullptr, 0, nullptr, 0, nullptr, sym, \
+        nullptr, nullptr, 0, nullptr, 0, nullptr, nullptr, sym, \
         down_cast<decl_attribute_t>(x))
 #define DECL_ASSIGNMENT(l) make_AttrAssignment_t(p.m_a, l)
 #define DECL_OP(op, l) make_AttrIntrinsicOperator_t(p.m_a, l, op)
@@ -507,7 +709,7 @@ static inline VarType* VARTYPE4_(Allocator &al,
 #define VARTYPE4(s, k, l) VARTYPE4_(p.m_a, s, k, l)
 
 static inline FnArg* DIM1(Allocator &al, Location &l,
-    expr_t *a, expr_t *b, expr_t *c)
+    expr_t *a, expr_t *b, expr_t *c, int64_t label)
 {
     FnArg *s = al.allocate<FnArg>();
     s->keyword = false;
@@ -515,6 +717,7 @@ static inline FnArg* DIM1(Allocator &al, Location &l,
     s->arg.m_start = a;
     s->arg.m_end = b;
     s->arg.m_step = c;
+    s->arg.m_label = label;
     return s;
 }
 
@@ -612,7 +815,11 @@ static inline arg_t* ARGS(Allocator &al, Location &l,
     arg_t *a = al.allocate<arg_t>(args.size());
     for (size_t i=0; i < args.size(); i++) {
         a[i].loc = l;
-        a[i].m_arg = name2char(args.p[i]);
+        if (args.p[i]) {
+            a[i].m_arg = name2char(args.p[i]);
+        } else {
+            a[i].m_arg = nullptr;
+        }
     }
     return a;
 }
@@ -797,7 +1004,8 @@ char *str2str_null(Allocator &al, const LCompilers::Str &s) {
 
 
 ast_t* SUBROUTINE_CALL0(Allocator &al, struct_member_t* mem, size_t n,
-        const ast_t *id, const Vec<FnArg> &args, Location &l) {
+        const ast_t *id, const Vec<FnArg> &args,
+        const Vec<ast_t*> &temp_args, Location &l) {
     Vec<fnarg_t> v;
     v.reserve(al, args.size());
     Vec<keyword_t> v2;
@@ -809,20 +1017,28 @@ ast_t* SUBROUTINE_CALL0(Allocator &al, struct_member_t* mem, size_t n,
             v.push_back(al, item.arg);
         }
     }
+    Vec<decl_attribute_t*> v3;
+    v3.reserve(al, temp_args.size());
+    for (size_t i=0; i<temp_args.size(); i++) {
+        v3.push_back(al, down_cast<decl_attribute_t>(temp_args[i]));
+    }
     return make_SubroutineCall_t(al, l, 0,
         /*char* a_func*/ name2char(id),
         /*struct_member_t* a_member*/ mem, /*size_t n_member*/ n,
         /*expr_t** a_args*/ v.p, /*size_t n_args*/ v.size(),
-        /*keyword_t* a_keywords*/ v2.p, /*size_t n_keywords*/ v2.size(), nullptr);
+        /*keyword_t* a_keywords*/ v2.p, /*size_t n_keywords*/ v2.size(),
+        /*temp_args*/ v3.p, /*n_temp_args*/ v3.size(), nullptr);
 }
 #define SUBROUTINE_CALL(name, args, l) SUBROUTINE_CALL0(p.m_a, \
-        nullptr, 0, name, args, l)
+        nullptr, 0, name, args, empty_vecast(), l)
 #define SUBROUTINE_CALL1(mem, name, args, l) SUBROUTINE_CALL0(p.m_a, \
-        mem.p, mem.n, name, args, l)
+        mem.p, mem.n, name, args, empty_vecast(), l)
 #define SUBROUTINE_CALL2(name, l) make_SubroutineCall_t(p.m_a, l, 0, \
-        name2char(name), nullptr, 0, nullptr, 0, nullptr, 0, nullptr)
+        name2char(name), nullptr, 0, nullptr, 0, nullptr, 0, nullptr, 0, nullptr)
 #define SUBROUTINE_CALL3(mem, name, l) make_SubroutineCall_t(p.m_a, l, 0, \
-        name2char(name), mem.p, mem.n, nullptr, 0, nullptr, 0, nullptr)
+        name2char(name), mem.p, mem.n, nullptr, 0, nullptr, 0, nullptr, 0, nullptr)
+#define SUBROUTINE_CALL4(name, temp_args, args, l) SUBROUTINE_CALL0(p.m_a, \
+        nullptr, 0, name, args, temp_args, l)
 
 ast_t* DEALLOCATE_STMT1(Allocator &al,
         const Vec<FnArg> &args, Location &l) {
@@ -1180,9 +1396,9 @@ Vec<ast_t*> empty_sync(Allocator &al) {
 #define EVENT_WAIT_KW_ARG(id, e, l) make_AttrEventWaitKwArg_t(p.m_a, l, \
         name2char(id), EXPR(e))
 
-#define SUBROUTINE(name, args, bind, trivia, use, import, implicit, decl, stmts, contains, l) \
+#define SUBROUTINE(name, args, bind, trivia, use, import, implicit, decl, stmts, contains, name_opt, l) \
     make_Subroutine_t(p.m_a, l, \
-        /*name*/ name2char(name), \
+        /*name*/ name2char_with_check(name, name_opt, l, "subroutine", p.diag), \
         /*args*/ ARGS(p.m_a, l, args), \
         /*n_args*/ args.size(), \
         /*m_attributes*/ nullptr, \
@@ -1200,10 +1416,14 @@ Vec<ast_t*> empty_sync(Allocator &al) {
         /*body*/ STMTS(stmts), \
         /*n_body*/ stmts.size(), \
         /*contains*/ CONTAINS(contains), \
-        /*n_contains*/ contains.size())
+        /*n_contains*/ contains.size(), \
+        /*temp_args*/ nullptr, \
+        /*n_temp_args*/ 0, \
+        /*start_name*/ &(name->loc), \
+        /*end_name*/ &(name_opt->loc))
 #define SUBROUTINE1(fn_mod, name, args, bind, trivia, use, import, implicit, \
-        decl, stmts, contains, l) make_Subroutine_t(p.m_a, l, \
-        /*name*/ name2char(name), \
+        decl, stmts, contains, name_opt, l) make_Subroutine_t(p.m_a, l, \
+        /*name*/ name2char_with_check(name, name_opt, l, "subroutine", p.diag), \
         /*args*/ ARGS(p.m_a, l, args), \
         /*n_args*/ args.size(), \
         /*m_attributes*/ VEC_CAST(fn_mod, decl_attribute), \
@@ -1221,7 +1441,11 @@ Vec<ast_t*> empty_sync(Allocator &al) {
         /*body*/ STMTS(stmts), \
         /*n_body*/ stmts.size(), \
         /*contains*/ CONTAINS(contains), \
-        /*n_contains*/ contains.size())
+        /*n_contains*/ contains.size(), \
+        /*temp_args*/ nullptr, \
+        /*n_temp_args*/ 0, \
+        /*start_name*/ &(name->loc), \
+        /*end_name*/ &(name_opt->loc))
 #define PROCEDURE(fn_mod, name, args, trivia, use, import, implicit, decl, stmts, contains, l) \
     make_Procedure_t(p.m_a, l, \
         /*name*/ name2char(name), \
@@ -1251,8 +1475,8 @@ char *str_or_null(Allocator &al, const LCompilers::Str &s) {
     }
 }
 
-#define FUNCTION(fn_type, name, args, return_var, bind, trivia, use, import, implicit, decl, stmts, contains, l) make_Function_t(p.m_a, l, \
-        /*name*/ name2char(name), \
+#define FUNCTION(fn_type, name, args, return_var, bind, trivia, use, import, implicit, decl, stmts, contains, name_opt, l) make_Function_t(p.m_a, l, \
+        /*name*/ name2char_with_check(name, name_opt, l, "function", p.diag), \
         /*args*/ ARGS(p.m_a, l, args), \
         /*n_args*/ args.size(), \
         /*m_attributes*/ VEC_CAST(fn_type, decl_attribute), \
@@ -1271,9 +1495,13 @@ char *str_or_null(Allocator &al, const LCompilers::Str &s) {
         /*body*/ STMTS(stmts), \
         /*n_body*/ stmts.size(), \
         /*contains*/ CONTAINS(contains), \
-        /*n_contains*/ contains.size())
-#define FUNCTION0(name, args, return_var, bind, trivia, use, import, implicit, decl, stmts, contains, l) make_Function_t(p.m_a, l, \
-        /*name*/ name2char(name), \
+        /*n_contains*/ contains.size(), \
+        /*temp_args*/ nullptr, \
+        /*n_temp_args*/ 0, \
+        /*start_name*/ &(name->loc), \
+        /*end_name*/ &(name_opt->loc))
+#define FUNCTION0(name, args, return_var, bind, trivia, use, import, implicit, decl, stmts, contains, name_opt, l) make_Function_t(p.m_a, l, \
+        /*name*/ name2char_with_check(name, name_opt, l, "function", p.diag), \
         /*args*/ ARGS(p.m_a, l, args), \
         /*n_args*/ args.size(), \
         /*return_type*/ nullptr, \
@@ -1292,7 +1520,114 @@ char *str_or_null(Allocator &al, const LCompilers::Str &s) {
         /*body*/ STMTS(stmts), \
         /*n_body*/ stmts.size(), \
         /*contains*/ CONTAINS(contains), \
-        /*n_contains*/ contains.size())
+        /*n_contains*/ contains.size(), \
+        /*temp_args*/ nullptr, \
+        /*n_temp_args*/ 0, \
+        /*start_name*/ &(name->loc), \
+        /*end_name*/ &(name_opt->loc))
+
+#define TEMPLATED_FUNCTION(fn_type, name, temp_args, fn_args, return_var, bind, trivia, decl, stmts, name_opt, l) \
+        make_Function_t(p.m_a, l, \
+        /*name*/ name2char_with_check(name, name_opt, l, "function", p.diag), \
+        /*args*/ ARGS(p.m_a, l, fn_args), \
+        /*n_args*/ fn_args.size(), \
+        /*m_attributes*/ VEC_CAST(fn_type, decl_attribute), \
+        /*n_attributes*/ fn_type.size(), \
+        /*return_var*/ EXPR_OPT(return_var), \
+        /*bind*/ bind_opt(bind), \
+        trivia_cast(trivia), \
+        /*use*/ nullptr, \
+        /*n_use*/ 0, \
+        /*m_import*/ nullptr, \
+        /*n_import*/ 0, \
+        /*m_implicit*/ nullptr, \
+        /*n_implicit*/ 0, \
+        /*decl*/ DECLS(decl), \
+        /*n_decl*/ decl.size(), \
+        /*body*/ STMTS(stmts), \
+        /*n_body*/ stmts.size(), \
+        /*contains*/ nullptr, \
+        /*n_contains*/ 0, \
+        /*temp_args*/ REDUCE_ARGS(p.m_a, temp_args), \
+        /*n_temp_args*/ temp_args.size(), \
+        /*start_name*/ &(name->loc), \
+        /*end_name*/ &(name_opt->loc))
+#define TEMPLATED_FUNCTION0(name, temp_args, fn_args, return_var, bind, trivia, decl, stmts, name_opt, l) \
+        make_Function_t(p.m_a, l, \
+        /*name*/ name2char_with_check(name, name_opt, l, "function", p.diag), \
+        /*args*/ ARGS(p.m_a, l, fn_args), \
+        /*n_args*/ fn_args.size(), \
+        /*m_attributes*/ nullptr, \
+        /*n_attributes*/ 0, \
+        /*return_var*/ EXPR_OPT(return_var), \
+        /*bind*/ bind_opt(bind), \
+        trivia_cast(trivia), \
+        /*use*/ nullptr, \
+        /*n_use*/ 0, \
+        /*m_import*/ nullptr, \
+        /*n_import*/ 0, \
+        /*m_implicit*/ nullptr, \
+        /*n_implicit*/ 0, \
+        /*decl*/ DECLS(decl), \
+        /*n_decl*/ decl.size(), \
+        /*body*/ STMTS(stmts), \
+        /*n_body*/ stmts.size(), \
+        /*contains*/ nullptr, \
+        /*n_contains*/ 0, \
+        /*temp_args*/ REDUCE_ARGS(p.m_a, temp_args), \
+        /*n_temp_args*/ temp_args.size(), \
+        /*start_name*/ &(name->loc), \
+        /*end_name*/ &(name_opt->loc))
+#define TEMPLATED_SUBROUTINE(name, temp_args, fn_args, bind, trivia, decl, stmts, l) \
+        make_Subroutine_t(p.m_a, l, \
+        /*name*/ name2char(name), \
+        /*args*/ ARGS(p.m_a, l, fn_args), \
+        /*n_args*/ fn_args.size(), \
+        /*m_attributes*/ nullptr, \
+        /*n_attributes*/ 0, \
+        /*bind*/ bind_opt(bind), \
+        trivia_cast(trivia), \
+        /*use*/ nullptr, \
+        /*n_use*/ 0, \
+        /*m_import*/ nullptr, \
+        /*n_import*/ 0, \
+        /*m_implicit*/ nullptr, \
+        /*n_implicit*/ 0, \
+        /*decl*/ DECLS(decl), \
+        /*n_decl*/ decl.size(), \
+        /*body*/ STMTS(stmts), \
+        /*n_body*/ stmts.size(), \
+        /*contains*/ nullptr, \
+        /*n_contains*/ 0, \
+        /*temp_args*/ REDUCE_ARGS(p.m_a, temp_args), \
+        /*n_temp_args*/ temp_args.size(), \
+        /*start_name*/ &(name->loc), \
+        /*end_name*/ &(name->loc))
+#define TEMPLATED_SUBROUTINE1(fn_type, name, temp_args, fn_args, bind, trivia, decl, stmts, l) \
+        make_Subroutine_t(p.m_a, l, \
+        /*name*/ name2char(name), \
+        /*args*/ ARGS(p.m_a, l, fn_args), \
+        /*n_args*/ fn_args.size(), \
+        /*m_attributes*/ VEC_CAST(fn_type, decl_attribute), \
+        /*n_attributes*/ fn_type.size(), \
+        /*bind*/ bind_opt(bind), \
+        trivia_cast(trivia), \
+        /*use*/ nullptr, \
+        /*n_use*/ 0, \
+        /*m_import*/ nullptr, \
+        /*n_import*/ 0, \
+        /*m_implicit*/ nullptr, \
+        /*n_implicit*/ 0, \
+        /*decl*/ DECLS(decl), \
+        /*n_decl*/ decl.size(), \
+        /*body*/ STMTS(stmts), \
+        /*n_body*/ stmts.size(), \
+        /*contains*/ nullptr, \
+        /*n_contains*/ 0, \
+        /*temp_args*/ REDUCE_ARGS(p.m_a, temp_args), \
+        /*n_temp_args*/ temp_args.size(), \
+        /*start_name*/ &(name->loc), \
+        /*end_name*/ &(name->loc))
 
 Vec<ast_t*> SPLIT_DECL(Allocator &al, Vec<ast_t*> ast)
 {
@@ -1322,16 +1657,16 @@ ast_t* PROGRAM2(Allocator &al, const Location &a_loc, char* a_name,
         trivia_t* a_trivia, unit_decl1_t** a_use, size_t n_use,
         implicit_statement_t** a_implicit, size_t n_implicit,
         Vec<ast_t*> decl_stmts, program_unit_t** a_contains,
-        size_t n_contains) {
+        size_t n_contains, Location *start_name, Location *end_name) {
 
 Vec<ast_t*> decl;
 Vec<ast_t*> stmt;
 decl.reserve(al, decl_stmts.size());
 stmt.reserve(al, decl_stmts.size());
 for (size_t i=0; i<decl_stmts.size(); i++) {
-    if (is_a<unit_decl2_t>(*decl_stmts[i])) {
+    if (decl_stmts[i] && is_a<unit_decl2_t>(*decl_stmts[i])) {
         decl.push_back(al, decl_stmts[i]);
-    } else {
+    } else if (decl_stmts[i]) {
         LCOMPILERS_ASSERT(is_a<stmt_t>(*decl_stmts[i]))
         stmt.push_back(al, decl_stmts[i]);
     }
@@ -1349,14 +1684,16 @@ return make_Program_t(al, a_loc,
         /*body*/ STMTS(stmt),
         /*n_body*/ stmt.size(),
         /*contains*/ a_contains,
-        /*n_contains*/ n_contains);
+        /*n_contains*/ n_contains,
+        /*m_start_name*/ start_name,
+        /*m_end_name*/ end_name);
 
 }
 
 
-#define PROGRAM(name, trivia, use, implicit, decl_stmts, contains, l) \
+#define PROGRAM(name, trivia, use, implicit, decl_stmts, contains, name_opt, l) \
     PROGRAM2(p.m_a, l, \
-        /*name*/ name2char(name), \
+        /*name*/ name2char_with_check(name, name_opt, l, "program", p.diag), \
         trivia_cast(trivia), \
         /*use*/ USES(use), \
         /*n_use*/ use.size(), \
@@ -1364,7 +1701,9 @@ return make_Program_t(al, a_loc,
         /*n_implicit*/ implicit.size(), \
         decl_stmts, \
         /*contains*/ CONTAINS(contains), \
-        /*n_contains*/ contains.size())
+        /*n_contains*/ contains.size(), \
+        /*start_name*/ &(name->loc), \
+        /*end_name*/ &(name_opt->loc))
 #define RESULT(x) p.result.push_back(p.m_a, x)
 
 #define STMT_NAME(id_first, id_last, stmt) \
@@ -1473,9 +1812,36 @@ static inline void repeat_list_add(Vec<ast_t*> &v, Allocator &al,
         /*body*/ STMTS(body), \
         /*n_body*/ body.size(), trivia_cast(trivia), nullptr)
 
+static inline ast_t* OMP_PRAGMA2(Allocator &al,
+        Location &loc, std::string omp_str) {
+    std::vector<std::string> omp_stmt = LCompilers::string_split_avoid_parentheses(omp_str);
+    size_t i = 1;
+    bool m_end = false;
+    std::string construct_name = omp_stmt[i++];
+    if (construct_name == "end") {
+        m_end = true;
+        construct_name = omp_stmt[i++];
+    }
+    Vec<expr_t *> m_clauses; m_clauses.reserve(al, 1);
+    for (; i < omp_stmt.size(); i++) {
+        if (omp_stmt[i] == "do" ||
+            omp_stmt[i] == "sections" ||
+            omp_stmt[i] == "workshare" ) {
+            construct_name += " " + omp_stmt[i];
+        } else {
+            m_clauses.push_back(al, EXPR(make_String_t(al, loc,
+                LCompilers::s2c(al, omp_stmt[i]))));
+        }
+    }
+    return make_Pragma_t(al, loc, 0, LCompilers::LFortran::AST::OMPPragma, m_end,
+        LCompilers::s2c(al, construct_name), m_clauses.p, m_clauses.n, nullptr);
+}
+
+#define OMP_PRAGMA(omp_str, l) OMP_PRAGMA2(p.m_a, l, omp_str.c_str(p.m_a))
+
 void add_ws_warning(const Location &loc,
         LCompilers::diag::Diagnostics &diagnostics, bool fixed_form,
-        int end_token) {
+        int end_token, int a_kind = 4) {
     if (!fixed_form) {
         if (end_token == yytokentype::KW_ENDDO) {
             diagnostics.parser_style_label(
@@ -1487,12 +1853,79 @@ void add_ws_warning(const Location &loc,
                 "Use 'end if' instead of 'endif'",
                 {loc},
                 "help: write this as 'end if'");
+        } else if (end_token == yytokentype::KW_REAL) {
+                if (a_kind == 4){
+                        diagnostics.parser_style_label(
+                        "Use real(4) instead of real*4",
+                        {loc},
+                        "help: write this as 'real(4)'");
+                } else if(a_kind == 8){
+                        diagnostics.parser_style_label(
+                        "Use real(8) instead of real*8",
+                        {loc},
+                        "help: write this as 'real(8)'");
+                } else {
+                        diagnostics.add(LCompilers::LFortran::parser_local::ParserError(
+                        "kind " + std::to_string(a_kind) + " is not supported yet.", {loc}).d);
+                }
+        } else if (end_token == yytokentype::KW_INTEGER) {
+                if (a_kind == 4){
+                        diagnostics.parser_style_label(
+                        "Use integer(4) instead of integer*4",
+                        {loc},
+                        "help: write this as 'integer(4)'");
+                } else if (a_kind == 8){
+                        diagnostics.parser_style_label(
+                        "Use integer(8) instead of integer*8",
+                        {loc},
+                        "help: write this as 'integer(8)'");
+                } else {
+                        diagnostics.add(LCompilers::LFortran::parser_local::ParserError(
+                                "kind " + std::to_string(a_kind) + " is not supported yet.", {loc}).d);
+                }
+        } else if (end_token == yytokentype::KW_CHARACTER) {
+                std::string msg1 = "Use character("+std::to_string(a_kind)+") instead of character*"+std::to_string(a_kind);
+                std::string msg2 = "help: write this as 'character("+std::to_string(a_kind)+")'";
+                diagnostics.parser_style_label(
+                msg1,
+                {loc},
+                msg2);
+        } else if (end_token == yytokentype::KW_COMPLEX) {
+            if (a_kind == 16) {
+                diagnostics.parser_style_label(
+                "Use complex(8) instead of complex*16",
+                {loc},
+                "help: write this as 'complex(8)'");
+            } else {
+                diagnostics.parser_style_label(
+                "Use complex(4) instead of complex*8",
+                {loc},
+                "help: write this as 'complex(4)'");
+            }
+        } else if (end_token == yytokentype::KW_LOGICAL) {
+            if (a_kind == 4) {
+                diagnostics.parser_style_label(
+                "Use logical(4) instead of logical*4",
+                {loc},
+                "help: write this as 'logical(4)'");
+            } else {
+                diagnostics.parser_style_label(
+                "Use logical(8) instead of logical*8",
+                {loc},
+                "help: write this as 'logical(8)'");
+            }
         }
+
     }
 }
 
 #define WARN_ENDDO(l) add_ws_warning(l, p.diag, p.fixed_form, KW_ENDDO)
 #define WARN_ENDIF(l) add_ws_warning(l, p.diag, p.fixed_form, KW_ENDIF)
+#define WARN_REALSTAR(x, l) add_ws_warning(l, p.diag, p.fixed_form, KW_REAL, x.int_n.n)
+#define WARN_COMPLEXSTAR(x, l) add_ws_warning(l, p.diag, p.fixed_form, KW_COMPLEX, x.int_n.n)
+#define WARN_INTEGERSTAR(x, l) add_ws_warning(l, p.diag, p.fixed_form, KW_INTEGER, x.int_n.n)
+#define WARN_CHARACTERSTAR(x, l) add_ws_warning(l, p.diag, p.fixed_form, KW_CHARACTER, x.int_n.n)
+#define WARN_LOGICALSTAR(x, l) add_ws_warning(l, p.diag, p.fixed_form, KW_LOGICAL, x.int_n.n)
 
 #define DO1(trivia, body, l) make_DoLoop_t(p.m_a, l, 0, nullptr, 0, \
         nullptr, nullptr, nullptr, nullptr, \
@@ -1588,6 +2021,7 @@ void add_ws_warning(const Location &loc,
 #define REDUCE_OP_TYPE_ADD(l) reduce_opType::ReduceAdd
 #define REDUCE_OP_TYPE_MUL(l) reduce_opType::ReduceMul
 #define REDUCE_OP_TYPE_ID(id, l) convert_id_to_reduce_type(l, id)
+#define REDUCE_OP_TYPE_INVALID (reduce_opType)-1
 
 #define VAR_SYM_DECL1(id, l)         DECL3(p.m_a, id, nullptr, nullptr)
 #define VAR_SYM_DECL2(id, e, l)      DECL3(p.m_a, id, nullptr, EXPR(e))
@@ -1599,15 +2033,16 @@ void add_ws_warning(const Location &loc,
 #define VAR_SYM_DECL6(id, a, e, l)   DECL3(p.m_a, id, &a, EXPR(e))
 #define VAR_SYM_DECL7(l)             DECL2c(p.m_a, l)
 
-#define ARRAY_COMP_DECL_0i0(a,l)     DIM1(p.m_a, l, nullptr, EXPR(a), nullptr)
-#define ARRAY_COMP_DECL_001(l)       DIM1(p.m_a, l, nullptr, nullptr, EXPR(INT1(l)))
-#define ARRAY_COMP_DECL_a01(a,l)     DIM1(p.m_a, l, EXPR(a), nullptr, EXPR(INT1(l)))
-#define ARRAY_COMP_DECL_0b1(b,l)     DIM1(p.m_a, l, nullptr, EXPR(b), EXPR(INT1(l)))
-#define ARRAY_COMP_DECL_ab1(a,b,l)   DIM1(p.m_a, l, EXPR(a), EXPR(b), EXPR(INT1(l)))
-#define ARRAY_COMP_DECL_00c(c,l)     DIM1(p.m_a, l, nullptr, nullptr, EXPR(c))
-#define ARRAY_COMP_DECL_a0c(a,c,l)   DIM1(p.m_a, l, EXPR(a), nullptr, EXPR(c))
-#define ARRAY_COMP_DECL_0bc(b,c,l)   DIM1(p.m_a, l, nullptr, EXPR(b), EXPR(c))
-#define ARRAY_COMP_DECL_abc(a,b,c,l) DIM1(p.m_a, l, EXPR(a), EXPR(b), EXPR(c))
+#define ARRAY_COMP_DECL_0i0(a,l)     DIM1(p.m_a, l, nullptr, EXPR(a), nullptr, 0)
+#define ARRAY_COMP_DECL_001(l)       DIM1(p.m_a, l, nullptr, nullptr, EXPR(INT1(l)), 0)
+#define ARRAY_COMP_DECL_a01(a,l)     DIM1(p.m_a, l, EXPR(a), nullptr, EXPR(INT1(l)), 0)
+#define ARRAY_COMP_DECL_0b1(b,l)     DIM1(p.m_a, l, nullptr, EXPR(b), EXPR(INT1(l)), 0)
+#define ARRAY_COMP_DECL_ab1(a,b,l)   DIM1(p.m_a, l, EXPR(a), EXPR(b), EXPR(INT1(l)), 0)
+#define ARRAY_COMP_DECL_00c(c,l)     DIM1(p.m_a, l, nullptr, nullptr, EXPR(c), 0)
+#define ARRAY_COMP_DECL_a0c(a,c,l)   DIM1(p.m_a, l, EXPR(a), nullptr, EXPR(c), 0)
+#define ARRAY_COMP_DECL_0bc(b,c,l)   DIM1(p.m_a, l, nullptr, EXPR(b), EXPR(c), 0)
+#define ARRAY_COMP_DECL_abc(a,b,c,l) DIM1(p.m_a, l, EXPR(a), EXPR(b), EXPR(c), 0)
+#define ARRAY_COMP_DECL_label(x, l)   DIM1(p.m_a, l, nullptr, nullptr, nullptr, x.int_n.n);
 
 #define ARRAY_COMP_DECL1k(id, a, l)   DIM1k(p.m_a, l, id, EXPR(INT1(l)), EXPR(a))
 
@@ -1722,6 +2157,7 @@ ast_t* FUNCCALLORARRAY0(Allocator &al, const ast_t *id,
         const Vec<struct_member_t> &member,
         const Vec<FnArg> &args,
         const Vec<FnArg> &subargs,
+        const Vec<ast_t*> &temp_args,
         Location &l) {
     Vec<fnarg_t> v;
     v.reserve(al, args.size());
@@ -1739,38 +2175,45 @@ ast_t* FUNCCALLORARRAY0(Allocator &al, const ast_t *id,
     for (auto &item : subargs) {
         v1.push_back(al, item.arg);
     }
+    Vec<decl_attribute_t*> v3;
+    v3.reserve(al, temp_args.size());
+    for (size_t i=0; i<temp_args.size(); i++) {
+        v3.push_back(al, down_cast<decl_attribute_t>(temp_args[i]));
+    }
     return make_FuncCallOrArray_t(al, l,
         /*char* a_func*/ name2char(id),
         /* struct_member_t* */member.p, /* size_t */member.size(),
         /*fnarg_t* a_args*/ v.p, /*size_t n_args*/ v.size(),
         /*keyword_t* a_keywords*/ v2.p, /*size_t n_keywords*/ v2.size(),
-        /*fnarg_t* a_subargs*/ v1.p , /*size_t n_subargs*/ v1.size());
+        /*fnarg_t* a_subargs*/ v1.p , /*size_t n_subargs*/ v1.size(),
+        /*m_temp_args*/ v3.p, /*n_temp_args*/ v3.size());
 }
-
 #define FUNCCALLORARRAY(id, args, l) FUNCCALLORARRAY0(p.m_a, id, empty5(), \
-        args, empty1(), l)
+        args, empty1(), empty_vecast(), l)
 #define FUNCCALLORARRAY2(members, id, args, l) FUNCCALLORARRAY0(p.m_a, id, \
-        members, args, empty1(), l)
+        members, args, empty1(), empty_vecast(), l)
 #define FUNCCALLORARRAY3(id, args, subargs, l) FUNCCALLORARRAY0(p.m_a, id, \
-        empty5(), args, subargs, l)
+        empty5(), args, subargs, empty_vecast(), l)
 #define FUNCCALLORARRAY4(mem, id, args, subargs, l) FUNCCALLORARRAY0(p.m_a, id, \
-        mem, args, subargs, l)
+        mem, args, subargs, empty_vecast(), l)
+#define FUNCCALLORARRAY5(id, args, temp_args, l) FUNCCALLORARRAY0(p.m_a, id, empty5(), \
+        args, empty1(), temp_args, l)
 
 ast_t* SUBSTRING_(Allocator &al, const LCompilers::Str &str,
-        const Vec<FnArg> &args, Location &l) {
+        const Vec<FnArg> &args, Location &l, LCompilers::diag::Diagnostics &diagnostics) {
     Vec<fnarg_t> v;
     v.reserve(al, args.size());
     for (auto &item : args) {
         if(item.keyword) {
-            throw LCompilers::LFortran::parser_local::ParserError(
-                "Keyword Assignment is not allowed in Character Substring", l);
+            diagnostics.add(LCompilers::LFortran::parser_local::ParserError(
+                "Keyword Assignment is not allowed in Character Substring", {l}).d);
         }
         v.push_back(al, item.arg);
     }
     return make_Substring_t(al, l, str.c_str(al), v.p, v.size());
 }
 
-#define SUBSTRING(str, args, l) SUBSTRING_(p.m_a, str, args, l)
+#define SUBSTRING(str, args, l) SUBSTRING_(p.m_a, str, args, l, p.diag)
 
 ast_t* COARRAY(Allocator &al, const ast_t *id,
         const Vec<struct_member_t> &member,
@@ -1887,37 +2330,130 @@ ast_t* COARRAY(Allocator &al, const ast_t *id,
 #define USE_WRITE(x, l) make_UseWrite_t(p.m_a, l, name2char(x))
 #define USE_READ(x, l) make_UseRead_t(p.m_a, l, name2char(x))
 
+ast_t* MODULE2(Allocator &al, const Location &a_loc, char* a_name,
+        trivia_t* a_trivia, unit_decl1_t** a_use, size_t n_use,
+        implicit_statement_t** a_implicit, size_t n_implicit,
+        Vec<ast_t*> decl_stmts, program_unit_t** a_contains,
+        size_t n_contains, Location* a_start_name = nullptr,
+        Location* a_end_name = nullptr) {
 
-#define MODULE(name, trivia, use, implicit, decl, contains, l) make_Module_t(p.m_a, l, \
-        name2char(name), \
+Vec<ast_t*> decl;
+Vec<ast_t*> stmt;
+decl.reserve(al, decl_stmts.size());
+stmt.reserve(al, decl_stmts.size());
+for (size_t i=0; i<decl_stmts.size(); i++) {
+    if (is_a<unit_decl2_t>(*decl_stmts[i])) {
+        decl.push_back(al, decl_stmts[i]);
+    } else {
+        LCOMPILERS_ASSERT(is_a<stmt_t>(*decl_stmts[i]))
+        stmt.push_back(al, decl_stmts[i]);
+    }
+}
+
+return make_Module_t(al, a_loc,
+        /*name*/ a_name,
+        a_trivia,
+        /*use*/ a_use,
+        /*n_use*/ n_use,
+        /*m_implicit*/ a_implicit,
+        /*n_implicit*/ n_implicit,
+        /*decl*/ DECLS(decl),
+        /*n_decl*/ decl.size(),
+        /*body*/ STMTS(stmt),
+        /*n_body*/ stmt.size(),
+        /*contains*/ a_contains,
+        /*n_contains*/ n_contains,
+        /*m_start_name*/ a_start_name,
+        /*m_end_name*/ a_end_name);
+
+}
+
+#define MODULE(name, trivia, use, implicit, decl_stmts, contains, name_opt, l) \
+    MODULE2(p.m_a, l, \
+        /*name*/ name2char_with_check(name, name_opt, l, "module", p.diag), \
         trivia_cast(trivia), \
-        /*unit_decl1_t** a_use*/ USES(use), /*size_t n_use*/ use.size(), \
+        /*use*/ USES(use), \
+        /*n_use*/ use.size(), \
         /*m_implicit*/ VEC_CAST(implicit, implicit_statement), \
         /*n_implicit*/ implicit.size(), \
-        /*unit_decl2_t** a_decl*/ DECLS(decl), /*size_t n_decl*/ decl.size(), \
-        /*program_unit_t** a_contains*/ CONTAINS(contains), /*size_t n_contains*/ contains.size())
-#define SUBMODULE(id ,name, trivia, use, implicit, decl, contains, l) make_Submodule_t(p.m_a, l, \
+        decl_stmts, \
+        /*contains*/ CONTAINS(contains), \
+        /*n_contains*/ contains.size(), \
+        /*start_name*/ &(name->loc), \
+        /*end_name*/ &(name_opt->loc))
+
+ast_t* SUBMODULE2(Allocator &al, const Location &a_loc, char* a_id,
+        char* a_parent_name, char* a_name, trivia_t* a_trivia,
+        unit_decl1_t** a_use, size_t n_use,
+        implicit_statement_t** a_implicit, size_t n_implicit,
+        Vec<ast_t*> decl_stmts, program_unit_t** a_contains,
+        size_t n_contains, Location* a_start_name = nullptr,
+        Location* a_end_name = nullptr) {
+
+Vec<ast_t*> decl;
+Vec<ast_t*> stmt;
+decl.reserve(al, decl_stmts.size());
+stmt.reserve(al, decl_stmts.size());
+for (size_t i=0; i<decl_stmts.size(); i++) {
+    if (is_a<unit_decl2_t>(*decl_stmts[i])) {
+        decl.push_back(al, decl_stmts[i]);
+    } else {
+        LCOMPILERS_ASSERT(is_a<stmt_t>(*decl_stmts[i]))
+        stmt.push_back(al, decl_stmts[i]);
+    }
+}
+
+return make_Submodule_t(al, a_loc,
+        /*id*/ a_id,
+        /*a_parent_name*/ a_parent_name,
+        /*name*/ a_name,
+        a_trivia,
+        /*use*/ a_use,
+        /*n_use*/ n_use,
+        /*m_implicit*/ a_implicit,
+        /*n_implicit*/ n_implicit,
+        /*decl*/ DECLS(decl),
+        /*n_decl*/ decl.size(),
+        /*body*/ STMTS(stmt),
+        /*n_body*/ stmt.size(),
+        /*contains*/ a_contains,
+        /*n_contains*/ n_contains,
+        /*m_start_name*/ a_start_name,
+        /*m_end_name*/ a_end_name);
+}
+
+
+#define SUBMODULE(id, name, trivia, use, implicit, decl_stmts, contains, name_opt, l) \
+    SUBMODULE2(p.m_a, l, \
         name2char(id), \
         nullptr, \
-        name2char(name), \
+        /*name*/ name2char_with_check(name, name_opt, l, "submodule", p.diag), \
         trivia_cast(trivia), \
-        /*unit_decl1_t** a_use*/ USES(use), /*size_t n_use*/ use.size(), \
+        /*use*/ USES(use), \
+        /*n_use*/ use.size(), \
         /*m_implicit*/ VEC_CAST(implicit, implicit_statement), \
         /*n_implicit*/ implicit.size(), \
-        /*unit_decl2_t** a_decl*/ DECLS(decl), /*size_t n_decl*/ decl.size(), \
-        /*program_unit_t** a_contains*/ CONTAINS(contains), /*size_t n_contains*/ contains.size())
+        decl_stmts, \
+        /*contains*/ CONTAINS(contains), \
+        /*n_contains*/ contains.size(), \
+        /*start_name*/ &(name->loc), \
+        /*end_name*/ &(name_opt->loc))
 
-#define SUBMODULE1(id, parent_name, name, trivia, use, implicit, decl, contains, l) \
-        make_Submodule_t(p.m_a, l, \
+#define SUBMODULE1(id, parent_name, name, trivia, use, implicit, decl_stmts, contains, name_opt, l) \
+    SUBMODULE2(p.m_a, l, \
         name2char(id), \
         name2char(parent_name), \
-        name2char(name), \
+        /*name*/ name2char_with_check(name, name_opt, l, "submodule", p.diag), \
         trivia_cast(trivia), \
-        /*unit_decl1_t** a_use*/ USES(use), /*size_t n_use*/ use.size(), \
+        /*use*/ USES(use), \
+        /*n_use*/ use.size(), \
         /*m_implicit*/ VEC_CAST(implicit, implicit_statement), \
         /*n_implicit*/ implicit.size(), \
-        /*unit_decl2_t** a_decl*/ DECLS(decl), /*size_t n_decl*/ decl.size(), \
-        /*program_unit_t** a_contains*/ CONTAINS(contains), /*size_t n_contains*/ contains.size())
+        decl_stmts, \
+        /*contains*/ CONTAINS(contains), \
+        /*n_contains*/ contains.size(), \
+        /*start_name*/ &(name->loc), \
+        /*end_name*/ &(name_opt->loc))
 
 #define BLOCKDATA(trivia, use, implicit, decl, stmt, l) make_BlockData_t(p.m_a, l, \
         nullptr, trivia_cast(trivia), \
@@ -1942,6 +2478,7 @@ ast_t* COARRAY(Allocator &al, const ast_t *id,
 #define INTERFACE_HEADER_READ(x, l) make_InterfaceHeaderRead_t(p.m_a, l, name2char(x))
 
 #define OPERATOR(op, l) intrinsicopType::op
+#define OPERATOR_INVALID(l) (intrinsicopType)-1
 
 #define INTERFACE(header, trivia, contains, l) make_Interface_t(p.m_a, l, \
         down_cast<interface_header_t>(header), \
@@ -1973,6 +2510,21 @@ ast_t* COARRAY(Allocator &al, const ast_t *id,
         VEC_CAST(attr, decl_attribute), attr.size(),  \
         DECLS(decl), decl.size(), \
         VEC_CAST(contains, procedure_decl), contains.size())
+#define DERIVED_TYPE2(name, attr, trivia, l) \
+        TYPEPARAMETER0(p.m_a, attr, name, trivia, l)
+
+ast_t* TYPEPARAMETER0(Allocator &al,
+        const ast_t *attr,
+        const ast_t *id,
+        const ast_t *trivia,
+        Location &l) {
+    Vec<decl_attribute_t*> v;
+    v.reserve(al, 1);
+    v.push_back(al, down_cast<decl_attribute_t>(attr));
+    return make_DerivedType_t(al, l,
+        name2char(id), nullptr, 0, trivia_cast(trivia), v.p, v.size(),
+        nullptr, 0, nullptr, 0);
+}
 
 #define TEMPLATE(name, namelist, decl, contains, l) \
         make_Template_t(p.m_a, l, name2char(name), \
@@ -1983,12 +2535,19 @@ ast_t* COARRAY(Allocator &al, const ast_t *id,
         make_Requirement_t(p.m_a, l, name2char(name), \
         REDUCE_ARGS(p.m_a, namelist), namelist.size(), \
         DECLS(decl), decl.size(), CONTAINS(funcs), funcs.size())
-#define REQUIRES(name, namelist, l) \
-        make_Requires_t(p.m_a, l, name2char(name), \
-        REDUCE_ARGS(p.m_a, namelist), namelist.size())
-#define INSTANTIATE(name, args, syms, l) \
+#define REQUIRE(require_list, l) \
+        make_Require_t(p.m_a, l, \
+        VEC_CAST(require_list, unit_require), require_list.size())
+#define UNIT_REQUIRE(name, namelist, l) \
+        make_UnitRequire_t(p.m_a, l, name2char(name), \
+        VEC_CAST(namelist, decl_attribute), namelist.size())
+#define INSTANTIATE1(name, args, l) \
         make_Instantiate_t(p.m_a, l, name2char(name), \
-        REDUCE_ARGS(p.m_a, args), args.size(), \
+        VEC_CAST(args, decl_attribute), args.size(), \
+        nullptr, 0)
+#define INSTANTIATE2(name, args, syms, l) \
+        make_Instantiate_t(p.m_a, l, name2char(name), \
+        VEC_CAST(args, decl_attribute), args.size(), \
         USE_SYMBOLS(syms), syms.size())
 
 #define DERIVED_TYPE_PROC(attr, syms, trivia, l) make_DerivedTypeProc_t(p.m_a, l, \
@@ -2113,6 +2672,7 @@ void set_m_trivia(stmt_t *s, trivia_t *trivia) {
         TRIVIA_SET(Include)
         TRIVIA_SET(Inquire)
         TRIVIA_SET(Nullify)
+        TRIVIA_SET(Pragma)
         TRIVIA_SET(Open)
         TRIVIA_SET(Return)
         TRIVIA_SET(Print)

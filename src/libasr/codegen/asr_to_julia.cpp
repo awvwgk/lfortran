@@ -1,6 +1,8 @@
-#include "libasr/asr.h"
-#include "libasr/asr_utils.h"
-#include "libasr/diagnostics.h"
+#include <libasr/asr.h>
+#include <libasr/asr_utils.h>
+#include <libasr/pass/intrinsic_function_registry.h>
+#include <libasr/pass/intrinsic_array_function_registry.h>
+#include <libasr/diagnostics.h>
 #include <libasr/codegen/asr_to_julia.h>
 
 namespace LCompilers {
@@ -222,15 +224,18 @@ public:
     {
         std::string type_name;
         if (ASRUtils::is_integer(*farg->m_type)) {
-            ASR::Integer_t* t = ASR::down_cast<ASR::Integer_t>(farg->m_type);
+            ASR::Integer_t* t = ASR::down_cast<ASR::Integer_t>(
+                ASRUtils::type_get_past_array(farg->m_type));
             type_name = "Int" + std::to_string(t->m_kind * 8);
         } else if (ASRUtils::is_real(*farg->m_type)) {
-            ASR::Real_t* t = ASR::down_cast<ASR::Real_t>(farg->m_type);
+            ASR::Real_t* t = ASR::down_cast<ASR::Real_t>(
+                ASRUtils::type_get_past_array(farg->m_type));
             type_name = "Float32";
             if (t->m_kind == 8)
                 type_name = "Float64";
         } else if (ASRUtils::is_complex(*farg->m_type)) {
-            ASR::Complex_t* t = ASR::down_cast<ASR::Complex_t>(farg->m_type);
+            ASR::Complex_t* t = ASR::down_cast<ASR::Complex_t>(
+                ASRUtils::type_get_past_array(farg->m_type));
             type_name = "ComplexF32";
             if (t->m_kind == 8)
                 type_name = "ComplexF64";
@@ -278,12 +283,15 @@ public:
     {
         std::string sub;
         bool is_array = ASRUtils::is_array(v.m_type);
+        ASR::dimension_t* m_dims = nullptr;
+        size_t n_dims = ASRUtils::extract_dimensions_from_ttype(v.m_type, m_dims);
+        ASR::ttype_t* v_m_type = ASRUtils::type_get_past_array(v.m_type);
         bool use_ref = (v.m_intent == ASRUtils::intent_out
                         || v.m_intent == ASRUtils::intent_inout)
                        && !is_array;
         std::string dims;
-        if (ASRUtils::is_pointer(v.m_type)) {
-            ASR::ttype_t* t2 = ASR::down_cast<ASR::Pointer_t>(v.m_type)->m_type;
+        if (ASRUtils::is_pointer(v_m_type)) {
+            ASR::ttype_t* t2 = ASR::down_cast<ASR::Pointer_t>(v_m_type)->m_type;
             if (ASRUtils::is_integer(*t2)) {
                 ASR::Integer_t* t = ASR::down_cast<ASR::Integer_t>(t2);
                 std::string type_name = "Int" + std::to_string(t->m_kind * 8);
@@ -292,14 +300,14 @@ public:
                                         std::string(v.m_name),
                                         type_name,
                                         dims,
-                                        t->m_dims,
-                                        t->n_dims,
+                                        m_dims,
+                                        n_dims,
                                         is_argument);
                 } else {
                     sub = format_type(type_name, v.m_name, use_ref);
                 }
             } else {
-                diag.codegen_error_label("Type number '" + std::to_string(v.m_type->type)
+                diag.codegen_error_label("Type '" + ASRUtils::type_to_str_python(v.m_type)
                                              + "' not supported",
                                          { v.base.base.loc },
                                          "");
@@ -307,23 +315,23 @@ public:
             }
         } else {
             bool init_default = !is_argument && !v.m_symbolic_value
-                                && v.m_storage != ASR::storage_typeType::Allocatable;
-            if (ASRUtils::is_integer(*v.m_type)) {
-                ASR::Integer_t* t = ASR::down_cast<ASR::Integer_t>(v.m_type);
+                                && ASR::is_a<ASR::Allocatable_t>(*v_m_type);
+            if (ASRUtils::is_integer(*v_m_type)) {
+                ASR::Integer_t* t = ASR::down_cast<ASR::Integer_t>(v_m_type);
                 std::string type_name = "Int" + std::to_string(t->m_kind * 8);
                 if (is_array) {
                     generate_array_decl(sub,
                                         std::string(v.m_name),
                                         type_name,
                                         dims,
-                                        t->m_dims,
-                                        t->n_dims,
+                                        m_dims,
+                                        n_dims,
                                         init_default);
                 } else {
                     sub = format_type(type_name, v.m_name, use_ref, init_default ? "0" : "");
                 }
-            } else if (ASRUtils::is_real(*v.m_type)) {
-                ASR::Real_t* t = ASR::down_cast<ASR::Real_t>(v.m_type);
+            } else if (ASRUtils::is_real(*v_m_type)) {
+                ASR::Real_t* t = ASR::down_cast<ASR::Real_t>(v_m_type);
                 std::string type_name = "Float32";
                 if (t->m_kind == 8)
                     type_name = "Float64";
@@ -332,14 +340,14 @@ public:
                                         std::string(v.m_name),
                                         type_name,
                                         dims,
-                                        t->m_dims,
-                                        t->n_dims,
+                                        m_dims,
+                                        n_dims,
                                         init_default);
                 } else {
                     sub = format_type(type_name, v.m_name, use_ref, init_default ? "0.0" : "");
                 }
-            } else if (ASRUtils::is_complex(*v.m_type)) {
-                ASR::Complex_t* t = ASR::down_cast<ASR::Complex_t>(v.m_type);
+            } else if (ASRUtils::is_complex(*v_m_type)) {
+                ASR::Complex_t* t = ASR::down_cast<ASR::Complex_t>(v_m_type);
                 std::string type_name = "ComplexF32";
                 if (t->m_kind == 8)
                     type_name = "ComplexF64";
@@ -348,57 +356,55 @@ public:
                                         std::string(v.m_name),
                                         type_name,
                                         dims,
-                                        t->m_dims,
-                                        t->n_dims,
+                                        m_dims,
+                                        n_dims,
                                         init_default);
                 } else {
                     sub = format_type(type_name, v.m_name, use_ref, init_default ? "0.0" : "");
                 }
-            } else if (ASRUtils::is_logical(*v.m_type)) {
+            } else if (ASRUtils::is_logical(*v_m_type)) {
                 std::string type_name = "Bool";
-                ASR::Logical_t* t = ASR::down_cast<ASR::Logical_t>(v.m_type);
                 if (is_array) {
                     generate_array_decl(sub,
                                         std::string(v.m_name),
                                         type_name,
                                         dims,
-                                        t->m_dims,
-                                        t->n_dims,
+                                        m_dims,
+                                        n_dims,
                                         init_default);
                 } else {
                     sub = format_type(type_name, v.m_name, use_ref, init_default ? "false" : "");
                 }
-            } else if (ASRUtils::is_character(*v.m_type)) {
+            } else if (ASRUtils::is_character(*v_m_type)) {
                 std::string type_name = "String";
-                ASR::Character_t* t = ASR::down_cast<ASR::Character_t>(v.m_type);
                 if (is_array) {
                     generate_array_decl(sub,
                                         std::string(v.m_name),
                                         type_name,
                                         dims,
-                                        t->m_dims,
-                                        t->n_dims,
+                                        m_dims,
+                                        n_dims,
                                         init_default);
                 } else {
                     sub = format_type(type_name, v.m_name, use_ref, init_default ? "\"\"" : "");
                 }
-            } else if (ASR::is_a<ASR::Struct_t>(*v.m_type)) {
+            } else if (ASR::is_a<ASR::StructType_t>(*v_m_type)) {
                 // TODO: handle this
-                ASR::Struct_t* t = ASR::down_cast<ASR::Struct_t>(v.m_type);
+                ASR::StructType_t* t = ASR::down_cast<ASR::StructType_t>(v_m_type);
                 std::string der_type_name = ASRUtils::symbol_name(t->m_derived_type);
                 if (is_array) {
                     generate_array_decl(sub,
                                         std::string(v.m_name),
                                         der_type_name,
                                         dims,
-                                        t->m_dims,
-                                        t->n_dims,
+                                        m_dims,
+                                        n_dims,
                                         init_default);
                 } else {
                     sub = format_type(der_type_name, v.m_name, use_ref);
                 }
             } else {
-                diag.codegen_error_label("Type number '" + std::to_string(v.m_type->type)
+                diag.codegen_error_label("Type '" + ASRUtils::type_to_str_python(v_m_type)
                                              + "' not supported",
                                          { v.base.base.loc },
                                          "");
@@ -425,7 +431,7 @@ public:
     std::string get_function_declaration(const ASR::Function_t& x)
     {
         std::string sub, inl, ret_type;
-        if (x.m_inline) {
+        if (ASRUtils::get_FunctionType(x)->m_inline) {
             inl = "@inline ";
         }
         if (x.m_return_var) {
@@ -496,7 +502,7 @@ public:
 
     void visit_TranslationUnit(const ASR::TranslationUnit_t& x)
     {
-        global_scope = x.m_global_scope;
+        global_scope = x.m_symtab;
 
         // All loose statements must be converted to a function, so the items
         // must be empty:
@@ -513,10 +519,10 @@ public:
             std::vector<std::string> build_order
                 = ASRUtils::determine_module_dependencies(x);
             for (auto& item : build_order) {
-                LCOMPILERS_ASSERT(x.m_global_scope->get_scope().find(item)
-                                != x.m_global_scope->get_scope().end());
+                LCOMPILERS_ASSERT(x.m_symtab->get_scope().find(item)
+                                != x.m_symtab->get_scope().end());
                 if (startswith(item, "lfortran_intrinsic")) {
-                    ASR::symbol_t* mod = x.m_global_scope->get_symbol(item);
+                    ASR::symbol_t* mod = x.m_symtab->get_symbol(item);
                     visit_symbol(*mod);
                     unit_src += src;
                 }
@@ -524,7 +530,7 @@ public:
         }
 
         // Process procedures first:
-        for (auto& item : x.m_global_scope->get_scope()) {
+        for (auto& item : x.m_symtab->get_scope()) {
             if (ASR::is_a<ASR::Function_t>(*item.second)) {
                 visit_symbol(*item.second);
                 unit_src += src;
@@ -534,17 +540,17 @@ public:
         // Then do all the modules in the right order
         std::vector<std::string> build_order = ASRUtils::determine_module_dependencies(x);
         for (auto& item : build_order) {
-            LCOMPILERS_ASSERT(x.m_global_scope->get_scope().find(item)
-                            != x.m_global_scope->get_scope().end());
+            LCOMPILERS_ASSERT(x.m_symtab->get_scope().find(item)
+                            != x.m_symtab->get_scope().end());
             if (!startswith(item, "lfortran_intrinsic")) {
-                ASR::symbol_t* mod = x.m_global_scope->get_symbol(item);
+                ASR::symbol_t* mod = x.m_symtab->get_symbol(item);
                 visit_symbol(*mod);
                 unit_src += src;
             }
         }
 
         // Then the main program:
-        for (auto& item : x.m_global_scope->get_scope()) {
+        for (auto& item : x.m_symtab->get_scope()) {
             if (ASR::is_a<ASR::Program_t>(*item.second)) {
                 visit_symbol(*item.second);
                 unit_src += src;
@@ -665,7 +671,8 @@ public:
             sym_info[get_hash((ASR::asr_t*) &x)] = s;
         }
         std::string sub = get_function_declaration(x);
-        if (x.m_abi == ASR::abiType::BindC && x.m_deftype == ASR::deftypeType::Interface) {
+        if (ASRUtils::get_FunctionType(x)->m_abi == ASR::abiType::BindC &&
+            ASRUtils::get_FunctionType(x)->m_deftype == ASR::deftypeType::Interface) {
         } else {
             indentation_level += 1;
             std::string indent(indentation_level * indentation_spaces, ' ');
@@ -914,6 +921,10 @@ public:
         }
     }
 
+    void visit_ArrayPhysicalCast(const ASR::ArrayPhysicalCast_t &x) {
+        this->visit_expr(*x.m_arg);
+    }
+
     void visit_Allocate(const ASR::Allocate_t& x)
     {
         std::string indent(indentation_level * indentation_spaces, ' ');
@@ -926,7 +937,7 @@ public:
                 tmp_sym = tmp_var->m_v;
             } else {
                 throw CodeGenError("Cannot deallocate variables in expression " +
-                                    std::to_string(tmp_expr->type),
+                                    ASRUtils::type_to_str_python(ASRUtils::expr_type(tmp_expr)),
                                     tmp_expr->base.loc);
             }
             const ASR::Variable_t* v = ASR::down_cast<ASR::Variable_t>(
@@ -967,13 +978,13 @@ public:
                 std::string type_name = "String";
                 generate_array_decl(
                     out, std::string(v->m_name), type_name, _dims, nullptr, n_dims, true, true);
-            } else if (ASR::is_a<ASR::Struct_t>(*v->m_type)) {
-                ASR::Struct_t* t = ASR::down_cast<ASR::Struct_t>(v->m_type);
+            } else if (ASR::is_a<ASR::StructType_t>(*v->m_type)) {
+                ASR::StructType_t* t = ASR::down_cast<ASR::StructType_t>(v->m_type);
                 std::string der_type_name = ASRUtils::symbol_name(t->m_derived_type);
                 generate_array_decl(
                     out, std::string(v->m_name), der_type_name, _dims, nullptr, n_dims, true, true);
             } else {
-                diag.codegen_error_label("Type number '" + std::to_string(v->m_type->type)
+                diag.codegen_error_label("Type '" + ASRUtils::type_to_str_python(v->m_type)
                                              + "' not supported",
                                          { v->base.base.loc },
                                          "");
@@ -1162,7 +1173,7 @@ public:
         src += indent + "exit(1)\n";
     }
 
-    void visit_IntrinsicFunctionSqrt(const ASR::IntrinsicFunctionSqrt_t &x) {
+    void visit_RealSqrt(const ASR::RealSqrt_t &x) {
         /*
         if (x.m_value) {
             this->visit_expr(*x.m_value);
@@ -1226,8 +1237,11 @@ public:
 
     void visit_DoConcurrentLoop(const ASR::DoConcurrentLoop_t& x)
     {
-        const ASR::DoLoop_t do_loop = ASR::DoLoop_t{ x.base, x.m_head, x.m_body, x.n_body };
+        // LCOMPILERS_ASSERT(x.n_head == 1);
+        for (size_t i = 0; i < x.n_head; i++) {
+        const ASR::DoLoop_t do_loop = ASR::DoLoop_t{ x.base, nullptr, x.m_head[i], x.m_body, x.n_body, nullptr, 0 };
         visit_DoLoop(do_loop, true);
+        }
     }
 
     void visit_If(const ASR::If_t& x)
@@ -1424,10 +1438,9 @@ public:
     {
         std::string indent(indentation_level * indentation_spaces, ' ');
         std::string out = "[";
-        for (size_t i = 0; i < x.n_args; i++) {
-            visit_expr(*x.m_args[i]);
-            out += src;
-            if (i < x.n_args - 1)
+        for (size_t i = 0; i < (size_t) ASRUtils::get_fixed_size_of_array(x.m_type); i++) {
+            out += ASRUtils::fetch_ArrayConstant_value(x, i);
+            if (i < (size_t) ASRUtils::get_fixed_size_of_array(x.m_type) - 1)
                 out += ", ";
         }
         out += "]";
@@ -1799,18 +1812,6 @@ public:
         src = out;
     }
 
-    void visit_ArrayMatMul(const ASR::ArrayMatMul_t& x)
-    {
-        visit_expr(*x.m_matrix_a);
-        std::string left = std::move(src);
-        int left_precedence = last_expr_precedence;
-        visit_expr(*x.m_matrix_b);
-        std::string right = std::move(src);
-        int right_precedence = last_expr_precedence;
-        last_expr_precedence = julia_prec::Mul;
-        src = format_binop(left, "*", right, left_precedence, right_precedence);
-    }
-
     void visit_TupleLen(const ASR::TupleLen_t& x)
     {
         visit_expr(*x.m_arg);
@@ -1844,24 +1845,28 @@ public:
     {
         std::string indent(indentation_level * indentation_spaces, ' ');
         std::string out = indent + "println(", sep;
-        if (x.m_separator) {
-            visit_expr(*x.m_separator);
-            sep = src;
-        } else {
-            sep = "\" \"";
-        }
-        for (size_t i = 0; i < x.n_values; i++) {
-            visit_expr(*x.m_values[i]);
+        sep = "\" \"";
+        //HACKISH way to handle print refactoring (always using stringformat).
+        // TODO : Implement stringformat visitor.
+        ASR::StringFormat_t* str_fmt;
+        size_t n_values = 0;
+        if(ASR::is_a<ASR::StringFormat_t>(*x.m_text)){
+            str_fmt = ASR::down_cast<ASR::StringFormat_t>(x.m_text);
+            n_values = str_fmt->n_args;
+        } else if (ASR::is_a<ASR::String_t>(*ASRUtils::expr_type(x.m_text))){
+            visit_expr(*x.m_text);
             out += src;
-            if (i + 1 != x.n_values) {
+        } else {
+            throw CodeGenError("print statment supported for stringformat and single character argument",
+                x.base.base.loc);
+        } 
+        for (size_t i = 0; i < n_values; i++) {
+            visit_expr(*str_fmt->m_args[i]);
+            out += src;
+            if (i + 1 != n_values) {
                 out += ", " + sep + ", ";
             }
         }
-        if (x.m_end) {
-            visit_expr(*x.m_end);
-            out += src;
-        }
-
         out += ")\n";
         src = out;
     }
@@ -1879,6 +1884,73 @@ public:
     {
         std::string indent(indentation_level * indentation_spaces, ' ');
         std::string out = indent + "// FIXME: File Read\n";
+        src = out;
+    }
+
+    void visit_IntrinsicElementalFunction(const ASR::IntrinsicElementalFunction_t &x) {
+        std::string out;
+        LCOMPILERS_ASSERT(x.n_args == 1);
+        visit_expr(*x.m_args[0]);
+        switch (x.m_intrinsic_id) {
+            SET_INTRINSIC_NAME(Sin, "sin");
+            SET_INTRINSIC_NAME(Cos, "cos");
+            SET_INTRINSIC_NAME(Tan, "tan");
+            SET_INTRINSIC_NAME(Asin, "asin");
+            SET_INTRINSIC_NAME(Acos, "acos");
+            SET_INTRINSIC_NAME(Atan, "atan");
+            SET_INTRINSIC_NAME(Sinh, "sinh");
+            SET_INTRINSIC_NAME(Cosh, "cosh");
+            SET_INTRINSIC_NAME(Tanh, "tanh");
+            SET_INTRINSIC_NAME(Abs, "abs");
+            SET_INTRINSIC_NAME(Exp, "exp");
+            SET_INTRINSIC_NAME(Exp2, "exp2");
+            SET_INTRINSIC_NAME(Expm1, "expm1");
+            SET_INTRINSIC_NAME(Trunc, "trunc");
+            SET_INTRINSIC_NAME(Fix, "fix");
+            SET_INTRINSIC_NAME(StringContainsSet, "verify");
+            SET_INTRINSIC_NAME(StringFindSet, "scan");
+            SET_INTRINSIC_NAME(SubstrIndex, "index");
+            SET_INTRINSIC_NAME(Modulo, "modulo");
+            SET_INTRINSIC_NAME(StringLenTrim, "len_trim");
+            SET_INTRINSIC_NAME(StringTrim, "trim");
+            default : {
+                throw LCompilersException("IntrinsicFunction: `"
+                    + ASRUtils::get_intrinsic_name(x.m_intrinsic_id)
+                    + "` is not implemented");
+            }
+        }
+        out += "(" + src + ")";
+        src = out;
+    }
+
+    #define SET_ARR_INTRINSIC_NAME(X, func_name)                                \
+        case (static_cast<int64_t>(ASRUtils::IntrinsicArrayFunctions::X)) : {   \
+            visit_expr(*x.m_args[0]);                                           \
+            out += func_name; break;                                            \
+        }
+
+    void visit_IntrinsicArrayFunction(const ASR::IntrinsicArrayFunction_t &x) {
+        std::string out;
+        switch (x.m_arr_intrinsic_id) {
+            SET_ARR_INTRINSIC_NAME(Sum, "sum");
+            case (static_cast<int64_t>(ASRUtils::IntrinsicArrayFunctions::MatMul)) : {
+                visit_expr(*x.m_args[0]);
+                std::string left = std::move(src);
+                int left_precedence = last_expr_precedence;
+                visit_expr(*x.m_args[1]);
+                std::string right = std::move(src);
+                int right_precedence = last_expr_precedence;
+                last_expr_precedence = julia_prec::Mul;
+                src = format_binop(left, "*", right, left_precedence, right_precedence);
+                return;
+            }
+            default : {
+                throw LCompilersException("IntrinsicFunction: `"
+                    + ASRUtils::get_intrinsic_name(x.m_arr_intrinsic_id)
+                    + "` is not implemented");
+            }
+        }
+        out += "(" + src + ")";
         src = out;
     }
 };
