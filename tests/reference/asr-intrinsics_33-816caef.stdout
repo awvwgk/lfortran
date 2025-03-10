@@ -1,0 +1,54 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            intrinsics_29:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            
+                        })
+                    intrinsics_29
+                    []
+                    [(Print
+                        (StringConcat
+                            (StringConcat
+                                (StringConstant
+                                    "This is record 1."
+                                    (String 1 17 () PointerString)
+                                )
+                                (TypeInquiry
+                                    NewLine
+                                    (String 1 1 () PointerString)
+                                    (StringConstant
+                                        "A"
+                                        (String 1 1 () PointerString)
+                                    )
+                                    (String 1 -1 () PointerString)
+                                    (StringConstant
+                                        "\n"
+                                        (String 1 1 () PointerString)
+                                    )
+                                )
+                                (String 1 -1 () PointerString)
+                                (StringConstant
+                                    "This is record 1.\n"
+                                    (String 1 18 () PointerString)
+                                )
+                            )
+                            (StringConstant
+                                "This is record 2."
+                                (String 1 17 () PointerString)
+                            )
+                            (String 1 -1 () PointerString)
+                            (StringConstant
+                                "This is record 1.\nThis is record 2."
+                                (String 1 35 () PointerString)
+                            )
+                        )
+                    )]
+                )
+        })
+    []
+)

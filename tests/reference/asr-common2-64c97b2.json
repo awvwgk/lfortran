@@ -1,0 +1,13 @@
+{
+    "basename": "asr-common2-64c97b2",
+    "cmd": "lfortran --fixed-form --show-asr --no-color {infile} -o {outfile}",
+    "infile": "tests/common2.f",
+    "infile_hash": "761ba9bcb69efc19ad1828c9ebc8deab710d02f98f6722736d6a4dd2",
+    "outfile": null,
+    "outfile_hash": null,
+    "stdout": "asr-common2-64c97b2.stdout",
+    "stdout_hash": "34a06da172a466c8947dbff3032482b7bd5e21821a603038ca2fd133",
+    "stderr": null,
+    "stderr_hash": null,
+    "returncode": 0
+}

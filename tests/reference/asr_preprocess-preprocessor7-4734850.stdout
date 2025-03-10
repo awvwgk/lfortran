@@ -1,0 +1,44 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            preprocessor7:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            
+                        })
+                    preprocessor7
+                    []
+                    [(Print
+                        (StringFormat
+                            ()
+                            [(IntegerConstant 1 (Integer 4) Decimal)]
+                            FormatFortran
+                            (String -1 0 () PointerString)
+                            ()
+                        )
+                    )
+                    (Print
+                        (StringFormat
+                            ()
+                            [(IntegerConstant 4 (Integer 4) Decimal)]
+                            FormatFortran
+                            (String -1 0 () PointerString)
+                            ()
+                        )
+                    )
+                    (Print
+                        (StringFormat
+                            ()
+                            [(IntegerConstant 4 (Integer 4) Decimal)]
+                            FormatFortran
+                            (String -1 0 () PointerString)
+                            ()
+                        )
+                    )]
+                )
+        })
+    []
+)

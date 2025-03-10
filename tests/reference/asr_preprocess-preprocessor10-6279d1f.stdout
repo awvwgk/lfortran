@@ -1,0 +1,83 @@
+(TranslationUnit
+    (SymbolTable
+        1
+        {
+            preprocessor10:
+                (Program
+                    (SymbolTable
+                        2
+                        {
+                            
+                        })
+                    preprocessor10
+                    []
+                    [(Print
+                        (StringConstant
+                            "X is defined"
+                            (String 1 12 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "Y is defined"
+                            (String 1 12 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "Z is not defined"
+                            (String 1 16 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "X and Y is defined"
+                            (String 1 18 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "Z and Y is not defined"
+                            (String 1 22 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "Z or Y is defined"
+                            (String 1 17 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "X and Y and Z is not defined"
+                            (String 1 28 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "X and Y or Z is defined"
+                            (String 1 23 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "X and Y or Z is defined"
+                            (String 1 23 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "X and !Y or !Z is defined"
+                            (String 1 25 () PointerString)
+                        )
+                    )
+                    (Print
+                        (StringConstant
+                            "X and !(Y or Z) is not defined"
+                            (String 1 30 () PointerString)
+                        )
+                    )]
+                )
+        })
+    []
+)

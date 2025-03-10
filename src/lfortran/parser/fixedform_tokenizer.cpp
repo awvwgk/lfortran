@@ -1,4 +1,12 @@
-#include <limits>
+/*
+This is a fixed-form tokenizer. It accepts a prescanned source code that removes
+all whitespace.  It uses a hand written recursive descent parser to figure out
+how to properly tokenize the input. It returns a list of tokens that are then
+fed into our Bison parser, that is shared with the free-form parser.
+
+Note: The prescanner removes CR, so we only handle LF here.
+*/
+#include <unordered_map>
 #include <utility>
 
 #include <lfortran/parser/parser_exception.h>
@@ -15,7 +23,7 @@ int position = 0;
 
 namespace LCompilers::LFortran {
 
-std::map<std::string, yytokentype> identifiers_map = {
+const std::unordered_map<std::string, yytokentype> identifiers_map = {
     {"EOF", END_OF_FILE},
     {"\n", TK_NEWLINE},
     {"name", TK_NAME},
@@ -36,6 +44,8 @@ std::map<std::string, yytokentype> identifiers_map = {
     {"rparen", TK_RPAREN},
     {"lbracket", TK_LBRACKET},
     {"rbracket", TK_RBRACKET},
+    {"lbrace", TK_LBRACE},
+    {"rbace", TK_RBRACE},
     {"rbracket_old", TK_RBRACKET_OLD},
     {"percent", TK_PERCENT},
     {"vbar", TK_VBAR},
@@ -257,18 +267,26 @@ std::map<std::string, yytokentype> identifiers_map = {
     {"uminus", UMINUS}
 };
 
-std::vector<std::string> declarators{
+// star-forms must appear before non-stars
+const std::vector<std::string> declarators{
+            "integer*",
             "integer",
+	    "real*",
             "real",
+	    "complex*",
             "complex",
             "doubleprecision",
             "doublecomplex",
             "external",
             "dimension",
+	    "character*",
             "character",
+	    "logical*",
             "logical",
             "bytes",
-            "data"
+            "data",
+            "type",
+            "class"
         };
 
 std::vector<std::string> lines{};
@@ -320,26 +338,23 @@ struct FixedFormRecursiveDescent {
     }
 
     // Are the next characters in the `cur` stream equal to `str`?
-    bool next_is(unsigned char *cur, const std::string &str) {
-        unsigned char *tok = cur;
-        unsigned char *cur2 = cur;
-        while ((size_t)(cur2-tok) < str.size()) {
-            if (*cur2 == '\0') {
-                return false;
-            }
-            cur2++;
-        }
-        std::string next_str = std::string((char *)tok, cur2 - tok);
-        return next_str == str;
+    bool next_is(unsigned char const *cur, const std::string &str) {
+	for(const char s : str) {
+	    if (!s || *cur++ != s) return false;
+	}
+	return true;
     }
 
-    bool next_is_eol(unsigned char *cur) {
-        if (*cur == '\n') {
-            return true;
-        } else if (*cur == '\r' && *(cur+1) == '\n') {
-            return true;
-        }
-        return false;
+    // Are the next characters in the `cur` stream equal to `str`?
+    constexpr bool next_is(unsigned char const * cur, const char *str) {
+	while(*str) {
+	    if (*cur++ != *str++) return false;
+	}
+	return true;
+    }
+
+    constexpr bool next_is_eol(unsigned char const *cur) {
+        return (*cur == '\n');
     }
 
     bool is_integer(const std::string &s) const {
@@ -423,7 +438,7 @@ struct FixedFormRecursiveDescent {
     // Push the token_type, YYSTYPE and Location of the token_str at `cur`.
     // (Does not modify `cur`.)
     void push_token_no_advance_token(unsigned char *cur, const std::string &token_str,
-            yytokentype token_type) {
+            yytokentype const token_type) {
         YYSTYPE yy;
         yy.string.from_str(m_a, token_str);
         stypes.push_back(yy);
@@ -436,7 +451,9 @@ struct FixedFormRecursiveDescent {
 
     // token_type automatically determined
     void push_token_no_advance(unsigned char *cur, const std::string &token_str) {
-        push_token_no_advance_token(cur, token_str, identifiers_map[token_str]);
+	auto it = identifiers_map.find(token_str);
+	LCOMPILERS_ASSERT(it != identifiers_map.end());
+        push_token_no_advance_token(cur, token_str, it->second);
     }
 
     void push_integer_no_advance(unsigned char *cur, int32_t n) {
@@ -711,7 +728,7 @@ struct FixedFormRecursiveDescent {
         ptrdiff_t len;
         while (t.cur < end) {
             YYSTYPE y2;
-            auto token = t.lex(m_a, y2, loc, diag);
+            auto token = t.lex(m_a, y2, loc, diag, false);
             len = t.cur - t.tok;
             tokens.push_back(token);
             if (token == yytokentype::TK_INTEGER) {
@@ -779,9 +796,49 @@ struct FixedFormRecursiveDescent {
         return multiline;
     }
 
+    // Determines if a line in Fortran code represents an assignment rather than a declaration.
+    // E.g. below are declarations
+    //      integer :: x = 1
+    //      DATA p(1), (c(i), i=1, 2) / 5, 10, 12 /
+    //
+    // while, below are assignments
+    //      i = 2
+    //      integerx = 12
+    //      datap = 5
+    // NOTE: this function doesn't actually lexes, but only determines if it's
+    // (possibly) an assignment or not
+    bool is_possible_assignment(unsigned char *start, unsigned char *&cur) {
+        unsigned char *end = start;
+        if (!try_name(end)) return false;
+
+        // Try parsing array indices, if any
+        while (*end == '(') {
+            end++;  // Move past '('
+            if (!try_expr(end, true)) {
+                return false;  // Parsing failed, it’s not an assignment
+            }
+            if (*end != ')') {
+                return false;  // Expected closing ')', not an assignment
+            }
+            end++;  // Move past ')'
+        }
+
+        // After parsing identifier and indices, check if the next character is `=`
+        if (*end == '=') {
+            cur = start;  // Reset to the start to re-tokenize as an assignment
+            return true;
+        }
+        return false;  // Not an assignment if no '=' found
+    }
+
     bool lex_declaration(unsigned char *&cur) {
         unsigned char *start = cur;
         next_line(cur);
+
+        if (is_possible_assignment(start, cur)) {
+            return false;
+        }
+
         if (lex_declarator(start)) {
             tokenize_line(start);
             return true;
@@ -793,7 +850,20 @@ struct FixedFormRecursiveDescent {
     bool lex_declarator(unsigned char *&cur) {
         for(const auto& declarator : declarators) {
             if(next_is(cur, declarator)) {
-                push_token_advance(cur, declarator);
+		if (declarator.back() == '*') {
+		    /* In "star" form declarations, we need to be careful of only parsing an integer (no kind)
+		       after the star, so that we correctly parse "character*2d3v" as "character*2 d3v"
+		       instead of "character*2d3 v", which is illegal. */
+		    push_token_advance(cur, declarator.substr(0, declarator.size() - 1));
+		    push_token_advance(cur, std::string("*"));
+		    unsigned char *int_start = cur;
+		    if (try_integer(cur)) {
+			int32_t val = std::atoi((char*)int_start);
+			push_integer_no_advance(int_start, val);
+		    }
+		} else {
+		    push_token_advance(cur, declarator);
+		}
                 return true;
             }
         }
@@ -807,7 +877,7 @@ struct FixedFormRecursiveDescent {
                     cur += io_str.size();
                     unsigned char *start;
                     Location loc;
-                    lex_format(cur, loc, start);
+                    lex_format(cur, loc, start, diag, false);
                     locations.push_back(loc);
                     YYSTYPE yylval;
                     yylval.string.p = (char*) start;
@@ -845,6 +915,11 @@ struct FixedFormRecursiveDescent {
         tokenize_line(cur);
     }
 
+    void lex_use(unsigned char *&cur) {
+        push_token_advance(cur, "use");
+        tokenize_line(cur);
+    }
+
     bool is_function_call(unsigned char *cur) {
         if (try_next(cur, "call")) {
             if (try_name(cur)) {
@@ -872,7 +947,7 @@ struct FixedFormRecursiveDescent {
                 // If we are at the end of the statement, then this must
                 // be a function call. Otherwise it's something else,
                 // such as assignment (=, or =>).
-                if (*cur == '\n' || *cur == ';') {
+                if (next_is_eol(cur) || *cur == ';') {
                     return true;
                 }
             }
@@ -880,11 +955,77 @@ struct FixedFormRecursiveDescent {
         return false;
     }
 
+    void lex_common_block_part(unsigned char *&cur) {
+        // tokenize / block_1 / a, b
+        bool first_slash = true;
+        while(!next_is_eol(cur)) {
+            if (*(cur+1) == '/' && !first_slash) {
+                if (*cur != ',') {
+                    cur+=1;
+                }
+                unsigned char *end = cur;
+                // tokenize uptil here
+                tokenize_until(end);
+                t.cur = cur;
+                break;
+            } else if (*(cur+1) == '/') {
+                first_slash = false;
+            }
+            cur++;
+        }
+        if (next_is_eol(cur)) {
+            tokenize_until(cur);
+            t.cur = cur;
+        }
+    }
+
+    bool lex_common_block(unsigned char *&cur) {
+        push_token_advance(cur, "common");
+        while(*cur == '/') {
+            lex_common_block_part(cur);
+            // handle an optional comma
+            if(*cur == '\n') {
+                break;
+            }
+            push_token_no_advance(cur, "comma");
+            if (*cur == ',') {
+                cur++;
+                t.cur = cur;
+            }
+        }
+        next_line(cur);
+        tokenize_until(cur);
+        LCOMPILERS_ASSERT(*(t.cur-1) == '\n');
+        return true;
+    }
+
+    void lex_derived_type(unsigned char *&cur) {
+        push_token_advance(cur, "type");
+        tokenize_line(cur);
+        while (true) {
+            if (next_is(cur, "endtype")) {
+                push_token_advance(cur, "endtype");
+                tokenize_line(cur);
+                break;
+            } else {
+                lex_declaration(cur);
+            }
+        }
+    }
+
     bool lex_body_statement(unsigned char *&cur) {
         int64_t l = eat_label(cur);
+        // handle derived type tokenization
+        // this needs to be done before 'lex_declaration'
+        if (next_is(cur, "type::")) {
+            lex_derived_type(cur);
+            return true;
+        }
+
         if (lex_declaration(cur)) {
             return true;
         }
+
         if (lex_io(cur)) return true;
         if (next_is(cur, "if(")) {
             lex_cond(cur);
@@ -893,6 +1034,21 @@ struct FixedFormRecursiveDescent {
         unsigned char *nline = cur; next_line(nline);
         if (is_do_loop(cur)) {
             lex_do(cur);
+            return true;
+        }
+
+        if (next_is(cur, "doconcurrent(")) {
+            lex_do_concurrent(cur);
+            return true;
+        }
+
+        if (next_is(cur, "dowhile(")) {
+            lex_dowhile(cur);
+            return true;
+        }
+
+        if (next_is(cur, "selectrank(")) {
+            lex_selectrank(cur);
             return true;
         }
 
@@ -924,6 +1080,53 @@ struct FixedFormRecursiveDescent {
             return true;
         }
 
+        if (next_is(cur, "backspace")) {
+            push_token_advance(cur, "backspace");
+            tokenize_line(cur);
+            return true;
+        }
+
+        if (next_is(cur, "rewind")) {
+            push_token_advance(cur, "rewind");
+            tokenize_line(cur);
+            return true;
+        }
+
+        if (next_is(cur, "endfile")) {
+            push_token_advance(cur, "endfile");
+            tokenize_line(cur);
+            return true;
+        }
+
+        if (next_is(cur, "interface")) {
+            lex_interface(cur);
+            return true;
+        }
+
+        if (next_is(cur, "exit")) {
+            push_token_advance(cur, "exit");
+            tokenize_line(cur);
+            return true;
+        }
+
+        if (next_is(cur, "flush")) {
+            push_token_advance(cur, "flush");
+            tokenize_line(cur);
+            return true;
+        }
+
+        if (next_is(cur, "allocate")) {
+            push_token_advance(cur, "allocate");
+            tokenize_line(cur);
+            return true;
+        }
+
+        if (next_is(cur, "deallocate")) {
+            push_token_advance(cur, "deallocate");
+            tokenize_line(cur);
+            return true;
+        }
+
         if (next_is(cur, "goto")) {
             push_token_advance(cur, "goto");
             tokenize_line(cur);
@@ -937,9 +1140,7 @@ struct FixedFormRecursiveDescent {
         }
 
         if (next_is(cur, "common")) {
-            push_token_advance(cur, "common");
-            tokenize_line(cur);
-            return true;
+            return lex_common_block(cur);
         }
 
         if (next_is(cur, "save")) {
@@ -971,7 +1172,19 @@ struct FixedFormRecursiveDescent {
             return true;
         }
 
+        if (next_is(cur, "use")) {
+            lex_use(cur);
+            return true;
+        }
+
         if (next_is(cur, "stop")) {
+            push_token_advance(cur, "stop");
+            tokenize_line(cur);
+            return true;
+        }
+
+        if (next_is(cur, "errorstop")) {
+            push_token_advance(cur, "error");
             push_token_advance(cur, "stop");
             tokenize_line(cur);
             return true;
@@ -980,6 +1193,11 @@ struct FixedFormRecursiveDescent {
         if (next_is(cur, "assign")) {
             lex_assign(cur);
             return true;
+        }
+
+        if (next_is(cur, "cycle")){
+            push_token_advance(cur, "cycle");
+            tokenize_line(cur);
         }
 
         if (l != -1) {
@@ -1159,6 +1377,27 @@ struct FixedFormRecursiveDescent {
         return false;
     }
 
+    void lex_do_concurrent(unsigned char *&cur) {
+        push_token_advance(cur, "do");
+        push_token_advance(cur, "concurrent");
+        tokenize_line(cur);
+
+        while (true) {
+            if (next_is(cur, "enddo")) {
+                push_token_no_advance(cur, "enddo");
+                push_token_no_advance(cur, "\n");
+                next_line(cur);
+                break;
+            } else if (!lex_body_statement(cur)) {
+                Location loc;
+                loc.first = cur - string_start;
+                loc.last = cur - string_start;
+                throw parser_local::TokenizerError("Expected an executable "
+                    "statement inside do concurrent loop", loc);
+            }
+        }
+    }
+
     void lex_do(unsigned char *&cur) {
         auto end = cur; next_line(end);
         push_token_advance(cur, "do");
@@ -1228,6 +1467,30 @@ struct FixedFormRecursiveDescent {
         }
     }
 
+    void lex_dowhile(unsigned char *&cur) {
+        auto end = cur; next_line(end);
+        push_token_advance(cur, "do");
+        push_token_advance(cur, "while");
+        tokenize_line(cur); // tokenize rest of line where `do while` starts
+        while (!next_is(cur, "enddo\n")) {
+            lex_body_statement(cur);
+        }
+        push_token_advance(cur, "enddo");
+        tokenize_line(cur);
+    }
+
+    void lex_selectrank(unsigned char *&cur) {
+        auto end = cur; next_line(end);
+        push_token_advance(cur, "select");
+        push_token_advance(cur, "rank");
+        tokenize_line(cur); // tokenize rest of line where `select rank` starts
+        while (!next_is(cur, "endselect\n")) {
+            tokenize_line(cur);
+        }
+        push_token_advance(cur, "endselect");
+        tokenize_line(cur);
+    }
+
     bool if_advance_or_terminate(unsigned char *&cur) {
         int64_t l = eat_label(cur);
         if (next_is(cur, "elseif")) {
@@ -1281,6 +1544,21 @@ struct FixedFormRecursiveDescent {
         }
     }
 
+    /*
+        explicit_program: This flag indicates whether the Fortran
+            program being lexed is explicitly declared with the
+            program keyword or implicitly defined by the presence
+            of statements that belong to a main program but without
+            an explicit program declaration.
+
+            E.g.; program where `explicit_program` is false:
+            ```
+                   integer :: x
+                   x = 42
+                   print *, x
+                   end
+            ```
+    */
     void lex_program(unsigned char *&cur, bool explicit_program) {
         if (explicit_program) {
             push_token_advance(cur, "program");
@@ -1288,6 +1566,12 @@ struct FixedFormRecursiveDescent {
         }
         while(lex_body_statement(cur));
         eat_label(cur);
+        if (next_is(cur, "contains")) {
+            push_token_advance(cur, "contains");
+            push_token_no_advance(cur, "\n");
+            next_line(cur); // Does not generate any code?
+            while(lex_procedure(cur));
+        }
         if (next_is(cur, "endprogram")) {
             push_token_advance(cur, "endprogram");
             tokenize_line(cur);
@@ -1296,6 +1580,28 @@ struct FixedFormRecursiveDescent {
             tokenize_line(cur);
         } else {
             error(cur, "Expecting terminating symbol for program");
+        }
+    }
+
+    void lex_module(unsigned char *&cur) {
+        push_token_advance(cur, "module");
+        tokenize_line(cur);
+        while(lex_body_statement(cur));
+        eat_label(cur);
+        if (next_is(cur, "contains")) {
+            push_token_advance(cur, "contains");
+            push_token_no_advance(cur, "\n");
+            next_line(cur);
+            while(lex_procedure(cur));
+        }
+        if (next_is(cur, "endmodule")) {
+            push_token_advance(cur, "endmodule");
+            tokenize_line(cur);
+        } else if (next_is(cur, "end")) {
+            push_token_advance(cur, "end");
+            tokenize_line(cur);
+        } else {
+            error(cur, "Expecting terminating symbol for module");
         }
     }
 
@@ -1317,6 +1623,26 @@ struct FixedFormRecursiveDescent {
         }
     }
 
+    void lex_interface(unsigned char *&cur) {
+        push_token_advance(cur, "interface");
+        tokenize_line(cur);
+
+        while (true) {
+            if (next_is(cur, "endinterface")) {
+                push_token_advance(cur, "endinterface");
+                tokenize_line(cur);
+                break;
+            } else if (next_is(cur, "subroutine") || next_is(cur, "function")) {
+                // Handle procedure declaration within the interface
+                lex_procedure(cur);
+            } else if (next_is(cur, "moduleprocedure")) {
+                // TODO: handle module procedure
+            } else {
+                error(cur, "Unexpected token in interface block");
+            }
+        }
+    }
+
     void lex_block_data(unsigned char *&cur) {
         push_token_advance(cur, "block");
         push_token_advance(cur, "data");
@@ -1333,13 +1659,14 @@ struct FixedFormRecursiveDescent {
         }
     }
 
-    bool is_declaration(unsigned char *&cur, std::string declaration_type /*function, subroutine, program*/, const std::vector<std::string>& keywords) {
+    bool is_declaration(unsigned char *&cur,
+			std::string declaration_type /*function, subroutine, program*/,
+			const std::vector<std::string>& keywords) {
         unsigned char *cpy = cur;
         unsigned char *nextline = cur; next_line(nextline);
         std::string line{tostr(cur, nextline-1)};
         // current line does not contain type -> we abort
-        if (!(line.find(std::string(declaration_type)) != std::string::npos)) return false;
-
+        if (!(line.find(declaration_type) != std::string::npos)) return false;
         std::vector<std::string> kw_found;
         std::vector<std::string> decls{keywords.begin(), keywords.end()};
         while(decls.size() != 0) {
@@ -1347,32 +1674,46 @@ struct FixedFormRecursiveDescent {
                 if (next_is(cpy, decls[i])) {
                     kw_found.push_back(decls[i]);
                     cpy += decls[i].size();
+                    if (decls[i].back() == '*') {
+ 		        if (decls[i] == "character*" && next_is(cpy, "(*)")) {
+			    kw_found.back() += "(*)";
+			    cpy += 3;
+                        } else if (std::isdigit(*cpy)) {
+			    do {
+                                kw_found.back().push_back(*cpy++);
+                            } while(std::isdigit(*cpy));
+			} else {
+			    error(cpy, "Syntax error: expecting length "
+				  "specification after " + decls[i]);
+			}
+                    }
                     decls.erase(decls.begin() + i);
                     break;
                 }
             }
             if (next_is(cpy, declaration_type))
                 break;
-            // catching syntax errors like `recursive double precision recursive function f(...`
+            // catching syntax errors like `recursive double precision
+            // recursive function f(...`
             for (auto kw = kw_found.begin(); kw != kw_found.end(); ++kw) {
                 if (next_is(cpy, *kw)) {
-                    error(cpy, "Syntax error: keyword " + *kw + "cannot occur multiple times in " + declaration_type + "declaration");
+                    error(cpy, "Syntax error: keyword " + *kw +
+			  "cannot occur multiple times in " +
+			  declaration_type + "declaration");
                 }
             }
         }
-
         if (kw_found.size() == 0 && !next_is(cpy, declaration_type))
             return false;
 
         // tokenize all keywords
-        for(auto iter = kw_found.begin(); iter != kw_found.end(); ++iter) {
-            if (*iter == "real*8") {
-                tokenize_until(cur+(*iter).size());
+        for(auto const &kw : kw_found) {
+            if (kw.find('*') != std::string::npos) {
+                tokenize_until(cur + kw.size());
             } else {
-                push_token_advance(cur, *iter);
+                push_token_advance(cur, kw);
             }
         }
-
         cur = cpy;
         push_token_advance(cur, declaration_type);
         tokenize_line(cur);
@@ -1397,29 +1738,48 @@ struct FixedFormRecursiveDescent {
         return next_is(cur, "program");
     }
 
+    bool is_module(unsigned char *cur) {
+        return next_is(cur, "module");
+    }
+
+    bool lex_procedure(unsigned char *&cur) {
+	const std::vector<std::string> subroutine_keywords{"recursive", "pure",
+            "elemental"};
+        const std::vector<std::string> function_keywords{"recursive", "pure",
+            "elemental", "real*", "real",
+	    "character*(*)",
+            "character*", "character",
+            "complex*", "complex",
+            "integer*", "integer",
+            "logical*", "logical",
+            "doubleprecision", "doublecomplex"};
+        if (is_declaration(cur, "subroutine", subroutine_keywords)) {
+            lex_subroutine(cur);
+            return true;
+        } else if (is_declaration(cur, "function", function_keywords)) {
+            lex_function(cur);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     void lex_global_scope_item(unsigned char *&cur) {
         // we can define a global assignment
         unsigned char *nline = cur; next_line(nline);
         // eat_label(cur);
-        std::vector<std::string> program_keywords{};
-        std::vector<std::string> subroutine_keywords{"recursive", "pure",
-            "elemental"};
-        std::vector<std::string> function_keywords{"recursive", "pure",
-            "elemental",
-            "real*8", "real", "character", "complex", "integer", "logical",
-            "doubleprecision", "doublecomplex"};
-
         if (next_is(cur, "include")) {
             push_token_advance(cur, "include");
             tokenize_line(cur);
         }
         if (is_program(cur)) {
             lex_program(cur, true);
-        } else if (is_declaration(cur, "subroutine", subroutine_keywords)) {
-            lex_subroutine(cur);
-        } else if (is_declaration(cur, "function", function_keywords)) {
-            lex_function(cur);
+        } else if (next_is(cur, "interface")) {
+            lex_interface(cur);
+        } else if (is_module(cur)) {
+            lex_module(cur);
+        } else if (lex_procedure(cur)) {
+            return;
         } else if (next_is(cur, "blockdata")) {
             lex_block_data(cur);
         } else if (is_implicit_program(cur)) {
@@ -1431,8 +1791,6 @@ struct FixedFormRecursiveDescent {
         } else {
             error(cur, "ICE: Cannot recognize global scope entity");
         }
-
-
     }
 
     void lex_global_scope(unsigned char *&cur) {
@@ -1458,7 +1816,6 @@ bool FixedFormTokenizer::tokenize_input(diag::Diagnostics &diagnostics, Allocato
         f.t.string_start = string_start;
         f.t.cur_line = string_start;
         f.t.line_num = 1;
-
         f.lex_global_scope(cur);
         tokens = std::move(f.tokens);
         stypes = std::move(f.stypes);
@@ -1474,7 +1831,7 @@ bool FixedFormTokenizer::tokenize_input(diag::Diagnostics &diagnostics, Allocato
 }
 
 int FixedFormTokenizer::lex(Allocator &/*al*/, YYSTYPE &yylval,
-        Location &loc, diag::Diagnostics &/*diagnostics*/)
+        Location &loc, diag::Diagnostics &/*diagnostics*/, bool /*continue_compilation*/)
 {
     if (!tokens.empty()) {
         auto tok = tokens[token_pos];

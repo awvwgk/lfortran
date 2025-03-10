@@ -138,6 +138,7 @@ for more and more people.
 :hidden:
 installation
 language
+usage
 ```
 
 ```{toctree}
@@ -175,7 +176,6 @@ asr/asr_nodes/cast_kind_nodes/cast_kind.md
 asr/asr_nodes/expression_nodes/expression_nodes.md
 asr/asr_nodes/kinds_nodes/kinds.md
 asr/asr_nodes/statement_nodes/statement_nodes.md
-asr/asr_nodes/symbol_nodes/symbol.md
-asr/asr_nodes/symbol_nodes/program.md
+asr/asr_nodes/symbol_nodes/symbol_nodes.md
 asr/asr_nodes/type_nodes/ttype.md
 ```
