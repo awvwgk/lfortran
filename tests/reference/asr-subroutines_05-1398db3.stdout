@@ -39,6 +39,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             x:
                                                 (Variable
@@ -62,6 +63,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     f
@@ -105,6 +107,7 @@
                                             ()
                                         )
                                         ()
+                                        .false.
                                     )
                                     (Assignment
                                         (Var 3 e)
@@ -120,13 +123,14 @@
                                             ColMajor
                                         )
                                         ()
+                                        .false.
                                     )
                                     (Print
                                         (StringFormat
                                             ()
                                             [(Var 3 e)]
                                             FormatFortran
-                                            (String -1 0 () PointerString)
+                                            (String 1 () .false. .false. CString)
                                             ()
                                         )
                                     )]
@@ -160,6 +164,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     bugsize

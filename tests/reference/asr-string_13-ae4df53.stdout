@@ -16,7 +16,7 @@
                                     (Iachar
                                         (StringConstant
                                             "0"
-                                            (String 1 1 () PointerString)
+                                            (String 1 (IntegerConstant 1 (Integer 4) Decimal) .false. .false. PointerString)
                                         )
                                         (Integer 4)
                                         (IntegerConstant 48 (Integer 4) Decimal)
@@ -31,6 +31,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             ia5:
                                 (Variable
@@ -41,7 +42,7 @@
                                     (Iachar
                                         (StringConstant
                                             "5"
-                                            (String 1 1 () PointerString)
+                                            (String 1 (IntegerConstant 1 (Integer 4) Decimal) .false. .false. PointerString)
                                         )
                                         (Integer 4)
                                         (IntegerConstant 53 (Integer 4) Decimal)
@@ -56,6 +57,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             ia9:
                                 (Variable
@@ -66,7 +68,7 @@
                                     (Iachar
                                         (StringConstant
                                             "9"
-                                            (String 1 1 () PointerString)
+                                            (String 1 (IntegerConstant 1 (Integer 4) Decimal) .false. .false. PointerString)
                                         )
                                         (Integer 4)
                                         (IntegerConstant 57 (Integer 4) Decimal)
@@ -81,6 +83,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     string_13
@@ -140,7 +143,7 @@
                             (Var 2 ia5)
                             (Var 2 ia9)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )]

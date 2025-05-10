@@ -34,6 +34,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     nested_01
@@ -49,6 +50,7 @@
                             ()
                         )
                         ()
+                        .false.
                     )]
                 ),
             nested_01_a:
@@ -78,6 +80,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             d:
                                                 (Function
@@ -101,6 +104,7 @@
                                                                     .false.
                                                                     .false.
                                                                     .false.
+                                                                    ()
                                                                 )
                                                         })
                                                     d
@@ -123,13 +127,14 @@
                                                     [(Print
                                                         (StringConstant
                                                             "d()"
-                                                            (String 1 3 () PointerString)
+                                                            (String 1 (IntegerConstant 3 (Integer 4) Decimal) .false. .false. PointerString)
                                                         )
                                                     )
                                                     (Assignment
                                                         (Var 4 d)
                                                         (IntegerConstant 1 (Integer 4) Decimal)
                                                         ()
+                                                        .false.
                                                     )]
                                                     (Var 4 d)
                                                     Public
@@ -154,6 +159,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     b
@@ -176,7 +182,7 @@
                                     [(Print
                                         (StringConstant
                                             "b()"
-                                            (String 1 3 () PointerString)
+                                            (String 1 (IntegerConstant 3 (Integer 4) Decimal) .false. .false. PointerString)
                                         )
                                     )
                                     (Assignment
@@ -190,11 +196,13 @@
                                             ()
                                         )
                                         ()
+                                        .false.
                                     )
                                     (Assignment
                                         (Var 3 b)
                                         (IntegerConstant 0 (Integer 4) Decimal)
                                         ()
+                                        .false.
                                     )]
                                     (Var 3 b)
                                     Public

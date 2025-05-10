@@ -59,6 +59,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     modules_44
@@ -101,7 +102,7 @@
                                                     Default
                                                     (Allocatable
                                                         (Array
-                                                            (String 1 -2 () PointerString)
+                                                            (String 1 () .false. .true. PointerString)
                                                             [(()
                                                             ())]
                                                             DescriptorArray
@@ -114,6 +115,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             settings:
                                                 (Variable
@@ -137,6 +139,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     cmd_new
@@ -167,7 +170,7 @@
                                             160
                                             ["# ", "My cool new project!"]
                                             (Array
-                                                (String 1 80 () PointerString)
+                                                (String 1 (IntegerConstant 80 (Integer 4) Decimal) .false. .false. PointerString)
                                                 [((IntegerConstant 1 (Integer 4) Decimal)
                                                 (IntegerConstant 2 (Integer 4) Decimal))]
                                                 FixedSizeArray
@@ -175,6 +178,7 @@
                                             ColMajor
                                         )
                                         ()
+                                        .false.
                                     )
                                     (SubroutineCall
                                         2 warnwrite_string____1
@@ -184,14 +188,25 @@
                                                 (Var 8 settings)
                                                 8 1_fpm_new_settings_name
                                                 (Allocatable
-                                                    (String 1 -2 () DescriptorString)
+                                                    (String 1 () .false. .true. DescriptorString)
                                                 )
                                                 ()
                                             )
                                             DescriptorString
                                             PointerString
                                             (Allocatable
-                                                (String 1 -2 () PointerString)
+                                                (String 1 (StringLen
+                                                    (StructInstanceMember
+                                                        (Var 8 settings)
+                                                        8 1_fpm_new_settings_name
+                                                        (Allocatable
+                                                            (String 1 () .false. .true. DescriptorString)
+                                                        )
+                                                        ()
+                                                    )
+                                                    (Integer 4)
+                                                    ()
+                                                ) .false. .false. PointerString)
                                             )
                                             ()
                                         ))
@@ -201,7 +216,7 @@
                                             PointerToDataArray
                                             (Allocatable
                                                 (Array
-                                                    (String 1 -2 () PointerString)
+                                                    (String 1 () .false. .true. PointerString)
                                                     [(()
                                                     ())]
                                                     PointerToDataArray
@@ -245,7 +260,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -254,6 +269,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     fpm_cmd_settings
@@ -283,7 +299,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -292,6 +308,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     fpm_new_settings
@@ -349,6 +366,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             __2data:
                                                 (Variable
@@ -367,6 +385,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             data:
                                                 (Variable
@@ -379,7 +398,7 @@
                                                     ()
                                                     Default
                                                     (Array
-                                                        (String 1 -1 () PointerString)
+                                                        (String 1 () .true. .false. PointerString)
                                                         [((Var 10 __1data)
                                                         (Var 10 __2data))]
                                                         PointerToDataArray
@@ -391,6 +410,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             fname:
                                                 (Variable
@@ -401,7 +421,7 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 -1 () PointerString)
+                                                    (String 1 () .true. .false. PointerString)
                                                     ()
                                                     Source
                                                     Public
@@ -409,13 +429,14 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     warnwrite_string____1
                                     (FunctionType
-                                        [(String 1 -1 () PointerString)
+                                        [(String 1 () .true. .false. PointerString)
                                         (Array
-                                            (String 1 -1 () PointerString)
+                                            (String 1 () .true. .false. PointerString)
                                             [((FunctionParam
                                                 2
                                                 (Integer 4)

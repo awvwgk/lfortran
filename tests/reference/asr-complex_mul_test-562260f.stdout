@@ -24,6 +24,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     complex2
@@ -47,6 +48,7 @@
                             )
                         )
                         ()
+                        .false.
                     )
                     (Assignment
                         (Var 2 x)
@@ -70,13 +72,14 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(Var 2 x)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )
@@ -99,13 +102,14 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(Var 2 x)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )
@@ -134,13 +138,14 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(Var 2 x)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )]

@@ -54,6 +54,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             line_break:
                                                 (Variable
@@ -72,6 +73,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             message:
                                                 (Variable
@@ -83,7 +85,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -92,6 +94,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             num:
                                                 (Variable
@@ -102,7 +105,7 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 20 () PointerString)
+                                                    (String 1 (IntegerConstant 20 (Integer 4) Decimal) .false. .false. PointerString)
                                                     ()
                                                     Source
                                                     Public
@@ -110,12 +113,13 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     add_context
                                     (FunctionType
                                         [(Allocatable
-                                            (String 1 -2 () DescriptorString)
+                                            (String 1 () .false. .true. DescriptorString)
                                         )
                                         (StructType
                                             []
@@ -160,7 +164,7 @@
                                             [(StringFormat
                                                 (StringConstant
                                                     "(\"line\",1x,i0,\":\")"
-                                                    (String 1 18 () PointerString)
+                                                    (String 1 (IntegerConstant 18 (Integer 4) Decimal) .false. .false. PointerString)
                                                 )
                                                 [(StructInstanceMember
                                                     (Var 4 context)
@@ -169,7 +173,7 @@
                                                     ()
                                                 )]
                                                 FormatFortran
-                                                (String -1 0 () PointerString)
+                                                (String 1 () .false. .false. CString)
                                                 ()
                                             )]
                                             ()
@@ -204,7 +208,7 @@
                                                             ()
                                                         )
                                                         (IntegerConstant 1 (Integer 4) Decimal)
-                                                        (String 1 -3 (IntegerBinOp
+                                                        (String 1 (IntegerBinOp
                                                             (IntegerBinOp
                                                                 (IntrinsicElementalFunction
                                                                     StringLenTrim
@@ -228,7 +232,7 @@
                                                             )
                                                             (Integer 4)
                                                             ()
-                                                        ) PointerString)
+                                                        ) .false. .false. PointerString)
                                                         ()
                                                     )
                                                     (StringPhysicalCast
@@ -236,21 +240,26 @@
                                                         DescriptorString
                                                         PointerString
                                                         (Allocatable
-                                                            (String 1 -2 () PointerString)
+                                                            (String 1 (StringLen
+                                                                (Var 4 message)
+                                                                (Integer 4)
+                                                                ()
+                                                            ) .false. .false. PointerString)
                                                         )
                                                         ()
                                                     )
-                                                    (String 1 -1 () PointerString)
+                                                    (String 1 () .false. .false. PointerString)
                                                     ()
                                                 )
                                                 PointerString
                                                 DescriptorString
                                                 (Allocatable
-                                                    (String 1 -1 () DescriptorString)
+                                                    (String 1 () .false. .false. DescriptorString)
                                                 )
                                                 ()
                                             )
                                             ()
+                                            .false.
                                         )]
                                         []
                                     )
@@ -265,15 +274,19 @@
                                                             DescriptorString
                                                             PointerString
                                                             (Allocatable
-                                                                (String 1 -2 () PointerString)
+                                                                (String 1 (StringLen
+                                                                    (Var 4 message)
+                                                                    (Integer 4)
+                                                                    ()
+                                                                ) .false. .false. PointerString)
                                                             )
                                                             ()
                                                         )
                                                         (StringConstant
                                                             "   | "
-                                                            (String 1 5 () PointerString)
+                                                            (String 1 (IntegerConstant 5 (Integer 4) Decimal) .false. .false. PointerString)
                                                         )
-                                                        (String 1 -1 () PointerString)
+                                                        (String 1 () .false. .false. PointerString)
                                                         ()
                                                     )
                                                     (StringSection
@@ -281,7 +294,7 @@
                                                             (Var 4 context)
                                                             4 1_toml_context_ptr
                                                             (Pointer
-                                                                (String 1 -2 () PointerString)
+                                                                (String 1 () .false. .true. PointerString)
                                                             )
                                                             ()
                                                         )
@@ -294,7 +307,7 @@
                                                         )
                                                         (Var 4 line_break)
                                                         (IntegerConstant 1 (Integer 4) Decimal)
-                                                        (String 1 -3 (IntegerBinOp
+                                                        (String 1 (IntegerBinOp
                                                             (Var 4 line_break)
                                                             Sub
                                                             (IntegerBinOp
@@ -306,27 +319,28 @@
                                                             )
                                                             (Integer 4)
                                                             ()
-                                                        ) PointerString)
+                                                        ) .false. .false. PointerString)
                                                         ()
                                                     )
-                                                    (String 1 -1 () PointerString)
+                                                    (String 1 () .false. .false. PointerString)
                                                     ()
                                                 )
                                                 (StringConstant
                                                     "   |"
-                                                    (String 1 4 () PointerString)
+                                                    (String 1 (IntegerConstant 4 (Integer 4) Decimal) .false. .false. PointerString)
                                                 )
-                                                (String 1 -1 () PointerString)
+                                                (String 1 () .false. .false. PointerString)
                                                 ()
                                             )
                                             PointerString
                                             DescriptorString
                                             (Allocatable
-                                                (String 1 -1 () DescriptorString)
+                                                (String 1 () .false. .false. DescriptorString)
                                             )
                                             ()
                                         )
                                         ()
+                                        .false.
                                     )]
                                     ()
                                     Public
@@ -356,6 +370,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             pos:
                                                 (Variable
@@ -374,6 +389,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             ptr:
                                                 (Variable
@@ -385,7 +401,7 @@
                                                     ()
                                                     Default
                                                     (Pointer
-                                                        (String 1 -2 () PointerString)
+                                                        (String 1 () .false. .true. PointerString)
                                                     )
                                                     ()
                                                     Source
@@ -394,6 +410,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     toml_context
@@ -447,7 +464,7 @@
                     [(Print
                         (StringConstant
                             "working"
-                            (String 1 7 () PointerString)
+                            (String 1 (IntegerConstant 7 (Integer 4) Decimal) .false. .false. PointerString)
                         )
                     )]
                 )

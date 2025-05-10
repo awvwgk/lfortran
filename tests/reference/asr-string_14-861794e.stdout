@@ -32,7 +32,7 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 -1 () PointerString)
+                                                    (String 1 () .true. .false. PointerString)
                                                     ()
                                                     Source
                                                     Private
@@ -40,6 +40,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             iostat:
                                                 (Variable
@@ -58,6 +59,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             iotype:
                                                 (Variable
@@ -68,7 +70,7 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 -1 () PointerString)
+                                                    (String 1 () .true. .false. PointerString)
                                                     ()
                                                     Source
                                                     Private
@@ -76,6 +78,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             line:
                                                 (Variable
@@ -87,7 +90,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -96,6 +99,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             string:
                                                 (Variable
@@ -119,6 +123,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             unit:
                                                 (Variable
@@ -137,6 +142,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             v_list:
                                                 (Variable
@@ -160,6 +166,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     read_formatted
@@ -171,7 +178,7 @@
                                             2 string_type
                                         )
                                         (Integer 4)
-                                        (String 1 -1 () PointerString)
+                                        (String 1 () .true. .false. PointerString)
                                         (Array
                                             (Integer 4)
                                             [(()
@@ -179,7 +186,7 @@
                                             DescriptorArray
                                         )
                                         (Integer 4)
-                                        (String 1 -1 () PointerString)]
+                                        (String 1 () .true. .false. PointerString)]
                                         ()
                                         Source
                                         Implementation
@@ -221,7 +228,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -230,6 +237,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     string_type
@@ -258,7 +266,7 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 -1 () PointerString)
+                                                    (String 1 () .true. .false. PointerString)
                                                     ()
                                                     Source
                                                     Private
@@ -266,6 +274,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             iostat:
                                                 (Variable
@@ -284,6 +293,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             iotype:
                                                 (Variable
@@ -294,7 +304,7 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 -1 () PointerString)
+                                                    (String 1 () .true. .false. PointerString)
                                                     ()
                                                     Source
                                                     Private
@@ -302,6 +312,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             string:
                                                 (Variable
@@ -325,6 +336,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             unit:
                                                 (Variable
@@ -343,6 +355,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             v_list:
                                                 (Variable
@@ -366,6 +379,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     write_formatted
@@ -377,7 +391,7 @@
                                             2 string_type
                                         )
                                         (Integer 4)
-                                        (String 1 -1 () PointerString)
+                                        (String 1 () .true. .false. PointerString)
                                         (Array
                                             (Integer 4)
                                             [(()
@@ -385,7 +399,7 @@
                                             DescriptorArray
                                         )
                                         (Integer 4)
-                                        (String 1 -1 () PointerString)]
+                                        (String 1 () .true. .false. PointerString)]
                                         ()
                                         Source
                                         Implementation

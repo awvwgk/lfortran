@@ -30,6 +30,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             bf1:
                                 (Variable
@@ -54,6 +55,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             c1:
                                 (Variable
@@ -97,6 +99,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             td:
                                 (Variable
@@ -115,6 +118,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             x:
                                 (Variable
@@ -133,6 +137,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             xx90:
                                 (Variable
@@ -157,6 +162,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             xx95:
                                 (Variable
@@ -181,6 +187,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             y:
                                 (Variable
@@ -205,6 +212,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             z:
                                 (Variable
@@ -229,6 +237,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     data_12_module
@@ -339,7 +348,7 @@
                             ()
                             [(Var 3 x)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )
@@ -361,7 +370,7 @@
                             ()
                             [(Var 3 y)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )
@@ -401,7 +410,7 @@
                             ()
                             [(Var 3 z)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )
@@ -449,7 +458,7 @@
                                 ()
                             )]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )
@@ -505,7 +514,7 @@
                                 ()
                             )]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )
@@ -561,7 +570,7 @@
                                 ()
                             )]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )
@@ -609,7 +618,7 @@
                             ()
                             [(Var 3 bf1)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )
@@ -649,7 +658,7 @@
                             ()
                             [(Var 3 xx90)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )
@@ -689,7 +698,7 @@
                             ()
                             [(Var 3 xx95)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )

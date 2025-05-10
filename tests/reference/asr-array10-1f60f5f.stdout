@@ -49,6 +49,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     const_arrays
@@ -58,7 +59,7 @@
                             ()
                             [(Var 2 x)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )]

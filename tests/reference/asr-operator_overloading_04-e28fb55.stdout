@@ -44,6 +44,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             rhs:
                                                 (Variable
@@ -54,7 +55,7 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 -1 () PointerString)
+                                                    (String 1 () .true. .false. PointerString)
                                                     ()
                                                     Source
                                                     Public
@@ -62,6 +63,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     assign_string_char
@@ -72,7 +74,7 @@
                                             .true.
                                             2 string_type
                                         )
-                                        (String 1 -1 () PointerString)]
+                                        (String 1 () .true. .false. PointerString)]
                                         ()
                                         Source
                                         Implementation
@@ -93,7 +95,7 @@
                                             (Var 4 lhs)
                                             4 1_string_type_raw
                                             (Allocatable
-                                                (String 1 -2 () DescriptorString)
+                                                (String 1 () .false. .true. DescriptorString)
                                             )
                                             ()
                                         )
@@ -102,11 +104,12 @@
                                             PointerString
                                             DescriptorString
                                             (Allocatable
-                                                (String 1 -1 () DescriptorString)
+                                                (String 1 () .true. .false. DescriptorString)
                                             )
                                             ()
                                         )
                                         ()
+                                        .false.
                                     )]
                                     ()
                                     Public
@@ -129,7 +132,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -138,6 +141,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     string_type
@@ -189,6 +193,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             trimmed_string:
                                                 (Variable
@@ -212,6 +217,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     trim_string
@@ -247,7 +253,7 @@
                                             (Var 5 string)
                                             5 1_string_type_raw
                                             (Allocatable
-                                                (String 1 -2 () DescriptorString)
+                                                (String 1 () .false. .true. DescriptorString)
                                             )
                                             ()
                                         )
@@ -260,19 +266,31 @@
                                                     (Var 5 string)
                                                     5 1_string_type_raw
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                 )
                                                 DescriptorString
                                                 PointerString
                                                 (Allocatable
-                                                    (String 1 -2 () PointerString)
+                                                    (String 1 (StringLen
+                                                        (StructInstanceMember
+                                                            (Var 5 string)
+                                                            5 1_string_type_raw
+                                                            (Allocatable
+                                                                (String 1 () .false. .true. DescriptorString)
+                                                            )
+                                                            ()
+                                                        )
+                                                        (Integer 4)
+                                                        ()
+                                                    ) .false. .false. PointerString)
                                                 )
                                                 ()
                                             ))]
                                             ()
                                         )
+                                        .false.
                                     )]
                                     (Var 5 trimmed_string)
                                     Public
@@ -335,6 +353,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             last:
                                                 (Variable
@@ -353,6 +372,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             string:
                                                 (Variable
@@ -376,6 +396,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             ~assign:
                                                 (ExternalSymbol

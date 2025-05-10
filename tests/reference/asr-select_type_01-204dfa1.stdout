@@ -49,6 +49,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     base
@@ -95,6 +96,7 @@
                                     .false.
                                     .true.
                                     .false.
+                                    ()
                                 ),
                             bptr:
                                 (Variable
@@ -117,6 +119,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             child:
                                 (Struct
@@ -140,6 +143,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     child
@@ -176,6 +180,7 @@
                                     .false.
                                     .true.
                                     .false.
+                                    ()
                                 ),
                             perform_select_type:
                                 (Function
@@ -203,6 +208,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             ~select_type_block_:
                                                 (Block
@@ -226,7 +232,7 @@
                                                             ()
                                                             [(StringConstant
                                                                 "base type: component value: "
-                                                                (String 1 28 () PointerString)
+                                                                (String 1 (IntegerConstant 28 (Integer 4) Decimal) .false. .false. PointerString)
                                                             )
                                                             (StructInstanceMember
                                                                 (Var 5 bptr)
@@ -235,7 +241,7 @@
                                                                 ()
                                                             )]
                                                             FormatFortran
-                                                            (String -1 0 () PointerString)
+                                                            (String 1 () .false. .false. CString)
                                                             ()
                                                         )
                                                     )
@@ -290,7 +296,7 @@
                                                             ()
                                                             [(StringConstant
                                                                 "child type: component values: "
-                                                                (String 1 30 () PointerString)
+                                                                (String 1 (IntegerConstant 30 (Integer 4) Decimal) .false. .false. PointerString)
                                                             )
                                                             (StructInstanceMember
                                                                 (Var 5 bptr)
@@ -305,7 +311,7 @@
                                                                 ()
                                                             )]
                                                             FormatFortran
-                                                            (String -1 0 () PointerString)
+                                                            (String 1 () .false. .false. CString)
                                                             ()
                                                         )
                                                     )
@@ -410,6 +416,7 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
@@ -421,7 +428,7 @@
                                 ()
                             )]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )
@@ -441,7 +448,7 @@
                                 ()
                             )]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )

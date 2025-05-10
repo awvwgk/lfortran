@@ -50,12 +50,12 @@ cd "$TMP_DIR"
 # Section 1: stdlib (Less Workarounds)
 ##########################
 time_section "🧪 Testing stdlib (Less Workarounds)" '
-  git clone https://github.com/czgdp1807/stdlib.git
-  cd stdlib
+  git clone https://github.com/Pranavchiku/stdlib-fortran-lang.git
+  cd stdlib-fortran-lang
   export PATH="$(pwd)/../src/bin:$PATH"
 
-  git checkout n-lf-3
-  git checkout 1de43b51a7c3c67baca65da66ee7e5d14edf6121
+  git checkout n-lf-6
+  git checkout aec6ad66cc039e84c365a12409efec3aa43e698c
   micromamba install -c conda-forge fypp
 
   git clean -fdx
@@ -114,7 +114,31 @@ time_section "🧪 Testing Numerical Methods Fortran" '
   run_test plot_pendulum.exe
   run_test plot_transes_iso.exe
 
+
+  git clean -dfx
+  print_subsection "Building Numerical Methods Fortran with separate compilation"
+
+  FC="$FC --generate-object-code" make
+  run_test test_fix_point.exe
+  run_test test_integrate_one.exe
+  run_test test_linear.exe
+  run_test test_newton.exe
+  run_test test_ode.exe
+  run_test test_probability_distribution.exe
+  run_test test_sde.exe
+
+  run_test plot_bogdanov_takens.exe
+  run_test plot_bruinsma.exe
+  run_test plot_fun1.exe
+  run_test plot_lorenz.exe
+  run_test plot_lotka_volterra1.exe
+  run_test plot_lotka_volterra2.exe
+  run_test plot_pendulum.exe
+  run_test plot_transes_iso.exe
+
+
   print_success "Done with Numerical Methods Fortran"
+
   cd ..
 '
 
@@ -241,6 +265,20 @@ time_section "🧪 Testing Legacy Minpack (SciPy)" '
 
   print_subsection "Running CTest"
   ctest
+
+  print_subsection "Testing with separate compilation"
+  cd ../
+  git clean -dfx
+  mkdir lf && cd lf
+  FC="$FC --intrinsic-mangling --generate-object-code" cmake ..
+  make
+  run_test examples/example_hybrd
+  run_test examples/example_hybrd1
+  run_test examples/example_lmder1
+  run_test examples/example_lmdif1
+  run_test examples/example_primes
+  print_subsection "Running CTest"
+  ctest
 '
 
 ##########################
@@ -256,6 +294,14 @@ time_section "🧪 Testing Modern Minpack (Fortran-Lang)" '
   $FC ./examples/example_hybrd1.f90 --legacy-array-sections
   $FC ./examples/example_lmdif1.f90 --legacy-array-sections
   $FC ./examples/example_lmder1.f90 --legacy-array-sections
+
+  print_subsection "Testing with separate compilation"
+  git clean -dfx
+  $FC ./src/minpack.f90 -c --legacy-array-sections --generate-object-code
+  $FC ./examples/example_hybrd.f90 --legacy-array-sections --generate-object-code minpack.o
+  $FC ./examples/example_hybrd1.f90 --legacy-array-sections --generate-object-code minpack.o
+  $FC ./examples/example_lmdif1.f90 --legacy-array-sections --generate-object-code minpack.o
+  $FC ./examples/example_lmder1.f90 --legacy-array-sections --generate-object-code minpack.o
 '
 
 time_section "🧪 Testing Modern Minpack (Result Check)" '
@@ -269,6 +315,14 @@ time_section "🧪 Testing Modern Minpack (Result Check)" '
   $FC ./examples/example_hybrd1.f90 --legacy-array-sections
   $FC ./examples/example_lmdif1.f90 --legacy-array-sections
   $FC ./examples/example_lmder1.f90 --legacy-array-sections
+
+  print_subsection "Testing with separate compilation"
+  git clean -dfx
+  $FC ./src/minpack.f90 -c --legacy-array-sections --generate-object-code
+  $FC ./examples/example_hybrd.f90 --legacy-array-sections --generate-object-code minpack.o
+  $FC ./examples/example_hybrd1.f90 --legacy-array-sections --generate-object-code minpack.o
+  $FC ./examples/example_lmdif1.f90 --legacy-array-sections --generate-object-code minpack.o
+  $FC ./examples/example_lmder1.f90 --legacy-array-sections --generate-object-code minpack.o
 '
 
 ##########################
@@ -285,6 +339,14 @@ time_section "🧪 Testing dftatom" '
   git clean -dfx
   make -f Makefile.manual F90=$FC F90FLAGS="-I../../src --fast"
   make -f Makefile.manual quicktest
+
+  git clean -dfx
+  make -f Makefile.manual F90=$FC F90FLAGS="-I../../src --generate-object-code"
+  make -f Makefile.manual quicktest
+
+  git clean -dfx
+  make -f Makefile.manual F90=$FC F90FLAGS="-I../../src --generate-object-code --fast"
+  make -f Makefile.manual quicktest
 '
 
 
@@ -299,8 +361,10 @@ time_section "🧪 Testing fastGPT" '
         git clean -dfx
         git checkout -t origin/namelist
         git checkout d3eef520c1be8e2db98a3c2189740af1ae7c3e06
+        # NOTE: the release file link below would not necessarily
+        # need to be updated if the commit hash above is updated
         curl -f -L -o model.dat \
-                https://github.com/gxyd/gpt/releases/download/v2.0/model_fastgpt_124M_v1.dat
+            https://github.com/certik/fastGPT/releases/download/v1.0.0/model_fastgpt_124M_v1.dat
         echo "11f6f018794924986b2fdccfbe8294233bb5e8ba28d40ae971dec3adbdc81ad7  model.dat" | shasum -a 256 --check
 
         mkdir lf
@@ -331,8 +395,10 @@ time_section "🧪 Testing fastGPT" '
         git clean -dfx
         git checkout -t origin/lf36run
         git checkout c915a244354df2e23b0dc613e302893b496549e2
+        # NOTE: the release file link below would not necessarily
+        # need to be updated if the commit hash above is updated
         curl -f -L -o model.dat \
-                https://github.com/gxyd/gpt/releases/download/v2.0/model_fastgpt_124M_v1.dat
+            https://github.com/certik/fastGPT/releases/download/v1.0.0/model_fastgpt_124M_v1.dat
         echo "11f6f018794924986b2fdccfbe8294233bb5e8ba28d40ae971dec3adbdc81ad7  model.dat" | shasum -a 256 --check
 
         mkdir lf

@@ -84,6 +84,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             error:
                                                 (Variable
@@ -109,6 +110,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             fpm_dependency_modules_31_dependency_node_t:
                                                 (ExternalSymbol
@@ -137,6 +139,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             settings:
                                                 (Variable
@@ -160,6 +163,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     cmd_update
@@ -222,14 +226,55 @@
                                                 )
                                                 7 1_dependency_config_t_name
                                                 (Allocatable
-                                                    (String 1 -2 () DescriptorString)
+                                                    (String 1 () .false. .true. DescriptorString)
                                                 )
                                                 ()
                                             )
                                             DescriptorString
                                             PointerString
                                             (Allocatable
-                                                (String 1 -2 () PointerString)
+                                                (String 1 (StringLen
+                                                    (StructInstanceMember
+                                                        (ArrayItem
+                                                            (StructInstanceMember
+                                                                (Var 7 deps)
+                                                                7 1_dependency_tree_t_dep
+                                                                (Allocatable
+                                                                    (Array
+                                                                        (StructType
+                                                                            []
+                                                                            []
+                                                                            .true.
+                                                                            7 fpm_dependency_modules_31_dependency_node_t
+                                                                        )
+                                                                        [(()
+                                                                        ())]
+                                                                        DescriptorArray
+                                                                    )
+                                                                )
+                                                                ()
+                                                            )
+                                                            [(()
+                                                            (Var 7 ii)
+                                                            ())]
+                                                            (StructType
+                                                                []
+                                                                []
+                                                                .true.
+                                                                7 fpm_dependency_modules_31_dependency_node_t
+                                                            )
+                                                            ColMajor
+                                                            ()
+                                                        )
+                                                        7 1_dependency_config_t_name
+                                                        (Allocatable
+                                                            (String 1 () .false. .true. DescriptorString)
+                                                        )
+                                                        ()
+                                                    )
+                                                    (Integer 4)
+                                                    ()
+                                                ) .false. .false. PointerString)
                                             )
                                             ()
                                         ))
@@ -290,6 +335,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             working_dir:
                                                 (Variable
@@ -301,7 +347,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -310,6 +356,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     fpm_cmd_settings
@@ -347,6 +394,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             fetch_only:
                                                 (Variable
@@ -365,6 +413,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             name:
                                                 (Variable
@@ -377,7 +426,7 @@
                                                     Default
                                                     (Allocatable
                                                         (Array
-                                                            (String 1 5 () PointerString)
+                                                            (String 1 (IntegerConstant 5 (Integer 4) Decimal) .false. .false. PointerString)
                                                             [(()
                                                             ())]
                                                             DescriptorArray
@@ -390,6 +439,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     fpm_update_settings
@@ -432,7 +482,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -441,6 +491,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             path:
                                                 (Variable
@@ -452,7 +503,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -461,6 +512,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     dependency_config_t
@@ -504,6 +556,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             proj_dir:
                                                 (Variable
@@ -515,7 +568,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -524,6 +577,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             revision:
                                                 (Variable
@@ -535,7 +589,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -544,6 +598,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             update:
                                                 (Variable
@@ -568,6 +623,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     dependency_node_t
@@ -600,7 +656,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -609,6 +665,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             dep:
                                                 (Variable
@@ -639,6 +696,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             dep_dir:
                                                 (Variable
@@ -650,7 +708,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -659,6 +717,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             ndep:
                                                 (Variable
@@ -677,6 +736,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             unit:
                                                 (Variable
@@ -695,6 +755,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             update:
                                                 (GenericProcedure
@@ -731,6 +792,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     dependency_tree_t
@@ -765,7 +827,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -774,6 +836,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     error_t
@@ -817,6 +880,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             name:
                                                 (Variable
@@ -827,7 +891,7 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 -1 () PointerString)
+                                                    (String 1 () .true. .false. PointerString)
                                                     ()
                                                     Source
                                                     Public
@@ -835,6 +899,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             self:
                                                 (Variable
@@ -855,6 +920,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     update_dependency
@@ -862,7 +928,7 @@
                                         [(ClassType
                                             9 dependency_tree_t
                                         )
-                                        (String 1 -1 () PointerString)
+                                        (String 1 () .true. .false. PointerString)
                                         (Allocatable
                                             (StructType
                                                 []
@@ -971,7 +1037,7 @@
                     [(Print
                         (StringConstant
                             "running modules_31 program"
-                            (String 1 26 () PointerString)
+                            (String 1 (IntegerConstant 26 (Integer 4) Decimal) .false. .false. PointerString)
                         )
                     )]
                 )

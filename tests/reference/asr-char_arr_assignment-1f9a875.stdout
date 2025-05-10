@@ -17,7 +17,7 @@
                                     ()
                                     Default
                                     (Array
-                                        (String 1 1 () PointerString)
+                                        (String 1 (IntegerConstant 1 (Integer 4) Decimal) .false. .false. PointerString)
                                         [((IntegerConstant 1 (Integer 4) Decimal)
                                         (IntegerConstant 4 (Integer 4) Decimal))]
                                         FixedSizeArray
@@ -29,6 +29,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     char_arr_assignment
@@ -52,7 +53,7 @@
                             )
                             (IntegerConstant 1 (Integer 4) Decimal))]
                             (Array
-                                (String 1 1 () PointerString)
+                                (String 1 (IntegerConstant 1 (Integer 4) Decimal) .false. .false. PointerString)
                                 [(()
                                 ())]
                                 DescriptorArray
@@ -62,7 +63,7 @@
                         (ArrayBroadcast
                             (StringConstant
                                 "A"
-                                (String 1 1 () PointerString)
+                                (String 1 (IntegerConstant 1 (Integer 4) Decimal) .false. .false. PointerString)
                             )
                             (IntrinsicArrayFunction
                                 Shape
@@ -84,7 +85,7 @@
                                     )
                                     (IntegerConstant 1 (Integer 4) Decimal))]
                                     (Array
-                                        (String 1 1 () PointerString)
+                                        (String 1 (IntegerConstant 1 (Integer 4) Decimal) .false. .false. PointerString)
                                         [(()
                                         ())]
                                         DescriptorArray
@@ -101,7 +102,7 @@
                                 ()
                             )
                             (Array
-                                (String 1 1 () PointerString)
+                                (String 1 (IntegerConstant 1 (Integer 4) Decimal) .false. .false. PointerString)
                                 [(()
                                 ())]
                                 DescriptorArray
@@ -109,6 +110,7 @@
                             ()
                         )
                         ()
+                        .false.
                     )]
                 )
         })

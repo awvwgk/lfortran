@@ -29,6 +29,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     array_02_transfer
@@ -47,6 +48,7 @@
                             ColMajor
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
@@ -74,7 +76,7 @@
                                 ()
                             )]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )]

@@ -24,6 +24,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     entry1
@@ -40,6 +41,7 @@
                             )
                         )
                         ()
+                        .false.
                     )
                     (SubroutineCall
                         1 x
@@ -76,6 +78,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     x
@@ -130,6 +133,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             entry__lcompilers:
                                 (Variable
@@ -148,6 +152,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     x_main__lcompilers
@@ -206,11 +211,11 @@
                             ()
                             [(StringConstant
                                 "Printed using subroutine call: "
-                                (String 1 31 () PointerString)
+                                (String 1 (IntegerConstant 31 (Integer 4) Decimal) .false. .false. PointerString)
                             )
                             (Var 5 dummy)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )
@@ -221,6 +226,7 @@
                             (Real 4)
                         )
                         ()
+                        .false.
                     )
                     (Return)
                     (GoToTarget
@@ -232,11 +238,11 @@
                             ()
                             [(StringConstant
                                 "Printed using entry statement: "
-                                (String 1 31 () PointerString)
+                                (String 1 (IntegerConstant 31 (Integer 4) Decimal) .false. .false. PointerString)
                             )
                             (Var 5 dummy)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )
@@ -269,6 +275,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     y

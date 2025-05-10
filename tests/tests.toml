@@ -1578,6 +1578,10 @@ filename = "write6.f90"
 run = true
 
 [[test]]
+filename = "write7.f90"
+asr = true
+
+[[test]]
 filename = "read1.f90"
 ast = true
 ast_f90 = true
@@ -1842,6 +1846,18 @@ run = true
 
 [[test]]
 filename = "../integration_tests/format_21.f90"
+run = true
+
+[[test]]
+filename = "../integration_tests/format_22.f90"
+run = true
+
+[[test]]
+filename = "../integration_tests/format_23.f90"
+run = true
+
+[[test]]
+filename = "../integration_tests/format_24.f90"
 run = true
 
 [[test]]
@@ -3027,6 +3043,10 @@ filename = "../integration_tests/bindc4.f90"
 asr = true
 
 [[test]]
+filename = "../integration_tests/bindc_06.f90"
+asr = true
+
+[[test]]
 filename = "../integration_tests/cmd_01.f90"
 asr = true
 
@@ -3056,7 +3076,11 @@ semantics_only_cc = true
 
 [[test]]
 filename = "errors/continue_compilation_ff_1.f"
-fixed_form_cc = true
+fixed_form_cc_asr = true
+
+[[test]]
+filename = "errors/continue_compilation_ff_2.f"
+fixed_form_cc_asr = true
 
 [[test]]
 filename = "../integration_tests/rewind_inquire_flush.f90"
@@ -4131,6 +4155,10 @@ filename = "errors/array_constructor_with_different_char_lengths.f90"
 asr = true
 
 [[test]]
+filename = "errors/incorrect_allocate_for_array.f90"
+asr = true
+
+[[test]]
 filename = "errors/incompatible_ranks_allocatable_arr1.f90"
 asr = true
 
@@ -4575,4 +4603,8 @@ run = true
 
 [[test]]
 filename = "errors/integerStringInput_64.f90"
+run = true
+
+[[test]]
+filename = "errors/integer_overflow.f90"
 run = true

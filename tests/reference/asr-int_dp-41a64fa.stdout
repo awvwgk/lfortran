@@ -24,6 +24,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             v:
                                 (Variable
@@ -47,6 +48,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     int_dp
@@ -57,7 +59,7 @@
                             [(Var 2 u)
                             (Var 2 v)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )]

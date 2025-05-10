@@ -30,6 +30,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     intrinsics_09
@@ -59,7 +60,7 @@
                                 ()
                                 [(Var 2 z)]
                                 FormatFortran
-                                (String -1 0 () PointerString)
+                                (String 1 () .false. .false. CString)
                                 ()
                             )
                         )]

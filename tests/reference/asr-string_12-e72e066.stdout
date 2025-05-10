@@ -24,18 +24,18 @@
                                         )
                                         (IntegerConstant 10 (Integer 4) Decimal)
                                         (IntegerConstant 1 (Integer 4) Decimal)
-                                        (String 1 22 () PointerString)
+                                        (String 1 (IntegerConstant 22 (Integer 4) Decimal) .false. .false. PointerString)
                                         (StringConstant
                                             "0123456789"
-                                            (String 1 22 () PointerString)
+                                            (String 1 (IntegerConstant 22 (Integer 4) Decimal) .false. .false. PointerString)
                                         )
                                     )
                                     (StringConstant
                                         "0123456789"
-                                        (String 1 22 () PointerString)
+                                        (String 1 (IntegerConstant 22 (Integer 4) Decimal) .false. .false. PointerString)
                                     )
                                     Parameter
-                                    (String 1 22 () PointerString)
+                                    (String 1 (IntegerConstant 22 (Integer 4) Decimal) .true. .false. PointerString)
                                     ()
                                     Source
                                     Public
@@ -43,6 +43,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             fullhex_digits:
                                 (Variable
@@ -52,14 +53,14 @@
                                     Local
                                     (StringConstant
                                         "0123456789ABCDEFabcdef"
-                                        (String 1 22 () PointerString)
+                                        (String 1 (IntegerConstant 22 (Integer 4) Decimal) .false. .false. PointerString)
                                     )
                                     (StringConstant
                                         "0123456789ABCDEFabcdef"
-                                        (String 1 22 () PointerString)
+                                        (String 1 (IntegerConstant 22 (Integer 4) Decimal) .false. .false. PointerString)
                                     )
                                     Parameter
-                                    (String 1 22 () PointerString)
+                                    (String 1 (IntegerConstant 22 (Integer 4) Decimal) .true. .false. PointerString)
                                     ()
                                     Source
                                     Public
@@ -67,6 +68,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             hex_digits:
                                 (Variable
@@ -85,18 +87,18 @@
                                         )
                                         (IntegerConstant 16 (Integer 4) Decimal)
                                         (IntegerConstant 1 (Integer 4) Decimal)
-                                        (String 1 22 () PointerString)
+                                        (String 1 (IntegerConstant 22 (Integer 4) Decimal) .false. .false. PointerString)
                                         (StringConstant
                                             "0123456789ABCDEF"
-                                            (String 1 22 () PointerString)
+                                            (String 1 (IntegerConstant 22 (Integer 4) Decimal) .false. .false. PointerString)
                                         )
                                     )
                                     (StringConstant
                                         "0123456789ABCDEF"
-                                        (String 1 22 () PointerString)
+                                        (String 1 (IntegerConstant 22 (Integer 4) Decimal) .false. .false. PointerString)
                                     )
                                     Parameter
-                                    (String 1 22 () PointerString)
+                                    (String 1 (IntegerConstant 22 (Integer 4) Decimal) .true. .false. PointerString)
                                     ()
                                     Source
                                     Public
@@ -104,6 +106,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             letters:
                                 (Variable
@@ -113,14 +116,14 @@
                                     Local
                                     (StringConstant
                                         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-                                        (String 1 52 () PointerString)
+                                        (String 1 (IntegerConstant 52 (Integer 4) Decimal) .false. .false. PointerString)
                                     )
                                     (StringConstant
                                         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-                                        (String 1 52 () PointerString)
+                                        (String 1 (IntegerConstant 52 (Integer 4) Decimal) .false. .false. PointerString)
                                     )
                                     Parameter
-                                    (String 1 52 () PointerString)
+                                    (String 1 (IntegerConstant 52 (Integer 4) Decimal) .true. .false. PointerString)
                                     ()
                                     Source
                                     Public
@@ -128,6 +131,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             lowercase:
                                 (Variable
@@ -146,18 +150,18 @@
                                         )
                                         ()
                                         (IntegerConstant 1 (Integer 4) Decimal)
-                                        (String 1 52 () PointerString)
+                                        (String 1 (IntegerConstant 52 (Integer 4) Decimal) .false. .false. PointerString)
                                         (StringConstant
                                             "abcdefghijklmnopqrstuvwxyz"
-                                            (String 1 52 () PointerString)
+                                            (String 1 (IntegerConstant 52 (Integer 4) Decimal) .false. .false. PointerString)
                                         )
                                     )
                                     (StringConstant
                                         "abcdefghijklmnopqrstuvwxyz"
-                                        (String 1 52 () PointerString)
+                                        (String 1 (IntegerConstant 52 (Integer 4) Decimal) .false. .false. PointerString)
                                     )
                                     Parameter
-                                    (String 1 52 () PointerString)
+                                    (String 1 (IntegerConstant 52 (Integer 4) Decimal) .true. .false. PointerString)
                                     ()
                                     Source
                                     Public
@@ -165,6 +169,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             lowerhex_digits:
                                 (Variable
@@ -174,14 +179,14 @@
                                     Local
                                     (StringConstant
                                         "0123456789abcdef"
-                                        (String 1 16 () PointerString)
+                                        (String 1 (IntegerConstant 16 (Integer 4) Decimal) .false. .false. PointerString)
                                     )
                                     (StringConstant
                                         "0123456789abcdef"
-                                        (String 1 16 () PointerString)
+                                        (String 1 (IntegerConstant 16 (Integer 4) Decimal) .false. .false. PointerString)
                                     )
                                     Parameter
-                                    (String 1 16 () PointerString)
+                                    (String 1 (IntegerConstant 16 (Integer 4) Decimal) .true. .false. PointerString)
                                     ()
                                     Source
                                     Public
@@ -189,6 +194,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             octal_digits:
                                 (Variable
@@ -207,18 +213,18 @@
                                         )
                                         (IntegerConstant 8 (Integer 4) Decimal)
                                         (IntegerConstant 1 (Integer 4) Decimal)
-                                        (String 1 22 () PointerString)
+                                        (String 1 (IntegerConstant 22 (Integer 4) Decimal) .false. .false. PointerString)
                                         (StringConstant
                                             "01234567"
-                                            (String 1 22 () PointerString)
+                                            (String 1 (IntegerConstant 22 (Integer 4) Decimal) .false. .false. PointerString)
                                         )
                                     )
                                     (StringConstant
                                         "01234567"
-                                        (String 1 22 () PointerString)
+                                        (String 1 (IntegerConstant 22 (Integer 4) Decimal) .false. .false. PointerString)
                                     )
                                     Parameter
-                                    (String 1 22 () PointerString)
+                                    (String 1 (IntegerConstant 22 (Integer 4) Decimal) .true. .false. PointerString)
                                     ()
                                     Source
                                     Public
@@ -226,6 +232,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             string:
                                 (Variable
@@ -241,18 +248,18 @@
                                             (IntegerConstant 52 (Integer 4) Decimal)
                                         )]
                                         0
-                                        (String 1 1 () PointerString)
+                                        (String 1 (IntegerConstant 1 (Integer 4) Decimal) .false. .false. PointerString)
                                         (StringConstant
                                             "4"
-                                            (String 1 1 () PointerString)
+                                            (String 1 (IntegerConstant 1 (Integer 4) Decimal) .false. .false. PointerString)
                                         )
                                     )
                                     (StringConstant
                                         "4"
-                                        (String 1 1 () PointerString)
+                                        (String 1 (IntegerConstant 1 (Integer 4) Decimal) .false. .false. PointerString)
                                     )
                                     Parameter
-                                    (String 1 1 () PointerString)
+                                    (String 1 (IntegerConstant 1 (Integer 4) Decimal) .true. .false. PointerString)
                                     ()
                                     Source
                                     Public
@@ -260,6 +267,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             uppercase:
                                 (Variable
@@ -278,18 +286,18 @@
                                         )
                                         (IntegerConstant 26 (Integer 4) Decimal)
                                         (IntegerConstant 1 (Integer 4) Decimal)
-                                        (String 1 52 () PointerString)
+                                        (String 1 (IntegerConstant 52 (Integer 4) Decimal) .false. .false. PointerString)
                                         (StringConstant
                                             "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                                            (String 1 52 () PointerString)
+                                            (String 1 (IntegerConstant 52 (Integer 4) Decimal) .false. .false. PointerString)
                                         )
                                     )
                                     (StringConstant
                                         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                                        (String 1 52 () PointerString)
+                                        (String 1 (IntegerConstant 52 (Integer 4) Decimal) .false. .false. PointerString)
                                     )
                                     Parameter
-                                    (String 1 52 () PointerString)
+                                    (String 1 (IntegerConstant 52 (Integer 4) Decimal) .true. .false. PointerString)
                                     ()
                                     Source
                                     Public
@@ -297,6 +305,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     string_12
@@ -330,7 +339,7 @@
                             ()
                             [(StringConstant
                                 "char("
-                                (String 1 5 () PointerString)
+                                (String 1 (IntegerConstant 5 (Integer 4) Decimal) .false. .false. PointerString)
                             )
                             (StringLen
                                 (Var 2 letters)
@@ -339,11 +348,11 @@
                             )
                             (StringConstant
                                 ") = "
-                                (String 1 4 () PointerString)
+                                (String 1 (IntegerConstant 4 (Integer 4) Decimal) .false. .false. PointerString)
                             )
                             (Var 2 string)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )
@@ -353,7 +362,7 @@
                             NotEq
                             (StringConstant
                                 "4"
-                                (String 1 1 () PointerString)
+                                (String 1 (IntegerConstant 1 (Integer 4) Decimal) .false. .false. PointerString)
                             )
                             (Logical 4)
                             (LogicalConstant

@@ -30,6 +30,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             y:
                                 (Variable
@@ -48,6 +49,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     int_01
@@ -70,7 +72,7 @@
                                 (IntegerConstant 7 (Integer 4) Decimal)
                             )]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () .false. .false. CString)
                             ()
                         )
                     )]

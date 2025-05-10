@@ -52,6 +52,7 @@
                                                     .false.
                                                     .true.
                                                     .false.
+                                                    ()
                                                 ),
                                             toml_value:
                                                 (ExternalSymbol
@@ -274,6 +275,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     destroy
@@ -303,14 +305,25 @@
                                                     (Var 6 self)
                                                     6 1_toml_value_key
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                 )
                                                 DescriptorString
                                                 PointerString
                                                 (Allocatable
-                                                    (String 1 -2 () PointerString)
+                                                    (String 1 (StringLen
+                                                        (StructInstanceMember
+                                                            (Var 6 self)
+                                                            6 1_toml_value_key
+                                                            (Allocatable
+                                                                (String 1 () .false. .true. DescriptorString)
+                                                            )
+                                                            ()
+                                                        )
+                                                        (Integer 4)
+                                                        ()
+                                                    ) .false. .false. PointerString)
                                                 )
                                                 ()
                                             )]
@@ -323,7 +336,7 @@
                                                 (Var 6 self)
                                                 6 1_toml_value_key
                                                 (Allocatable
-                                                    (String 1 -2 () DescriptorString)
+                                                    (String 1 () .false. .true. DescriptorString)
                                                 )
                                                 ()
                                             )]
@@ -416,6 +429,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     new_array
@@ -484,6 +498,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     toml_array
@@ -575,6 +590,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     destroy
@@ -604,14 +620,25 @@
                                                     (Var 23 self)
                                                     23 1_toml_value_key
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                 )
                                                 DescriptorString
                                                 PointerString
                                                 (Allocatable
-                                                    (String 1 -2 () PointerString)
+                                                    (String 1 (StringLen
+                                                        (StructInstanceMember
+                                                            (Var 23 self)
+                                                            23 1_toml_value_key
+                                                            (Allocatable
+                                                                (String 1 () .false. .true. DescriptorString)
+                                                            )
+                                                            ()
+                                                        )
+                                                        (Integer 4)
+                                                        ()
+                                                    ) .false. .false. PointerString)
                                                 )
                                                 ()
                                             )]
@@ -624,7 +651,7 @@
                                                 (Var 23 self)
                                                 23 1_toml_value_key
                                                 (Allocatable
-                                                    (String 1 -2 () DescriptorString)
+                                                    (String 1 () .false. .true. DescriptorString)
                                                 )
                                                 ()
                                             )]
@@ -639,14 +666,25 @@
                                                     (Var 23 self)
                                                     23 1_toml_keyval_raw
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                 )
                                                 DescriptorString
                                                 PointerString
                                                 (Allocatable
-                                                    (String 1 -2 () PointerString)
+                                                    (String 1 (StringLen
+                                                        (StructInstanceMember
+                                                            (Var 23 self)
+                                                            23 1_toml_keyval_raw
+                                                            (Allocatable
+                                                                (String 1 () .false. .true. DescriptorString)
+                                                            )
+                                                            ()
+                                                        )
+                                                        (Integer 4)
+                                                        ()
+                                                    ) .false. .false. PointerString)
                                                 )
                                                 ()
                                             )]
@@ -659,7 +697,7 @@
                                                 (Var 23 self)
                                                 23 1_toml_keyval_raw
                                                 (Allocatable
-                                                    (String 1 -2 () DescriptorString)
+                                                    (String 1 () .false. .true. DescriptorString)
                                                 )
                                                 ()
                                             )]
@@ -706,6 +744,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     new_keyval
@@ -750,7 +789,7 @@
                                                     destroy
                                                     20 destroy
                                                     Source
-                                                    .true.
+                                                    .false.
                                                     .false.
                                                 ),
                                             raw:
@@ -763,7 +802,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -772,6 +811,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     toml_keyval
@@ -812,7 +852,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -821,6 +861,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     toml_value
@@ -870,6 +911,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     destroy
@@ -924,7 +966,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () .false. .true. DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -933,6 +975,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     toml_value

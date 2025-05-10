@@ -328,7 +328,7 @@ ASR::Module_t* load_module(Allocator &al, SymbolTable *symtab,
     symtab->add_symbol(module_name, (ASR::symbol_t*)mod2);
     mod2->m_symtab->parent = symtab;
     mod2->m_loaded_from_mod = true;
-    if ( generate_object_code ) {
+    if ( generate_object_code && !startswith(mod2->m_name, "lfortran_intrinsic") ) {
         mod2->m_symtab->mark_all_variables_external(al);
     }
     LCOMPILERS_ASSERT(symtab->resolve_symbol(module_name));
@@ -374,7 +374,7 @@ ASR::Module_t* load_module(Allocator &al, SymbolTable *symtab,
                 symtab->add_symbol(item, (ASR::symbol_t*)mod2);
                 mod2->m_symtab->parent = symtab;
                 mod2->m_loaded_from_mod = true;
-                if ( generate_object_code ) {
+                if ( generate_object_code && !startswith(mod2->m_name, "lfortran_intrinsic") ) {
                     mod2->m_symtab->mark_all_variables_external(al);
                 }
                 rerun = true;
@@ -407,6 +407,19 @@ ASR::Module_t* load_module(Allocator &al, SymbolTable *symtab,
     symtab->asr_owner = orig_asr_owner;
 
     return mod2;
+}
+
+ASR::asr_t* make_Assignment_t_util(Allocator &al, const Location &a_loc,
+    ASR::expr_t* a_target, ASR::expr_t* a_value,
+    ASR::stmt_t* a_overloaded, bool a_realloc_lhs) {
+    bool is_allocatable = ASRUtils::is_allocatable(a_target);
+    if ( ASR::is_a<ASR::StructInstanceMember_t>(*a_target) ) {
+        ASR::StructInstanceMember_t* a_target_struct = ASR::down_cast<ASR::StructInstanceMember_t>(a_target);
+        is_allocatable |= ASRUtils::is_allocatable(a_target_struct->m_v);
+    }
+    a_realloc_lhs = a_realloc_lhs && is_allocatable;
+    return ASR::make_Assignment_t(al, a_loc, a_target, a_value,
+        a_overloaded, a_realloc_lhs);
 }
 
 void set_intrinsic(ASR::symbol_t* sym) {
@@ -1541,7 +1554,13 @@ ASR::symbol_t* import_class_procedure(Allocator &al, const Location& loc,
     if( original_sym && (ASR::is_a<ASR::ClassProcedure_t>(*original_sym) ||
         (ASR::is_a<ASR::Variable_t>(*original_sym) &&
          ASR::is_a<ASR::FunctionType_t>(*ASRUtils::symbol_type(original_sym)))) ) {
-        std::string class_proc_name = ASRUtils::symbol_name(original_sym);
+        std::string class_proc_name;
+        // ClassProcedure name might be same if the procedure is overridden, use proc_name instead
+        if (ASR::is_a<ASR::ClassProcedure_t>(*original_sym)) {
+            class_proc_name = std::string(ASR::down_cast<ASR::ClassProcedure_t>(original_sym)->m_proc_name);
+        } else {
+            class_proc_name = ASRUtils::symbol_name(original_sym);
+        }
         if( original_sym != current_scope->resolve_symbol(class_proc_name) ) {
             std::string imported_proc_name = "1_" + class_proc_name;
             if( current_scope->resolve_symbol(imported_proc_name) == nullptr ) {

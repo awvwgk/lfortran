@@ -510,7 +510,7 @@ public:
         ASR::expr_t *target = duplicate_expr(x->m_target);
         ASR::expr_t *value = duplicate_expr(x->m_value);
         ASR::stmt_t *overloaded = duplicate_stmt(x->m_overloaded);
-        return ASR::make_Assignment_t(al, x->base.base.loc, target, value, overloaded);
+        return ASRUtils::make_Assignment_t_util(al, x->base.base.loc, target, value, overloaded, false);
     }
 
     ASR::asr_t* duplicate_DoLoop(ASR::DoLoop_t *x) {
@@ -663,7 +663,9 @@ public:
                     case ASR::ttypeType::String: {
                         ASR::String_t* tnew = ASR::down_cast<ASR::String_t>(t);
                         t = ASRUtils::TYPE(ASR::make_String_t(al, t->base.loc,
-                                    tnew->m_kind, tnew->m_len, tnew->m_len_expr, ASR::string_physical_typeType::PointerString));
+                                    tnew->m_kind, tnew->m_len,
+                                    tnew->m_is_assumed_length, tnew->m_is_deferred_length,
+                                    ASR::string_physical_typeType::PointerString));
                         break;
                     }
                     case ASR::ttypeType::Complex: {
@@ -1756,7 +1758,7 @@ public:
         ASR::expr_t *target = duplicate_expr(x->m_target);
         ASR::expr_t *value = duplicate_expr(x->m_value);
         ASR::stmt_t *overloaded = duplicate_stmt(x->m_overloaded);
-        return ASR::make_Assignment_t(al, x->base.base.loc, target, value, overloaded);
+        return ASRUtils::make_Assignment_t_util(al, x->base.base.loc, target, value, overloaded, false);
     }
 
     /* array_index */
