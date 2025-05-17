@@ -39,6 +39,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     intrinsics_27
@@ -90,7 +91,7 @@
                                 )
                             )]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -125,7 +126,7 @@
                                 (IntegerConstant 0 (Integer 4) Decimal)
                             )]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )]

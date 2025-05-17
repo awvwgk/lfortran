@@ -24,6 +24,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             b:
                                 (Variable
@@ -42,6 +43,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             marks:
                                 (Variable
@@ -60,6 +62,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     case03
@@ -68,6 +71,7 @@
                         (Var 2 marks)
                         (IntegerConstant 94 (Integer 4) Decimal)
                         ()
+                        .false.
                     )
                     (Select
                         (Var 2 marks)
@@ -83,7 +87,7 @@
                             [(Print
                                 (StringConstant
                                     "Pass!"
-                                    (String 1 5 () PointerString)
+                                    (String 1 (IntegerConstant 5 (Integer 4) Decimal) ExpressionLength PointerString)
                                 )
                             )]
                         )
@@ -99,14 +103,14 @@
                             [(Print
                                 (StringConstant
                                     "Failed!"
-                                    (String 1 7 () PointerString)
+                                    (String 1 (IntegerConstant 7 (Integer 4) Decimal) ExpressionLength PointerString)
                                 )
                             )]
                         )]
                         [(Print
                             (StringConstant
                                 "Invalid marks"
-                                (String 1 13 () PointerString)
+                                (String 1 (IntegerConstant 13 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                         )]
                         .false.
@@ -116,11 +120,11 @@
                             ()
                             [(StringConstant
                                 "Your marks are "
-                                (String 1 15 () PointerString)
+                                (String 1 (IntegerConstant 15 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Var 2 marks)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -132,6 +136,7 @@
                             (IntegerConstant -1 (Integer 4) Decimal)
                         )
                         ()
+                        .false.
                     )
                     (Select
                         (Var 2 marks)
@@ -147,7 +152,7 @@
                             [(Print
                                 (StringConstant
                                     "Pass!"
-                                    (String 1 5 () PointerString)
+                                    (String 1 (IntegerConstant 5 (Integer 4) Decimal) ExpressionLength PointerString)
                                 )
                             )]
                         )
@@ -163,14 +168,14 @@
                             [(Print
                                 (StringConstant
                                     "Failed!"
-                                    (String 1 7 () PointerString)
+                                    (String 1 (IntegerConstant 7 (Integer 4) Decimal) ExpressionLength PointerString)
                                 )
                             )]
                         )]
                         [(Print
                             (StringConstant
                                 "Invalid marks"
-                                (String 1 13 () PointerString)
+                                (String 1 (IntegerConstant 13 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                         )]
                         .false.
@@ -180,11 +185,11 @@
                             ()
                             [(StringConstant
                                 "Your marks are "
-                                (String 1 15 () PointerString)
+                                (String 1 (IntegerConstant 15 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Var 2 marks)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )]

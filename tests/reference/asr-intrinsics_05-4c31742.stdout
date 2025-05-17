@@ -24,6 +24,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     intrinsics_05
@@ -44,13 +45,14 @@
                             )
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(Var 2 x)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -70,13 +72,14 @@
                             )
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(Var 2 x)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -96,13 +99,14 @@
                             )
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(Var 2 x)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )]

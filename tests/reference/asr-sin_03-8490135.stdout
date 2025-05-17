@@ -36,6 +36,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     sin_03
@@ -56,13 +57,14 @@
                             )
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(Var 2 x)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )]

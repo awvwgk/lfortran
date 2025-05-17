@@ -52,6 +52,7 @@
                                                     .false.
                                                     .true.
                                                     .false.
+                                                    ()
                                                 ),
                                             toml_value:
                                                 (ExternalSymbol
@@ -213,6 +214,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     destroy
@@ -242,14 +244,25 @@
                                                     (Var 15 self)
                                                     15 1_toml_value_key
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () DeferredLength DescriptorString)
                                                     )
                                                     ()
                                                 )
                                                 DescriptorString
                                                 PointerString
                                                 (Allocatable
-                                                    (String 1 -2 () PointerString)
+                                                    (String 1 (StringLen
+                                                        (StructInstanceMember
+                                                            (Var 15 self)
+                                                            15 1_toml_value_key
+                                                            (Allocatable
+                                                                (String 1 () DeferredLength DescriptorString)
+                                                            )
+                                                            ()
+                                                        )
+                                                        (Integer 4)
+                                                        ()
+                                                    ) ExpressionLength PointerString)
                                                 )
                                                 ()
                                             )]
@@ -262,7 +275,7 @@
                                                 (Var 15 self)
                                                 15 1_toml_value_key
                                                 (Allocatable
-                                                    (String 1 -2 () DescriptorString)
+                                                    (String 1 () DeferredLength DescriptorString)
                                                 )
                                                 ()
                                             )]
@@ -355,6 +368,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     new_array
@@ -423,6 +437,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     toml_array
@@ -494,6 +509,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     destroy
@@ -548,7 +564,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () DeferredLength DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -557,6 +573,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     toml_value

@@ -54,6 +54,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             queries:
                                 (Variable
@@ -72,6 +73,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             x:
                                 (Variable
@@ -92,6 +94,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             y:
                                 (Variable
@@ -110,6 +113,7 @@
                                     .false.
                                     .true.
                                     .false.
+                                    ()
                                 )
                         })
                     bindc3
@@ -130,7 +134,7 @@
                             )
                             (Var 2 queries)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -158,7 +162,7 @@
                                 ()
                             )]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )]

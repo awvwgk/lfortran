@@ -24,6 +24,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     main
@@ -38,6 +39,7 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (WhileLoop
                         ()
@@ -64,17 +66,18 @@
                                 ()
                             )
                             ()
+                            .false.
                         )
                         (Print
                             (StringFormat
                                 ()
                                 [(StringConstant
                                     "In loop 1 i ="
-                                    (String 1 13 () PointerString)
+                                    (String 1 (IntegerConstant 13 (Integer 4) Decimal) ExpressionLength PointerString)
                                 )
                                 (Var 2 i)]
                                 FormatFortran
-                                (String -1 0 () PointerString)
+                                (String 1 () ExpressionLength CString)
                                 ()
                             )
                         )
@@ -96,6 +99,7 @@
                                     ()
                                 )
                                 ()
+                                .false.
                             )
                             (Exit
                                 ()
@@ -114,17 +118,18 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(StringConstant
                                 "After loop 1 i = "
-                                (String 1 17 () PointerString)
+                                (String 1 (IntegerConstant 17 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Var 2 i)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -146,7 +151,7 @@
                             ()
                             []
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -160,6 +165,7 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (WhileLoop
                         ()
@@ -186,17 +192,18 @@
                                 ()
                             )
                             ()
+                            .false.
                         )
                         (Print
                             (StringFormat
                                 ()
                                 [(StringConstant
                                     "In loop 2 i = "
-                                    (String 1 14 () PointerString)
+                                    (String 1 (IntegerConstant 14 (Integer 4) Decimal) ExpressionLength PointerString)
                                 )
                                 (Var 2 i)]
                                 FormatFortran
-                                (String -1 0 () PointerString)
+                                (String 1 () ExpressionLength CString)
                                 ()
                             )
                         )
@@ -211,7 +218,7 @@
                             [(Print
                                 (StringConstant
                                     "if (i < 2) then"
-                                    (String 1 15 () PointerString)
+                                    (String 1 (IntegerConstant 15 (Integer 4) Decimal) ExpressionLength PointerString)
                                 )
                             )]
                             [(Assignment
@@ -224,6 +231,7 @@
                                     ()
                                 )
                                 ()
+                                .false.
                             )
                             (Exit
                                 ()
@@ -241,17 +249,18 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(StringConstant
                                 "After loop 2 i = "
-                                (String 1 17 () PointerString)
+                                (String 1 (IntegerConstant 17 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Var 2 i)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -273,7 +282,7 @@
                             ()
                             []
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -287,6 +296,7 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (WhileLoop
                         ()
@@ -313,17 +323,18 @@
                                 ()
                             )
                             ()
+                            .false.
                         )
                         (Print
                             (StringFormat
                                 ()
                                 [(StringConstant
                                     "In loop 3 i = "
-                                    (String 1 14 () PointerString)
+                                    (String 1 (IntegerConstant 14 (Integer 4) Decimal) ExpressionLength PointerString)
                                 )
                                 (Var 2 i)]
                                 FormatFortran
-                                (String -1 0 () PointerString)
+                                (String 1 () ExpressionLength CString)
                                 ()
                             )
                         )
@@ -373,6 +384,7 @@
                                             ()
                                         )
                                         ()
+                                        .false.
                                     )
                                     (Exit
                                         ()
@@ -389,6 +401,7 @@
                                         ()
                                     )
                                     ()
+                                    .false.
                                 )
                                 (Exit
                                     ()
@@ -409,17 +422,18 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(StringConstant
                                 "After loop 3 i = "
-                                (String 1 17 () PointerString)
+                                (String 1 (IntegerConstant 17 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Var 2 i)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -441,7 +455,7 @@
                             ()
                             []
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -455,6 +469,7 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (WhileLoop
                         ()
@@ -481,17 +496,18 @@
                                 ()
                             )
                             ()
+                            .false.
                         )
                         (Print
                             (StringFormat
                                 ()
                                 [(StringConstant
                                     "In loop 4 i = "
-                                    (String 1 14 () PointerString)
+                                    (String 1 (IntegerConstant 14 (Integer 4) Decimal) ExpressionLength PointerString)
                                 )
                                 (Var 2 i)]
                                 FormatFortran
-                                (String -1 0 () PointerString)
+                                (String 1 () ExpressionLength CString)
                                 ()
                             )
                         )
@@ -541,6 +557,7 @@
                                             ()
                                         )
                                         ()
+                                        .false.
                                     )
                                     (Exit
                                         ()
@@ -557,6 +574,7 @@
                                         ()
                                     )
                                     ()
+                                    .false.
                                 )
                                 (Exit
                                     ()
@@ -564,7 +582,7 @@
                                 [(Print
                                     (StringConstant
                                         "i - 1 /= 3"
-                                        (String 1 10 () PointerString)
+                                        (String 1 (IntegerConstant 10 (Integer 4) Decimal) ExpressionLength PointerString)
                                     )
                                 )]
                             )]
@@ -582,17 +600,18 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(StringConstant
                                 "After loop 4 i = "
-                                (String 1 17 () PointerString)
+                                (String 1 (IntegerConstant 17 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Var 2 i)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )

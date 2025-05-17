@@ -16,7 +16,7 @@
                                     ()
                                     ()
                                     Default
-                                    (String 1 15 () PointerString)
+                                    (String 1 (IntegerConstant 15 (Integer 4) Decimal) ExpressionLength PointerString)
                                     ()
                                     Source
                                     Public
@@ -24,6 +24,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             greetings:
                                 (Variable
@@ -34,7 +35,7 @@
                                     ()
                                     ()
                                     Default
-                                    (String 1 25 () PointerString)
+                                    (String 1 (IntegerConstant 25 (Integer 4) Decimal) ExpressionLength PointerString)
                                     ()
                                     Source
                                     Public
@@ -42,6 +43,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             surname:
                                 (Variable
@@ -52,7 +54,7 @@
                                     ()
                                     ()
                                     Default
-                                    (String 1 15 () PointerString)
+                                    (String 1 (IntegerConstant 15 (Integer 4) Decimal) ExpressionLength PointerString)
                                     ()
                                     Source
                                     Public
@@ -60,6 +62,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             title:
                                 (Variable
@@ -70,7 +73,7 @@
                                     ()
                                     ()
                                     Default
-                                    (String 1 6 () PointerString)
+                                    (String 1 (IntegerConstant 6 (Integer 4) Decimal) ExpressionLength PointerString)
                                     ()
                                     Source
                                     Public
@@ -78,6 +81,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     string_02
@@ -86,46 +90,50 @@
                         (Var 2 title)
                         (StringConstant
                             "Mr. "
-                            (String 1 4 () PointerString)
+                            (String 1 (IntegerConstant 4 (Integer 4) Decimal) ExpressionLength PointerString)
                         )
                         ()
+                        .false.
                     )
                     (Assignment
                         (Var 2 firstname)
                         (StringConstant
                             "Rowan "
-                            (String 1 6 () PointerString)
+                            (String 1 (IntegerConstant 6 (Integer 4) Decimal) ExpressionLength PointerString)
                         )
                         ()
+                        .false.
                     )
                     (Assignment
                         (Var 2 surname)
                         (StringConstant
                             "Atkinson"
-                            (String 1 8 () PointerString)
+                            (String 1 (IntegerConstant 8 (Integer 4) Decimal) ExpressionLength PointerString)
                         )
                         ()
+                        .false.
                     )
                     (Assignment
                         (Var 2 greetings)
                         (StringConstant
                             "A big hello from Mr. Bean"
-                            (String 1 25 () PointerString)
+                            (String 1 (IntegerConstant 25 (Integer 4) Decimal) ExpressionLength PointerString)
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(StringConstant
                                 "Here is "
-                                (String 1 8 () PointerString)
+                                (String 1 (IntegerConstant 8 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Var 2 title)
                             (Var 2 firstname)
                             (Var 2 surname)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )

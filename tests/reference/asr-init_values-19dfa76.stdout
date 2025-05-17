@@ -31,6 +31,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             b:
                                 (Variable
@@ -64,6 +65,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             c:
                                 (Variable
@@ -101,6 +103,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             i:
                                 (Variable
@@ -127,6 +130,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             j:
                                 (Variable
@@ -153,6 +157,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             l:
                                 (Variable
@@ -183,6 +188,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             r:
                                 (Variable
@@ -207,6 +213,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             r_minus:
                                 (Variable
@@ -235,6 +242,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             s:
                                 (Variable
@@ -246,18 +254,18 @@
                                     (StringConcat
                                         (Var 2 s1)
                                         (Var 2 s2)
-                                        (String 1 4 () PointerString)
+                                        (String 1 (IntegerConstant 4 (Integer 8) Decimal) ExpressionLength PointerString)
                                         (StringConstant
                                             "left"
-                                            (String 1 4 () PointerString)
+                                            (String 1 (IntegerConstant 4 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )
                                     )
                                     (StringConstant
                                         "left"
-                                        (String 1 4 () PointerString)
+                                        (String 1 (IntegerConstant 4 (Integer 4) Decimal) ExpressionLength PointerString)
                                     )
                                     Parameter
-                                    (String 1 4 () PointerString)
+                                    (String 1 (IntegerConstant 4 (Integer 4) Decimal) ExpressionLength PointerString)
                                     ()
                                     Source
                                     Public
@@ -265,6 +273,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             s1:
                                 (Variable
@@ -274,14 +283,14 @@
                                     Local
                                     (StringConstant
                                         "l"
-                                        (String 1 1 () PointerString)
+                                        (String 1 (IntegerConstant 1 (Integer 4) Decimal) ExpressionLength PointerString)
                                     )
                                     (StringConstant
                                         "l"
-                                        (String 1 1 () PointerString)
+                                        (String 1 (IntegerConstant 1 (Integer 4) Decimal) ExpressionLength PointerString)
                                     )
                                     Parameter
-                                    (String 1 1 () PointerString)
+                                    (String 1 (IntegerConstant 1 (Integer 4) Decimal) ExpressionLength PointerString)
                                     ()
                                     Source
                                     Public
@@ -289,6 +298,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             s2:
                                 (Variable
@@ -298,14 +308,14 @@
                                     Local
                                     (StringConstant
                                         "eft"
-                                        (String 1 3 () PointerString)
+                                        (String 1 (IntegerConstant 3 (Integer 4) Decimal) ExpressionLength PointerString)
                                     )
                                     (StringConstant
                                         "eft"
-                                        (String 1 3 () PointerString)
+                                        (String 1 (IntegerConstant 3 (Integer 4) Decimal) ExpressionLength PointerString)
                                     )
                                     Parameter
-                                    (String 1 3 () PointerString)
+                                    (String 1 (IntegerConstant 3 (Integer 4) Decimal) ExpressionLength PointerString)
                                     ()
                                     Source
                                     Public
@@ -313,6 +323,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     init_values
@@ -330,7 +341,7 @@
                             (Var 2 r_minus)
                             (Var 2 s)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )]

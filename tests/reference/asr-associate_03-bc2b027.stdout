@@ -24,6 +24,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             p1:
                                 (Variable
@@ -44,6 +45,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             t1:
                                 (Variable
@@ -62,6 +64,7 @@
                                     .false.
                                     .true.
                                     .false.
+                                    ()
                                 ),
                             t2:
                                 (Variable
@@ -80,6 +83,7 @@
                                     .false.
                                     .true.
                                     .false.
+                                    ()
                                 )
                         })
                     associate_03
@@ -90,7 +94,7 @@
                             [(Var 2 t1)
                             (Var 2 t2)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -116,7 +120,7 @@
                             ()
                             [(Var 2 p1)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -124,6 +128,7 @@
                         (Var 2 i)
                         (Var 2 p1)
                         ()
+                        .false.
                     )
                     (If
                         (IntegerCompare

@@ -35,24 +35,36 @@ void SymbolTable::mark_all_variables_external(Allocator &al) {
         switch (a.second->type) {
             case (ASR::symbolType::Variable) : {
                 ASR::Variable_t *v = ASR::down_cast<ASR::Variable_t>(a.second);
+                if ( v->m_abi == ASR::abiType::BindC ) {
+                    return;
+                }
                 v->m_abi = ASR::abiType::Interactive;
+                break;
+            }
+            case (ASR::symbolType::Enum) : {
+                ASR::Enum_t *en = ASR::down_cast<ASR::Enum_t>(a.second);
+                en->m_abi = ASR::abiType::Interactive;
+                en->m_symtab->mark_all_variables_external(al);
                 break;
             }
             case (ASR::symbolType::Function) : {
                 ASR::Function_t *v = ASR::down_cast<ASR::Function_t>(a.second);
                 ASR::FunctionType_t* v_func_type = ASR::down_cast<ASR::FunctionType_t>(v->m_function_signature);
-                if (v_func_type->m_abi != ASR::abiType::Interactive) {
+                if (v_func_type->m_abi != ASR::abiType::Interactive && v_func_type->m_abi != ASR::abiType::BindC) {
                     v->m_body = nullptr;
                     v->n_body = 0;
                     PassUtils::UpdateDependenciesVisitor ud(al);
                     ud.visit_Function(*v);
+                    v_func_type->m_abi = ASR::abiType::Interactive;
                 }
-                v_func_type->m_abi = ASR::abiType::Interactive;
+
                 break;
             }
             case (ASR::symbolType::Module) : {
                 ASR::Module_t *v = ASR::down_cast<ASR::Module_t>(a.second);
-                v->m_symtab->mark_all_variables_external(al);
+                if ( !startswith(v->m_name, "lfortran_intrinsic") ) {
+                    v->m_symtab->mark_all_variables_external(al);
+                }
             }
             default : {};
         }
