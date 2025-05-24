@@ -82,6 +82,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             j:
                                 (Variable
@@ -100,6 +101,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             s:
                                 (Function
@@ -148,7 +150,7 @@
                                                 )
                                             )]
                                             FormatFortran
-                                            (String -1 0 () PointerString)
+                                            (String 1 () ExpressionLength CString)
                                             ()
                                         )
                                     )]
@@ -198,7 +200,7 @@
                                 )
                             )]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )]

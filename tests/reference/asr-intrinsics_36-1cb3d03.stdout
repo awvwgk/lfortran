@@ -17,21 +17,21 @@
                                         Adjustl
                                         [(StringConstant
                                             "    "
-                                            (String 1 4 () PointerString)
+                                            (String 1 (IntegerConstant 4 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )]
                                         0
-                                        (String 1 4 () PointerString)
+                                        (String 1 (IntegerConstant 4 (Integer 4) Decimal) ExpressionLength PointerString)
                                         (StringConstant
                                             "    "
-                                            (String 1 4 () PointerString)
+                                            (String 1 (IntegerConstant 4 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )
                                     )
                                     (StringConstant
                                         "    "
-                                        (String 1 4 () PointerString)
+                                        (String 1 (IntegerConstant 4 (Integer 4) Decimal) ExpressionLength PointerString)
                                     )
                                     Save
-                                    (String 1 25 () PointerString)
+                                    (String 1 (IntegerConstant 25 (Integer 4) Decimal) ExpressionLength PointerString)
                                     ()
                                     Source
                                     Public
@@ -39,6 +39,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             empty:
                                 (Variable
@@ -50,21 +51,21 @@
                                         Adjustl
                                         [(StringConstant
                                             ""
-                                            (String 1 0 () PointerString)
+                                            (String 1 (IntegerConstant 0 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )]
                                         0
-                                        (String 1 0 () PointerString)
+                                        (String 1 (IntegerConstant 0 (Integer 4) Decimal) ExpressionLength PointerString)
                                         (StringConstant
                                             ""
-                                            (String 1 0 () PointerString)
+                                            (String 1 (IntegerConstant 0 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )
                                     )
                                     (StringConstant
                                         ""
-                                        (String 1 0 () PointerString)
+                                        (String 1 (IntegerConstant 0 (Integer 4) Decimal) ExpressionLength PointerString)
                                     )
                                     Save
-                                    (String 1 25 () PointerString)
+                                    (String 1 (IntegerConstant 25 (Integer 4) Decimal) ExpressionLength PointerString)
                                     ()
                                     Source
                                     Public
@@ -72,6 +73,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             simple:
                                 (Variable
@@ -83,21 +85,21 @@
                                         Adjustl
                                         [(StringConstant
                                             "gfortran"
-                                            (String 1 8 () PointerString)
+                                            (String 1 (IntegerConstant 8 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )]
                                         0
-                                        (String 1 8 () PointerString)
+                                        (String 1 (IntegerConstant 8 (Integer 4) Decimal) ExpressionLength PointerString)
                                         (StringConstant
                                             "gfortran"
-                                            (String 1 8 () PointerString)
+                                            (String 1 (IntegerConstant 8 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )
                                     )
                                     (StringConstant
                                         "gfortran"
-                                        (String 1 8 () PointerString)
+                                        (String 1 (IntegerConstant 8 (Integer 4) Decimal) ExpressionLength PointerString)
                                     )
                                     Save
-                                    (String 1 25 () PointerString)
+                                    (String 1 (IntegerConstant 25 (Integer 4) Decimal) ExpressionLength PointerString)
                                     ()
                                     Source
                                     Public
@@ -105,6 +107,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             space_at_end:
                                 (Variable
@@ -116,21 +119,21 @@
                                         Adjustl
                                         [(StringConstant
                                             "gfortran   "
-                                            (String 1 11 () PointerString)
+                                            (String 1 (IntegerConstant 11 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )]
                                         0
-                                        (String 1 11 () PointerString)
+                                        (String 1 (IntegerConstant 11 (Integer 4) Decimal) ExpressionLength PointerString)
                                         (StringConstant
                                             "gfortran   "
-                                            (String 1 11 () PointerString)
+                                            (String 1 (IntegerConstant 11 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )
                                     )
                                     (StringConstant
                                         "gfortran   "
-                                        (String 1 11 () PointerString)
+                                        (String 1 (IntegerConstant 11 (Integer 4) Decimal) ExpressionLength PointerString)
                                     )
                                     Save
-                                    (String 1 25 () PointerString)
+                                    (String 1 (IntegerConstant 25 (Integer 4) Decimal) ExpressionLength PointerString)
                                     ()
                                     Source
                                     Public
@@ -138,6 +141,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             space_at_start:
                                 (Variable
@@ -149,21 +153,21 @@
                                         Adjustl
                                         [(StringConstant
                                             "   gfortran"
-                                            (String 1 11 () PointerString)
+                                            (String 1 (IntegerConstant 11 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )]
                                         0
-                                        (String 1 11 () PointerString)
+                                        (String 1 (IntegerConstant 11 (Integer 4) Decimal) ExpressionLength PointerString)
                                         (StringConstant
                                             "gfortran   "
-                                            (String 1 11 () PointerString)
+                                            (String 1 (IntegerConstant 11 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )
                                     )
                                     (StringConstant
                                         "gfortran   "
-                                        (String 1 11 () PointerString)
+                                        (String 1 (IntegerConstant 11 (Integer 4) Decimal) ExpressionLength PointerString)
                                     )
                                     Save
-                                    (String 1 25 () PointerString)
+                                    (String 1 (IntegerConstant 25 (Integer 4) Decimal) ExpressionLength PointerString)
                                     ()
                                     Source
                                     Public
@@ -171,6 +175,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             space_in_between:
                                 (Variable
@@ -182,21 +187,21 @@
                                         Adjustl
                                         [(StringConstant
                                             "   g for tran   "
-                                            (String 1 16 () PointerString)
+                                            (String 1 (IntegerConstant 16 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )]
                                         0
-                                        (String 1 16 () PointerString)
+                                        (String 1 (IntegerConstant 16 (Integer 4) Decimal) ExpressionLength PointerString)
                                         (StringConstant
                                             "g for tran      "
-                                            (String 1 16 () PointerString)
+                                            (String 1 (IntegerConstant 16 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )
                                     )
                                     (StringConstant
                                         "g for tran      "
-                                        (String 1 16 () PointerString)
+                                        (String 1 (IntegerConstant 16 (Integer 4) Decimal) ExpressionLength PointerString)
                                     )
                                     Save
-                                    (String 1 25 () PointerString)
+                                    (String 1 (IntegerConstant 25 (Integer 4) Decimal) ExpressionLength PointerString)
                                     ()
                                     Source
                                     Public
@@ -204,6 +209,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             spaces_with_symbols:
                                 (Variable
@@ -215,21 +221,21 @@
                                         Adjustl
                                         [(StringConstant
                                             "  # gfor* t $ ran &    "
-                                            (String 1 23 () PointerString)
+                                            (String 1 (IntegerConstant 23 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )]
                                         0
-                                        (String 1 23 () PointerString)
+                                        (String 1 (IntegerConstant 23 (Integer 4) Decimal) ExpressionLength PointerString)
                                         (StringConstant
                                             "# gfor* t $ ran &      "
-                                            (String 1 23 () PointerString)
+                                            (String 1 (IntegerConstant 23 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )
                                     )
                                     (StringConstant
                                         "# gfor* t $ ran &      "
-                                        (String 1 23 () PointerString)
+                                        (String 1 (IntegerConstant 23 (Integer 4) Decimal) ExpressionLength PointerString)
                                     )
                                     Save
-                                    (String 1 25 () PointerString)
+                                    (String 1 (IntegerConstant 25 (Integer 4) Decimal) ExpressionLength PointerString)
                                     ()
                                     Source
                                     Public
@@ -237,6 +243,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     intrinsics_36
@@ -250,7 +257,7 @@
                             NotEq
                             (StringConstant
                                 ""
-                                (String 1 0 () PointerString)
+                                (String 1 (IntegerConstant 0 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Logical 4)
                             ()
@@ -269,7 +276,7 @@
                             NotEq
                             (StringConstant
                                 "    "
-                                (String 1 4 () PointerString)
+                                (String 1 (IntegerConstant 4 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Logical 4)
                             ()
@@ -288,7 +295,7 @@
                             NotEq
                             (StringConstant
                                 "gfortran"
-                                (String 1 8 () PointerString)
+                                (String 1 (IntegerConstant 8 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Logical 4)
                             ()
@@ -307,7 +314,7 @@
                             NotEq
                             (StringConstant
                                 "gfortran   "
-                                (String 1 11 () PointerString)
+                                (String 1 (IntegerConstant 11 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Logical 4)
                             ()
@@ -326,7 +333,7 @@
                             NotEq
                             (StringConstant
                                 "gfortran   "
-                                (String 1 11 () PointerString)
+                                (String 1 (IntegerConstant 11 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Logical 4)
                             ()
@@ -345,7 +352,7 @@
                             NotEq
                             (StringConstant
                                 "g for tran      "
-                                (String 1 16 () PointerString)
+                                (String 1 (IntegerConstant 16 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Logical 4)
                             ()
@@ -364,7 +371,7 @@
                             NotEq
                             (StringConstant
                                 "# gfor* t $ ran &      "
-                                (String 1 23 () PointerString)
+                                (String 1 (IntegerConstant 23 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Logical 4)
                             ()

@@ -383,6 +383,16 @@ public:
                 const_assigned.insert(std::make_pair(current_symtab->counter, variable_name));
             }
         }
+        if ( x.m_realloc_lhs ) {
+            ASR::expr_t* a_target = x.m_target;
+            bool is_allocatable = ASRUtils::is_allocatable(a_target);
+            if ( ASR::is_a<ASR::StructInstanceMember_t>(*a_target) ) {
+                ASR::StructInstanceMember_t* a_target_struct = ASR::down_cast<ASR::StructInstanceMember_t>(a_target);
+                is_allocatable |= ASRUtils::is_allocatable(a_target_struct->m_v);
+            }
+            require(is_allocatable,
+                "Reallocation of non allocatable variable is not allowed");
+        }
         BaseWalkVisitor<VerifyVisitor>::visit_Assignment(x);
     }
 
@@ -425,10 +435,6 @@ public:
     }
 
     void visit_Function(const Function_t &x) {
-        if (ASRUtils::get_FunctionType(&x)->m_abi == abiType::Interactive) {
-            require(x.n_body == 0,
-            "The Function::n_body should be 0 if abi set to Interactive");
-        }
         std::vector<std::string> function_dependencies_copy = function_dependencies;
         function_dependencies.clear();
         function_dependencies.reserve(x.n_dependencies);
@@ -1208,7 +1214,9 @@ public:
         int64_t n_data = ASRUtils::get_fixed_size_of_array(x.m_type) * ASRUtils::extract_kind_from_ttype_t(x.m_type);
         if (ASRUtils::is_character(*x.m_type)) {
             ASR::ttype_t* t = ASRUtils::type_get_past_array(x.m_type);
-            n_data = ASRUtils::get_fixed_size_of_array(x.m_type) * ASR::down_cast<ASR::String_t>(t)->m_len;
+            int64_t len;
+            require(ASRUtils::extract_value(ASR::down_cast<ASR::String_t>(t)->m_len, len), "Constant array of strings should have constant string length");
+            n_data = ASRUtils::get_fixed_size_of_array(x.m_type) * len;
         }
         require(n_data == x.m_n_data, "ArrayConstant::m_n_data must match the byte size of the array");
         visit_ttype(*x.m_type);
@@ -1281,7 +1289,18 @@ public:
                     "Allocate should only be called with  Allocatable or Pointer type inputs, found " +
                     std::string(ASRUtils::get_type_code(ASRUtils::expr_type(x.m_args[i].m_a))));
             }
+
+            if( x.m_source == nullptr ) {
+                for( size_t i = 0; i < x.n_args; i++ ) {
+                    if( ASRUtils::is_array(ASRUtils::expr_type(x.m_args[i].m_a)) ) {
+                        require(x.m_args[i].n_dims > 0,
+                            "Allocate for arrays should have dimensions specified, "
+                            "found only array variable with no dimensions");
+                    }
+                }
+            }
         }
+
         BaseWalkVisitor<VerifyVisitor>::visit_Allocate(x);
     }
 

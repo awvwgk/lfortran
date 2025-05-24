@@ -169,14 +169,14 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 -3 (FunctionCall
+                                                    (String 1 (FunctionCall
                                                         2 len_string
                                                         2 len
                                                         [((Var 5 string))]
                                                         (Integer 4)
                                                         ()
                                                         ()
-                                                    ) PointerString)
+                                                    ) ExpressionLength PointerString)
                                                     ()
                                                     Source
                                                     Public
@@ -184,6 +184,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             string:
                                                 (Variable
@@ -207,6 +208,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     char_string
@@ -217,7 +219,7 @@
                                             .true.
                                             2 string_type
                                         )]
-                                        (String 1 -3 (FunctionCall
+                                        (String 1 (FunctionCall
                                             2 len_string
                                             2 len
                                             [((FunctionParam
@@ -233,7 +235,7 @@
                                             (Integer 4)
                                             ()
                                             ()
-                                        ) PointerString)
+                                        ) ExpressionLength PointerString)
                                         Source
                                         Implementation
                                         ()
@@ -283,6 +285,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             string:
                                                 (Variable
@@ -306,6 +309,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     len_string
@@ -352,7 +356,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () DeferredLength DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -361,6 +365,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     string_type
@@ -437,6 +442,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             string:
                                                 (Variable
@@ -447,7 +453,7 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 -1 () PointerString)
+                                                    (String 1 () AssumedLength PointerString)
                                                     ()
                                                     Source
                                                     Public
@@ -455,18 +461,19 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     compute_lps
                                     (FunctionType
-                                        [(String 1 -1 () PointerString)]
+                                        [(String 1 () AssumedLength PointerString)]
                                         (Array
                                             (Integer 4)
                                             [((IntegerConstant 1 (Integer 4) Decimal)
                                             (StringLen
                                                 (FunctionParam
                                                     0
-                                                    (String 1 -1 () PointerString)
+                                                    (String 1 () AssumedLength PointerString)
                                                     ()
                                                 )
                                                 (Integer 4)
@@ -516,6 +523,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             string:
                                                 (Variable
@@ -526,7 +534,7 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 -1 () PointerString)
+                                                    (String 1 () AssumedLength PointerString)
                                                     ()
                                                     Source
                                                     Public
@@ -534,11 +542,12 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     compute_lps_use
                                     (FunctionType
-                                        [(String 1 -1 () PointerString)]
+                                        [(String 1 () AssumedLength PointerString)]
                                         (Integer 4)
                                         Source
                                         Implementation
@@ -574,7 +583,7 @@
                                                 ()
                                             )]
                                             FormatFortran
-                                            (String -1 0 () PointerString)
+                                            (String 1 () ExpressionLength CString)
                                             ()
                                         )
                                     )]
@@ -616,6 +625,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             len_string:
                                                 (ExternalSymbol
@@ -649,6 +659,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     compute_lps_use1
@@ -678,14 +689,14 @@
                                             9 char@char_string
                                             6 char
                                             [((Var 9 string))]
-                                            (String 1 -3 (FunctionCall
+                                            (String 1 (FunctionCall
                                                 9 len_string
                                                 6 len
                                                 [((Var 9 string))]
                                                 (Integer 4)
                                                 ()
                                                 ()
-                                            ) PointerString)
+                                            ) ExpressionLength PointerString)
                                             ()
                                             ()
                                         )
@@ -746,6 +757,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             res:
                                                 (Variable
@@ -756,11 +768,11 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 -3 (StringLen
+                                                    (String 1 (StringLen
                                                         (Var 12 string)
                                                         (Integer 4)
                                                         ()
-                                                    ) PointerString)
+                                                    ) ExpressionLength PointerString)
                                                     ()
                                                     Source
                                                     Public
@@ -768,6 +780,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             string:
                                                 (Variable
@@ -778,7 +791,7 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 -1 () PointerString)
+                                                    (String 1 () AssumedLength PointerString)
                                                     ()
                                                     Source
                                                     Public
@@ -786,13 +799,22 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     padl_char_default
                                     (FunctionType
-                                        [(String 1 -1 () PointerString)
+                                        [(String 1 () AssumedLength PointerString)
                                         (Integer 4)]
-                                        (String 1 -1 () PointerString)
+                                        (String 1 (StringLen
+                                            (FunctionParam
+                                                0
+                                                (String 1 () AssumedLength PointerString)
+                                                ()
+                                            )
+                                            (Integer 4)
+                                            ()
+                                        ) ExpressionLength PointerString)
                                         Source
                                         Implementation
                                         ()
@@ -816,9 +838,9 @@
                                             ((Var 12 output_length))
                                             ((StringConstant
                                                 " "
-                                                (String 1 1 () PointerString)
+                                                (String 1 (IntegerConstant 1 (Integer 4) Decimal) ExpressionLength PointerString)
                                             ))]
-                                            (String 1 -3 (IntrinsicElementalFunction
+                                            (String 1 (IntrinsicElementalFunction
                                                 Max
                                                 [(StringLen
                                                     (Var 12 string)
@@ -829,11 +851,12 @@
                                                 0
                                                 (Integer 4)
                                                 ()
-                                            ) PointerString)
+                                            ) ExpressionLength PointerString)
                                             ()
                                             ()
                                         )
                                         ()
+                                        .false.
                                     )]
                                     (Var 12 res)
                                     Public
@@ -863,6 +886,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             pad_with:
                                                 (Variable
@@ -873,7 +897,7 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 1 () PointerString)
+                                                    (String 1 (IntegerConstant 1 (Integer 4) Decimal) ExpressionLength PointerString)
                                                     ()
                                                     Source
                                                     Public
@@ -881,6 +905,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             res:
                                                 (Variable
@@ -892,7 +917,7 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 -3 (IntrinsicElementalFunction
+                                                    (String 1 (IntrinsicElementalFunction
                                                         Max
                                                         [(StringLen
                                                             (Var 13 string)
@@ -903,7 +928,7 @@
                                                         0
                                                         (Integer 4)
                                                         ()
-                                                    ) PointerString)
+                                                    ) ExpressionLength PointerString)
                                                     ()
                                                     Source
                                                     Public
@@ -911,6 +936,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             string:
                                                 (Variable
@@ -921,7 +947,7 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 -1 () PointerString)
+                                                    (String 1 () AssumedLength PointerString)
                                                     ()
                                                     Source
                                                     Public
@@ -929,6 +955,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             string_length:
                                                 (Variable
@@ -947,14 +974,34 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     padl_char_pad_with
                                     (FunctionType
-                                        [(String 1 -1 () PointerString)
+                                        [(String 1 () AssumedLength PointerString)
                                         (Integer 4)
-                                        (String 1 1 () PointerString)]
-                                        (String 1 1 () PointerString)
+                                        (String 1 (IntegerConstant 1 (Integer 4) Decimal) ExpressionLength PointerString)]
+                                        (String 1 (IntrinsicElementalFunction
+                                            Max
+                                            [(StringLen
+                                                (FunctionParam
+                                                    0
+                                                    (String 1 () AssumedLength PointerString)
+                                                    ()
+                                                )
+                                                (Integer 4)
+                                                ()
+                                            )
+                                            (FunctionParam
+                                                1
+                                                (Integer 4)
+                                                ()
+                                            )]
+                                            0
+                                            (Integer 4)
+                                            ()
+                                        ) ExpressionLength PointerString)
                                         Source
                                         Implementation
                                         ()
@@ -1019,6 +1066,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             res:
                                                 (Variable
@@ -1042,6 +1090,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             string:
                                                 (Variable
@@ -1065,6 +1114,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     padl_string_default
@@ -1108,37 +1158,37 @@
                                                         10 char@char_string
                                                         6 char
                                                         [((Var 10 string))]
-                                                        (String 1 -3 (FunctionCall
+                                                        (String 1 (FunctionCall
                                                             10 len_string
                                                             6 len
                                                             [((Var 10 string))]
                                                             (Integer 4)
                                                             ()
                                                             ()
-                                                        ) PointerString)
+                                                        ) ExpressionLength PointerString)
                                                         ()
                                                         ()
                                                     ))
                                                     ((Var 10 output_length))
                                                     ((StringConstant
                                                         " "
-                                                        (String 1 1 () PointerString)
+                                                        (String 1 (IntegerConstant 1 (Integer 4) Decimal) ExpressionLength PointerString)
                                                     ))]
-                                                    (String 1 -3 (IntrinsicElementalFunction
+                                                    (String 1 (IntrinsicElementalFunction
                                                         Max
                                                         [(StringLen
                                                             (FunctionCall
                                                                 10 char@char_string
                                                                 6 char
                                                                 [((Var 10 string))]
-                                                                (String 1 -3 (FunctionCall
+                                                                (String 1 (FunctionCall
                                                                     10 len_string
                                                                     6 len
                                                                     [((Var 10 string))]
                                                                     (Integer 4)
                                                                     ()
                                                                     ()
-                                                                ) PointerString)
+                                                                ) ExpressionLength PointerString)
                                                                 ()
                                                                 ()
                                                             )
@@ -1149,28 +1199,28 @@
                                                         0
                                                         (Integer 4)
                                                         ()
-                                                    ) PointerString)
+                                                    ) ExpressionLength PointerString)
                                                     ()
                                                     ()
                                                 )
                                                 PointerString
                                                 DescriptorString
                                                 (Allocatable
-                                                    (String 1 -3 (IntrinsicElementalFunction
+                                                    (String 1 (IntrinsicElementalFunction
                                                         Max
                                                         [(StringLen
                                                             (FunctionCall
                                                                 10 char@char_string
                                                                 6 char
                                                                 [((Var 10 string))]
-                                                                (String 1 -3 (FunctionCall
+                                                                (String 1 (FunctionCall
                                                                     10 len_string
                                                                     6 len
                                                                     [((Var 10 string))]
                                                                     (Integer 4)
                                                                     ()
                                                                     ()
-                                                                ) PointerString)
+                                                                ) ExpressionLength PointerString)
                                                                 ()
                                                                 ()
                                                             )
@@ -1181,7 +1231,7 @@
                                                         0
                                                         (Integer 4)
                                                         ()
-                                                    ) DescriptorString)
+                                                    ) ExpressionLength DescriptorString)
                                                 )
                                                 ()
                                             ))]
@@ -1194,6 +1244,7 @@
                                             ()
                                         )
                                         ()
+                                        .false.
                                     )]
                                     (Var 10 res)
                                     Public
@@ -1243,6 +1294,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             pad_with:
                                                 (Variable
@@ -1253,7 +1305,7 @@
                                                     ()
                                                     ()
                                                     Default
-                                                    (String 1 1 () PointerString)
+                                                    (String 1 (IntegerConstant 1 (Integer 4) Decimal) ExpressionLength PointerString)
                                                     ()
                                                     Source
                                                     Public
@@ -1261,6 +1313,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             res:
                                                 (Variable
@@ -1284,6 +1337,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             string:
                                                 (Variable
@@ -1307,6 +1361,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     padl_string_pad_with
@@ -1318,7 +1373,7 @@
                                             6 string_type
                                         )
                                         (Integer 4)
-                                        (String 1 1 () PointerString)]
+                                        (String 1 (IntegerConstant 1 (Integer 4) Decimal) ExpressionLength PointerString)]
                                         (StructType
                                             []
                                             []
@@ -1352,34 +1407,34 @@
                                                         11 char@char_string
                                                         6 char
                                                         [((Var 11 string))]
-                                                        (String 1 -3 (FunctionCall
+                                                        (String 1 (FunctionCall
                                                             11 len_string
                                                             6 len
                                                             [((Var 11 string))]
                                                             (Integer 4)
                                                             ()
                                                             ()
-                                                        ) PointerString)
+                                                        ) ExpressionLength PointerString)
                                                         ()
                                                         ()
                                                     ))
                                                     ((Var 11 output_length))
                                                     ((Var 11 pad_with))]
-                                                    (String 1 -3 (IntrinsicElementalFunction
+                                                    (String 1 (IntrinsicElementalFunction
                                                         Max
                                                         [(StringLen
                                                             (FunctionCall
                                                                 11 char@char_string
                                                                 6 char
                                                                 [((Var 11 string))]
-                                                                (String 1 -3 (FunctionCall
+                                                                (String 1 (FunctionCall
                                                                     11 len_string
                                                                     6 len
                                                                     [((Var 11 string))]
                                                                     (Integer 4)
                                                                     ()
                                                                     ()
-                                                                ) PointerString)
+                                                                ) ExpressionLength PointerString)
                                                                 ()
                                                                 ()
                                                             )
@@ -1390,28 +1445,28 @@
                                                         0
                                                         (Integer 4)
                                                         ()
-                                                    ) PointerString)
+                                                    ) ExpressionLength PointerString)
                                                     ()
                                                     ()
                                                 )
                                                 PointerString
                                                 DescriptorString
                                                 (Allocatable
-                                                    (String 1 -3 (IntrinsicElementalFunction
+                                                    (String 1 (IntrinsicElementalFunction
                                                         Max
                                                         [(StringLen
                                                             (FunctionCall
                                                                 11 char@char_string
                                                                 6 char
                                                                 [((Var 11 string))]
-                                                                (String 1 -3 (FunctionCall
+                                                                (String 1 (FunctionCall
                                                                     11 len_string
                                                                     6 len
                                                                     [((Var 11 string))]
                                                                     (Integer 4)
                                                                     ()
                                                                     ()
-                                                                ) PointerString)
+                                                                ) ExpressionLength PointerString)
                                                                 ()
                                                                 ()
                                                             )
@@ -1422,7 +1477,7 @@
                                                         0
                                                         (Integer 4)
                                                         ()
-                                                    ) DescriptorString)
+                                                    ) ExpressionLength DescriptorString)
                                                 )
                                                 ()
                                             ))]
@@ -1435,6 +1490,7 @@
                                             ()
                                         )
                                         ()
+                                        .false.
                                     )]
                                     (Var 11 res)
                                     Public

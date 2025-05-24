@@ -31,6 +31,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             b:
                                 (Variable
@@ -58,6 +59,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             c:
                                 (Variable
@@ -87,6 +89,77 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
+                                ),
+                            d:
+                                (Variable
+                                    2
+                                    d
+                                    []
+                                    Local
+                                    (ArrayConstant
+                                        20
+                                        [1, 2, 3, 4, 5]
+                                        (Array
+                                            (Integer 4)
+                                            [((IntegerConstant 1 (Integer 4) Decimal)
+                                            (IntegerConstant 5 (Integer 4) Decimal))]
+                                            FixedSizeArray
+                                        )
+                                        ColMajor
+                                    )
+                                    (ArrayConstant
+                                        20
+                                        [1, 2, 3, 4, 5]
+                                        (Array
+                                            (Integer 4)
+                                            [((IntegerConstant 1 (Integer 4) Decimal)
+                                            (IntegerConstant 5 (Integer 4) Decimal))]
+                                            FixedSizeArray
+                                        )
+                                        ColMajor
+                                    )
+                                    Save
+                                    (Array
+                                        (Integer 4)
+                                        [((IntegerConstant 1 (Integer 4) Decimal)
+                                        (IntegerConstant 5 (Integer 4) Decimal))]
+                                        FixedSizeArray
+                                    )
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                    .false.
+                                    ()
+                                ),
+                            e:
+                                (Variable
+                                    2
+                                    e
+                                    []
+                                    Local
+                                    ()
+                                    ()
+                                    Default
+                                    (Allocatable
+                                        (Array
+                                            (Integer 4)
+                                            [(()
+                                            ())]
+                                            DescriptorArray
+                                        )
+                                    )
+                                    ()
+                                    Source
+                                    Public
+                                    Required
+                                    .false.
+                                    .false.
+                                    .false.
+                                    ()
                                 ),
                             i:
                                 (Variable
@@ -105,6 +178,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             ierr:
                                 (Variable
@@ -123,6 +197,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             j:
                                 (Variable
@@ -141,6 +216,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             k:
                                 (Variable
@@ -159,6 +235,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             n:
                                 (Variable
@@ -177,6 +254,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             r:
                                 (Variable
@@ -195,6 +273,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             reduce_sum:
                                 (Function
@@ -227,6 +306,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             i:
                                                 (Variable
@@ -245,6 +325,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             j:
                                                 (Variable
@@ -263,6 +344,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             k:
                                                 (Variable
@@ -281,6 +363,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             r:
                                                 (Variable
@@ -299,6 +382,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     reduce_sum
@@ -340,6 +424,7 @@
                                             )
                                         )
                                         ()
+                                        .false.
                                     )
                                     (DoLoop
                                         ()
@@ -419,6 +504,7 @@
                                                         ()
                                                     )
                                                     ()
+                                                    .false.
                                                 )]
                                                 []
                                             )]
@@ -461,6 +547,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             b:
                                                 (Variable
@@ -488,6 +575,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             c:
                                                 (Variable
@@ -517,6 +605,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             c_copy:
                                                 (Variable
@@ -546,6 +635,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             i:
                                                 (Variable
@@ -564,6 +654,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             j:
                                                 (Variable
@@ -582,6 +673,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             k:
                                                 (Variable
@@ -600,6 +692,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     sum
@@ -965,6 +1058,7 @@
                                                         ()
                                                     )
                                                     ()
+                                                    .false.
                                                 )
                                                 (Assignment
                                                     (ArrayItem
@@ -1019,6 +1113,7 @@
                                                         ()
                                                     )
                                                     ()
+                                                    .false.
                                                 )]
                                                 []
                                             )]
@@ -1042,6 +1137,35 @@
                         (Var 2 n)
                         (IntegerConstant 10 (Integer 4) Decimal)
                         ()
+                        .false.
+                    )
+                    (Allocate
+                        [((Var 2 e)
+                        [((IntegerConstant 1 (Integer 4) Decimal)
+                        (IntegerConstant 5 (Integer 4) Decimal))]
+                        ()
+                        ())]
+                        ()
+                        ()
+                        ()
+                    )
+                    (If
+                        (IntegerCompare
+                            (ArraySize
+                                (Var 2 e)
+                                ()
+                                (Integer 4)
+                                ()
+                            )
+                            NotEq
+                            (IntegerConstant 5 (Integer 4) Decimal)
+                            (Logical 4)
+                            ()
+                        )
+                        [(ErrorStop
+                            ()
+                        )]
+                        []
                     )
                     (Allocate
                         [((Var 2 a)
@@ -1203,6 +1327,7 @@
                             )
                             (Var 2 i)
                             ()
+                            .false.
                         )]
                         []
                     )
@@ -1268,6 +1393,7 @@
                                     ()
                                 )
                                 ()
+                                .false.
                             )]
                             []
                         )]
@@ -1644,6 +1770,7 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (If
                         (ComplexCompare

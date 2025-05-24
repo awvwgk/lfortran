@@ -36,6 +36,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             ptr:
                                                 (Variable
@@ -58,6 +59,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 ),
                                             ~select_type_block_:
                                                 (Block
@@ -169,6 +171,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     child_value
@@ -210,7 +213,7 @@
                                     [(Print
                                         (StringConstant
                                             "default class"
-                                            (String 1 13 () PointerString)
+                                            (String 1 (IntegerConstant 13 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )
                                     )]
                                     ()
@@ -253,7 +256,7 @@
                                     [(Print
                                         (StringConstant
                                             "not ok"
-                                            (String 1 6 () PointerString)
+                                            (String 1 (IntegerConstant 6 (Integer 4) Decimal) ExpressionLength PointerString)
                                         )
                                     )]
                                     ()
@@ -277,7 +280,7 @@
                                                     ()
                                                     Default
                                                     (Allocatable
-                                                        (String 1 -2 () DescriptorString)
+                                                        (String 1 () DeferredLength DescriptorString)
                                                     )
                                                     ()
                                                     Source
@@ -286,6 +289,7 @@
                                                     .false.
                                                     .false.
                                                     .false.
+                                                    ()
                                                 )
                                         })
                                     toml_value
@@ -375,7 +379,7 @@
                     [(Print
                         (StringConstant
                             "running derived_types_19 main program"
-                            (String 1 37 () PointerString)
+                            (String 1 (IntegerConstant 37 (Integer 4) Decimal) ExpressionLength PointerString)
                         )
                     )]
                 )

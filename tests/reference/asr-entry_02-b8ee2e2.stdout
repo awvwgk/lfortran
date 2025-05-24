@@ -24,6 +24,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     entry_02
@@ -35,6 +36,7 @@
                             (Real 4)
                         )
                         ()
+                        .false.
                     )
                     (SubroutineCall
                         1 x
@@ -49,6 +51,7 @@
                             (Real 4)
                         )
                         ()
+                        .false.
                     )
                     (SubroutineCall
                         1 y
@@ -79,6 +82,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     x
@@ -133,6 +137,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             entry__lcompilers:
                                 (Variable
@@ -151,6 +156,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     x_main__lcompilers
@@ -209,11 +215,11 @@
                             ()
                             [(StringConstant
                                 "Printed using subroutine call: "
-                                (String 1 31 () PointerString)
+                                (String 1 (IntegerConstant 31 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Var 4 dummy)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -255,17 +261,18 @@
                             (Real 4)
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(StringConstant
                                 "Printed using entry statement: "
-                                (String 1 31 () PointerString)
+                                (String 1 (IntegerConstant 31 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Var 4 dummy)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -310,11 +317,11 @@
                             ()
                             [(StringConstant
                                 "Printed using entry statement: "
-                                (String 1 31 () PointerString)
+                                (String 1 (IntegerConstant 31 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                             (Var 4 dummy)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -378,6 +385,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     y

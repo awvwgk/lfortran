@@ -24,6 +24,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             int_inp2:
                                 (Variable
@@ -42,6 +43,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             output_amin0:
                                 (Variable
@@ -60,6 +62,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             output_amin1:
                                 (Variable
@@ -78,6 +81,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             output_dmin1:
                                 (Variable
@@ -96,6 +100,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             output_min:
                                 (Variable
@@ -114,6 +119,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             output_min0:
                                 (Variable
@@ -132,6 +138,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             output_min1:
                                 (Variable
@@ -150,6 +157,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             output_min_different_kinds:
                                 (Variable
@@ -168,6 +176,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             real_inp1:
                                 (Variable
@@ -186,6 +195,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             real_inp2:
                                 (Variable
@@ -204,6 +214,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             real_inp3:
                                 (Variable
@@ -222,6 +233,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             real_inp4:
                                 (Variable
@@ -240,6 +252,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             real_inp5:
                                 (Variable
@@ -258,6 +271,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 ),
                             real_inp6:
                                 (Variable
@@ -276,6 +290,7 @@
                                     .false.
                                     .false.
                                     .false.
+                                    ()
                                 )
                         })
                     min_min
@@ -287,6 +302,7 @@
                             (Real 8)
                         )
                         ()
+                        .false.
                     )
                     (Assignment
                         (Var 2 real_inp2)
@@ -295,6 +311,7 @@
                             (Real 8)
                         )
                         ()
+                        .false.
                     )
                     (Assignment
                         (Var 2 real_inp3)
@@ -303,6 +320,7 @@
                             (Real 4)
                         )
                         ()
+                        .false.
                     )
                     (Assignment
                         (Var 2 real_inp4)
@@ -311,16 +329,19 @@
                             (Real 4)
                         )
                         ()
+                        .false.
                     )
                     (Assignment
                         (Var 2 int_inp1)
                         (IntegerConstant 5 (Integer 4) Decimal)
                         ()
+                        .false.
                     )
                     (Assignment
                         (Var 2 int_inp2)
                         (IntegerConstant 10 (Integer 4) Decimal)
                         ()
+                        .false.
                     )
                     (Assignment
                         (Var 2 real_inp5)
@@ -329,6 +350,7 @@
                             (Real 8)
                         )
                         ()
+                        .false.
                     )
                     (Assignment
                         (Var 2 real_inp6)
@@ -337,6 +359,7 @@
                             (Real 4)
                         )
                         ()
+                        .false.
                     )
                     (Assignment
                         (Var 2 output_min)
@@ -349,13 +372,14 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(Var 2 output_min)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -423,7 +447,7 @@
                         [(ErrorStop
                             (StringConstant
                                 "Incorrect kind for min"
-                                (String 1 22 () PointerString)
+                                (String 1 (IntegerConstant 22 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                         )]
                         []
@@ -439,13 +463,14 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(Var 2 output_min0)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -482,7 +507,7 @@
                         [(ErrorStop
                             (StringConstant
                                 "Incorrect kind for min"
-                                (String 1 22 () PointerString)
+                                (String 1 (IntegerConstant 22 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                         )]
                         []
@@ -503,13 +528,14 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(Var 2 output_amin0)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -569,7 +595,7 @@
                         [(ErrorStop
                             (StringConstant
                                 "Incorrect kind for min"
-                                (String 1 22 () PointerString)
+                                (String 1 (IntegerConstant 22 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                         )]
                         []
@@ -590,13 +616,14 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(Var 2 output_min1)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -633,7 +660,7 @@
                         [(ErrorStop
                             (StringConstant
                                 "Incorrect kind for min"
-                                (String 1 22 () PointerString)
+                                (String 1 (IntegerConstant 22 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                         )]
                         []
@@ -649,13 +676,14 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(Var 2 output_amin1)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -715,7 +743,7 @@
                         [(ErrorStop
                             (StringConstant
                                 "Incorrect kind for min"
-                                (String 1 22 () PointerString)
+                                (String 1 (IntegerConstant 22 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                         )]
                         []
@@ -731,13 +759,14 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(Var 2 output_dmin1)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -805,7 +834,7 @@
                         [(ErrorStop
                             (StringConstant
                                 "Incorrect kind for min"
-                                (String 1 22 () PointerString)
+                                (String 1 (IntegerConstant 22 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                         )]
                         []
@@ -826,13 +855,14 @@
                             ()
                         )
                         ()
+                        .false.
                     )
                     (Print
                         (StringFormat
                             ()
                             [(Var 2 output_min_different_kinds)]
                             FormatFortran
-                            (String -1 0 () PointerString)
+                            (String 1 () ExpressionLength CString)
                             ()
                         )
                     )
@@ -895,7 +925,7 @@
                         [(ErrorStop
                             (StringConstant
                                 "Incorrect kind for min"
-                                (String 1 22 () PointerString)
+                                (String 1 (IntegerConstant 22 (Integer 4) Decimal) ExpressionLength PointerString)
                             )
                         )]
                         []
